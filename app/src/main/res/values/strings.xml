@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">Analyser of Fire Emblem Heroes</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9891716354513435/4265001702</string>
+    <string name="hp">HP</string>
+    <string name="spd">Spd</string>
+    <string name="atk">Atk</string>
+    <string name="def">Def</string>
+    <string name="res">Res</string>
+</resources>

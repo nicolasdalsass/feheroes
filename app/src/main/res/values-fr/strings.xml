@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="atk">Atq</string>
+    <string name="def">Déf</string>
+    <string name="res">Rés</string>
+    <string name="hp">PV</string>
+    <string name="spd">Vit</string>
+</resources>

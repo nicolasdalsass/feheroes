@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="stars_array" translatable="false">
+        <item>★★★★★</item>
+    </string-array>
+    <string name="stars" translatable="false">stars</string>
+</resources>
