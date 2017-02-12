@@ -9,28 +9,40 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#eceff1"
     tools:context="c4stor.com.feheroes.FEHAnalyserActivity">
 
-    <Spinner
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="18dp"
-        android:id="@+id/spinner_heroes"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:orientation="horizontal"
+        android:id="@+id/topspinners">
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/spinner_stars"
-        android:layout_marginTop="18dp"
-        android:layout_below="@+id/spinner_heroes"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+
+        <Spinner
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:layout_weight="2"
+            android:id="@+id/spinner_heroes"
+            android:layout_gravity="center"
+            />
+
+        <Spinner
+            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:id="@+id/spinner_stars"
+            android:layout_marginTop="18dp"
+            android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+
 
 
     <TableLayout
-        android:layout_below="@+id/spinner_stars"
+        android:layout_below="@+id/topspinners"
         android:layout_marginTop="40dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

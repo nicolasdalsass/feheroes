@@ -2,6 +2,7 @@
 <resources>
     <string-array name="stars_array" translatable="false">
         <item>★★★★★</item>
+        <item>★★★★</item>
     </string-array>
     <string name="stars" translatable="false">stars</string>
 </resources>
