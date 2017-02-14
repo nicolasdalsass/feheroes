@@ -100,7 +100,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         });
 
         populateSpinner(R.id.spinner_stars, R.array.stars_array);
-        adAdBanner();
+//        adAdBanner();
     }
 
     private int getNewPosition(String selectedValue, String[] values) {
