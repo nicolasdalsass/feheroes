@@ -36,10 +36,16 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         String line = reader.readLine();
         while (line != null) {
             JsonHero jH = gson.fromJson(line, JsonHero.class);
-
-            heroMap.put(jH.name, jH);
+            Log.i("", jH.name);
+            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
+            Log.i("", "" + nameIdentifier);
+            heroMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
             line = reader.readLine();
         }
+    }
+
+    private String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
     private Gson gson = new Gson();
@@ -71,22 +77,26 @@ public class FEHAnalyserActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 switch (position) {
                     case 0:
-                        String heroSelected = (String)spinnerHeroes.getSelectedItem();
-                        String[] newValues = fiveStarsMap.keySet().toArray(new String[]{});
-                        int newPosition = getNewPosition(heroSelected, newValues);
-                        ArrayAdapter a = new ArrayAdapter<String>(getBaseContext(), R.layout.spinner_item, newValues);
-                        a.notifyDataSetChanged();
-                        spinnerHeroes.setAdapter(a);
+                        String heroSelected = "";
+                        if (spinnerHeroes.getSelectedItem() != null)
+                            heroSelected = ((JsonHero) spinnerHeroes.getSelectedItem()).name;
+                        JsonHero[] fiveStarsValues = fiveStarsMap.values().toArray(new JsonHero[]{});
+                        int newPosition = getNewPosition(heroSelected, fiveStarsValues);
+                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(getBaseContext(), fiveStarsValues);
+                        fiveStarsAdapater.notifyDataSetChanged();
+                        spinnerHeroes.setAdapter(fiveStarsAdapater);
                         spinnerHeroes.setSelection(newPosition);
                         refMap = fiveStarsMap;
                         break;
                     case 1:
-                        String heroSelectedb = (String)spinnerHeroes.getSelectedItem();
-                        String[] newValuesb = fourStarsMap.keySet().toArray(new String[]{});
-                        int newPositionb = getNewPosition(heroSelectedb, newValuesb);
-                        ArrayAdapter b = new ArrayAdapter<String>(getBaseContext(), R.layout.spinner_item, newValuesb);
-                        b.notifyDataSetChanged();
-                        spinnerHeroes.setAdapter(b);
+                        String heroSelectedb = "";
+                        if (spinnerHeroes.getSelectedItem() != null)
+                            heroSelectedb = ((JsonHero) spinnerHeroes.getSelectedItem()).name;
+                        JsonHero[] fourStarsValues = fourStarsMap.values().toArray(new JsonHero[]{});
+                        int newPositionb = getNewPosition(heroSelectedb, fourStarsValues);
+                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(getBaseContext(), fourStarsValues);
+                        fourStarAdapter.notifyDataSetChanged();
+                        spinnerHeroes.setAdapter(fourStarAdapter);
                         spinnerHeroes.setSelection(newPositionb);
                         refMap = fourStarsMap;
                         break;
@@ -103,9 +113,9 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 //        adAdBanner();
     }
 
-    private int getNewPosition(String selectedValue, String[] values) {
-        for(int i=0; i< values.length; i++){
-            if(values[i].equalsIgnoreCase(selectedValue)){
+    private int getNewPosition(String selectedValue, JsonHero[] values) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].name.equalsIgnoreCase(selectedValue)) {
                 return i;
             }
         }
@@ -134,10 +144,8 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-            Object item = parent.getItemAtPosition(position);
-            JsonHero selectHero = refMap.get((String) item);
-
-            FEHAnalyserActivity.this.populateTableWithHero(selectHero);
+            JsonHero selectedHero = (JsonHero) parent.getItemAtPosition(position);
+            FEHAnalyserActivity.this.populateTableWithHero(selectedHero);
 
         }
 
@@ -250,11 +258,11 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         return tr;
     }
 
-    private String renderLvl40(int value){
-        if(value < 0 || refMap==fourStarsMap)
+    private String renderLvl40(int value) {
+        if (value < 0 || refMap == fourStarsMap)
             return "?";
         else
-            return value+"";
+            return value + "";
     }
 
     public class SpinnerTextViewChanger implements AdapterView.OnItemSelectedListener {
@@ -269,7 +277,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            tv.setText(renderLvl40(attributeValues[5-position]));
+            tv.setText(renderLvl40(attributeValues[5 - position]));
             int color = 0;
             switch (position) {
                 case 0:
@@ -282,8 +290,8 @@ public class FEHAnalyserActivity extends AppCompatActivity {
                     color = parent.getContext().getResources().getColor(R.color.low_red);
                     break;
             }
-            if(tv.getText()=="?")
-                color=parent.getContext().getResources().getColor(R.color.divider);
+            if (tv.getText() == "?")
+                color = parent.getContext().getResources().getColor(R.color.divider);
 
             tv.setTextColor(color);
         }

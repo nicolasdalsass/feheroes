@@ -57,7 +57,7 @@
     <string name="lilina">lilina</string>
     <string name="linde">linde</string>
     <string name="lissa">lissa</string>
-    <string name="lonqu">lon'qu</string>
+    <string name="lonqu">lon\'qu</string>
     <string name="lucina">lucina</string>
     <string name="lyn">lyn</string>
     <string name="maria">maria</string>
@@ -73,7 +73,7 @@
     <string name="nowi">nowi</string>
     <string name="oboro">oboro</string>
     <string name="odin">odin</string>
-    <string name="oguma">oguma</string>
+    <string name="ogma">ogma</string>
     <string name="olivia">olivia</string>
     <string name="palla">palla</string>
     <string name="peri">peri</string>
@@ -105,6 +105,4 @@
     <string name="wrys">wrys</string>
     <string name="xander">xander</string>
     <string name="zephiel">zephiel</string>
-
-
 </resources>
