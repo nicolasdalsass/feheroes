@@ -1,16 +1,21 @@
 package c4stor.com.feheroes;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -20,25 +25,26 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class FEHAnalyserActivity extends AppCompatActivity {
 
-    private Map<String, JsonHero> fiveStarsMap = new TreeMap<String, JsonHero>();
-    private Map<String, JsonHero> fourStarsMap = new TreeMap<String, JsonHero>();
+    Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
+    Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
+    Map<String, Hero> refMap = fiveStarsMap;
 
-    private Map<String, JsonHero> refMap = fiveStarsMap;
+    private HeroCollection collection = new HeroCollection();
 
-    private void initHeroesMap(int resource, Map<String, JsonHero> heroMap) throws IOException {
+    private void initHeroesMap(int resource, Map<String, Hero> heroMap) throws IOException {
         InputStream inputStream = getBaseContext().getResources().openRawResource(resource);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
-            JsonHero jH = gson.fromJson(line, JsonHero.class);
-            Log.i("", jH.name);
+            Hero jH = gson.fromJson(line, Hero.class);
             int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            Log.i("", "" + nameIdentifier);
             heroMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
             line = reader.readLine();
         }
@@ -62,12 +68,64 @@ public class FEHAnalyserActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_roller);
+        View v = findViewById(R.id.activity_roller);
+        v.setOnTouchListener(new OnSwipeTouchListener(getBaseContext()) {
+            public void onSwipeRight() {
+                startCollectionActivity();
+            }
+
+            public void onSwipeLeft() {
+                onSwipeRight();
+            }
+        });
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(R.string.app_name);
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
+        setSupportActionBar(myToolbar);
+
+        onResume();
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.gotofinder:
+                // User chose the "Settings" item, show the app settings UI...
+                return true;
+
+            case R.id.gotocollection:
+                startCollectionActivity();
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+
+        }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
+        return true;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         try {
             initFiveStarsMapFromJson();
             initFourStarsMap();
+            collection = HeroCollection.loadFromStorage(getBaseContext());
         } catch (IOException e) {
         }
-        setContentView(R.layout.activity_roller);
+
         final Spinner spinnerHeroes = (Spinner) findViewById(R.id.spinner_heroes);
         spinnerHeroes.setOnItemSelectedListener(new HeroSpinnerListener());
 
@@ -79,8 +137,8 @@ public class FEHAnalyserActivity extends AppCompatActivity {
                     case 0:
                         String heroSelected = "";
                         if (spinnerHeroes.getSelectedItem() != null)
-                            heroSelected = ((JsonHero) spinnerHeroes.getSelectedItem()).name;
-                        JsonHero[] fiveStarsValues = fiveStarsMap.values().toArray(new JsonHero[]{});
+                            heroSelected = ((Hero) spinnerHeroes.getSelectedItem()).name;
+                        Hero[] fiveStarsValues = fiveStarsMap.values().toArray(new Hero[]{});
                         int newPosition = getNewPosition(heroSelected, fiveStarsValues);
                         ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(getBaseContext(), fiveStarsValues);
                         fiveStarsAdapater.notifyDataSetChanged();
@@ -91,8 +149,8 @@ public class FEHAnalyserActivity extends AppCompatActivity {
                     case 1:
                         String heroSelectedb = "";
                         if (spinnerHeroes.getSelectedItem() != null)
-                            heroSelectedb = ((JsonHero) spinnerHeroes.getSelectedItem()).name;
-                        JsonHero[] fourStarsValues = fourStarsMap.values().toArray(new JsonHero[]{});
+                            heroSelectedb = ((Hero) spinnerHeroes.getSelectedItem()).name;
+                        Hero[] fourStarsValues = fourStarsMap.values().toArray(new Hero[]{});
                         int newPositionb = getNewPosition(heroSelectedb, fourStarsValues);
                         ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(getBaseContext(), fourStarsValues);
                         fourStarAdapter.notifyDataSetChanged();
@@ -110,10 +168,11 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         });
 
         populateSpinner(R.id.spinner_stars, R.array.stars_array);
-//        adAdBanner();
+
+        adAdBanner();
     }
 
-    private int getNewPosition(String selectedValue, JsonHero[] values) {
+    private int getNewPosition(String selectedValue, Hero[] values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i].name.equalsIgnoreCase(selectedValue)) {
                 return i;
@@ -144,7 +203,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-            JsonHero selectedHero = (JsonHero) parent.getItemAtPosition(position);
+            Hero selectedHero = (Hero) parent.getItemAtPosition(position);
             FEHAnalyserActivity.this.populateTableWithHero(selectedHero);
 
         }
@@ -155,7 +214,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 
     }
 
-    private void populateTableWithHero(JsonHero hero) {
+    private void populateTableWithHero(final Hero hero) {
         TableLayout tv = (TableLayout) findViewById(R.id.herotable);
         tv.removeAllViewsInLayout();
 
@@ -167,14 +226,14 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         headers.setPadding(0, 0, 0, 10);
 
         TextView attributeHeader = new TextView(FEHAnalyserActivity.this);
-        attributeHeader.setText("Attribute");
+        attributeHeader.setText(getResources().getString(R.string.attributeheader));
         attributeHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         attributeHeader.setTextSize(25);
         attributeHeader.setGravity(Gravity.LEFT);
         headers.addView(attributeHeader);
 
         TextView lvl1Header = new TextView(FEHAnalyserActivity.this);
-        lvl1Header.setText("Level 1");
+        lvl1Header.setText(getResources().getString(R.string.lvl1));
         lvl1Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         lvl1Header.setTextSize(25);
         lvl1Header.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -183,7 +242,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         TextView level40Header = new TextView(FEHAnalyserActivity.this);
         level40Header.setPadding(5, 0, 0, 0);
         level40Header.setTextSize(25);
-        level40Header.setText("Level 40");
+        level40Header.setText(getResources().getString(R.string.lvl40));
         level40Header.setGravity(Gravity.CENTER_HORIZONTAL);
         level40Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
         headers.addView(level40Header);
@@ -195,11 +254,11 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
 
-        TableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), hero.HP);
-        TableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), hero.atk);
-        TableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), hero.speed);
-        TableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), hero.def);
-        TableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), hero.res);
+        final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), hero.HP);
+        final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), hero.atk);
+        final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), hero.speed);
+        final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), hero.def);
+        final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), hero.res);
         tv.addView(headers);
         tv.addView(vline);
 
@@ -217,88 +276,52 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         tv.addView(trSpd);
         tv.addView(trDef);
         tv.addView(trRes);
-    }
 
-    TableRow makeTableRow(String attribute, int[] attributeValues) {
-        TableRow tr = new TableRow(FEHAnalyserActivity.this);
-
-        tr.setLayoutParams(new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.MATCH_PARENT));
-        tr.setPadding(12, 0, 0, 12);
-
-
-        TextView b = new TextView(FEHAnalyserActivity.this);
-        b.setText(attribute);
-        b.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        b.setTextSize(22);
-        tr.addView(b);
-
-        Spinner lvl1Spinner = new Spinner(FEHAnalyserActivity.this);
-        lvl1Spinner.setPadding(5, 0, 0, 0);
-
-        lvl1Spinner.setLayoutParams(new TableRow.LayoutParams(0,
-                TableRow.LayoutParams.WRAP_CONTENT, 1));
-        lvl1Spinner.setAdapter(new Level1StatSpinnerAdapter(attributeValues));
-        lvl1Spinner.setSelection(1);
-
-        final TextView lvl40Value = new TextView(FEHAnalyserActivity.this);
-        lvl40Value.setPadding(5, 0, 0, 0);
-        lvl40Value.setTextSize(22);
-        lvl40Value.setGravity(Gravity.CENTER_HORIZONTAL);
-        lvl40Value.setLayoutParams(new TableRow.LayoutParams(0,
-                TableRow.LayoutParams.WRAP_CONTENT, 1));
-
-        lvl40Value.setText(renderLvl40(attributeValues[4]) + "");
-
-        lvl1Spinner.setOnItemSelectedListener(new SpinnerTextViewChanger(lvl40Value, attributeValues));
-        tr.addView(lvl1Spinner);
-        tr.addView(lvl40Value);
-
-        return tr;
-    }
-
-    private String renderLvl40(int value) {
-        if (value < 0 || refMap == fourStarsMap)
-            return "?";
-        else
-            return value + "";
-    }
-
-    public class SpinnerTextViewChanger implements AdapterView.OnItemSelectedListener {
-
-        private TextView tv;
-        private int[] attributeValues;
-
-        public SpinnerTextViewChanger(TextView tv, int attributeValues[]) {
-            this.tv = tv;
-            this.attributeValues = attributeValues;
-        }
-
-        @Override
-        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            tv.setText(renderLvl40(attributeValues[5 - position]));
-            int color = 0;
-            switch (position) {
-                case 0:
-                    color = parent.getContext().getResources().getColor(R.color.high_green);
-                    break;
-                case 1:
-                    color = parent.getContext().getResources().getColor(R.color.colorPrimary);
-                    break;
-                case 2:
-                    color = parent.getContext().getResources().getColor(R.color.low_red);
-                    break;
+        Button addButton = (Button) findViewById(R.id.addToCollectionBtn);
+        addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Hero h = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
+                List<String> boons = new ArrayList<String>();
+                List<String> banes = new ArrayList<String>();
+                if (trDef.selectedPos == 0)
+                    boons.add(trDef.attribute);
+                if (trHP.selectedPos == 0)
+                    boons.add(trHP.attribute);
+                if (trRes.selectedPos == 0)
+                    boons.add(trRes.attribute);
+                if (trSpd.selectedPos == 0)
+                    boons.add(trSpd.attribute);
+                if (trMght.selectedPos == 0)
+                    boons.add(trMght.attribute);
+                if (trDef.selectedPos == 2)
+                    banes.add(trDef.attribute);
+                if (trHP.selectedPos == 2)
+                    banes.add(trHP.attribute);
+                if (trRes.selectedPos == 2)
+                    banes.add(trRes.attribute);
+                if (trSpd.selectedPos == 2)
+                    banes.add(trSpd.attribute);
+                if (trMght.selectedPos == 2)
+                    banes.add(trMght.attribute);
+                int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
+                HeroRoll hr = new HeroRoll(hero, stars, boons, banes);
+                collection.add(hr);
+                collection.save(getBaseContext());
+                Toast.makeText(getBaseContext(), hero.name + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();
             }
-            if (tv.getText() == "?")
-                color = parent.getContext().getResources().getColor(R.color.divider);
+        });
 
-            tv.setTextColor(color);
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> parent) {
-
-        }
     }
+
+    private void startCollectionActivity() {
+        Intent intent = new Intent(getBaseContext(), CollectionActivity.class);
+        startActivity(intent);
+    }
+
+    HeroTableRow makeTableRow(String attribute, int[] attributeValues) {
+        return new HeroTableRow(FEHAnalyserActivity.this, attribute, attributeValues);
+    }
+
+
 }

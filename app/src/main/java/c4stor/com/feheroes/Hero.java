@@ -1,5 +1,7 @@
 package c4stor.com.feheroes;
 
+import java.io.Serializable;
+
 /**
  * Created by Nicolas on 11/02/2017.
  */
@@ -10,7 +12,7 @@ package c4stor.com.feheroes;
 
  */
 
-public class JsonHero {
+public class Hero implements Serializable {
 
     public String name;
     public int[] HP;
@@ -18,6 +20,5 @@ public class JsonHero {
     public int[] def;
     public int[] speed;
     public int[] res;
-
 
 }

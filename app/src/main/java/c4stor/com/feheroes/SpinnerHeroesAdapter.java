@@ -1,7 +1,6 @@
 package c4stor.com.feheroes;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -12,23 +11,19 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 /**
  * Created by Nicolas on 14/02/2017.
  */
 
-public class SpinnerHeroesAdapter extends ArrayAdapter<JsonHero> {
+public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
 
-    public SpinnerHeroesAdapter(Context context, JsonHero[] values) {
+    public SpinnerHeroesAdapter(Context context, Hero[] values) {
         super(context, android.R.layout.simple_spinner_item, values);
 
     }
@@ -38,34 +33,34 @@ public class SpinnerHeroesAdapter extends ArrayAdapter<JsonHero> {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    private TextView makeView(int position, View convertView, ViewGroup parent, int imageWidth, int imageHeight) {
-        TextView label = (TextView) super.getDropDownView(position, convertView, parent);
-        label.setGravity(Gravity.CENTER);
-        JsonHero jsonHero = getItem(position);
-        int nameIdentifier = getContext().getResources().getIdentifier(jsonHero.name.toLowerCase(),"string",getContext().getPackageName());
+    private TextView makeView(int position, Context context, int imageWidth, int imageHeight) {
+        TextView label = new TextView(context);
+        label.setGravity(Gravity.CENTER_VERTICAL);
+        label.setCompoundDrawablePadding(50);
+        Hero hero = getItem(position);
+        int nameIdentifier = getContext().getResources().getIdentifier(hero.name.toLowerCase(),"string",getContext().getPackageName());
         label.setText(capitalize(getContext().getString(nameIdentifier)));
-        int drawableId = getContext().getResources().getIdentifier(jsonHero.name.toLowerCase(), "drawable", getContext().getPackageName());
-//        Drawable d = ContextCompat.getDrawable(getContext(),drawableId);
+        label.setTextSize(20);
+        int drawableId = getContext().getResources().getIdentifier(hero.name.toLowerCase(), "drawable", getContext().getPackageName());
         Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
         Bitmap c = getRoundedCroppedBitmap(b, imageWidth, imageHeight);
         Drawable dCool = new BitmapDrawable(getContext().getResources(), c);
         dCool.setBounds(imageHeight, imageHeight, imageHeight,imageHeight);
-//        dCool.set
         label.setCompoundDrawablesWithIntrinsicBounds(dCool, null, null, null);
-label.setPadding(0,2,0,0);
+        label.setPadding(0,4,0,0);
         return label;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-       TextView v = makeView(position, convertView, parent, 140, 140);
+       TextView v = makeView(position, parent.getContext(), 140, 140);
         v.setHeight(180);
         return v;
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-       return makeView(position, convertView, parent, 80, 80);
+       return makeView(position,  parent.getContext(), 80, 80);
     }
 
     private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth, int finalWeight) {

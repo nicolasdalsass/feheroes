@@ -105,4 +105,13 @@
     <string name="wrys">wrys</string>
     <string name="xander">xander</string>
     <string name="zephiel">zephiel</string>
+    <string name="ephraim">ephraim</string>
+    <string name="julia">julia</string>
+    <string name="seliph">seliph</string>
+    <string name="eirika">eirika</string>
+    <string name="addedtocollection">added to collection.</string>
+    <string name="mycollection">My Heroes</string>
+    <string name="lvl40">Level 40</string>
+    <string name="lvl1">Level 1</string>
+    <string name="attributeheader">Attribute</string>
 </resources>
