@@ -1,6 +1,7 @@
 package c4stor.com.feheroes;
 
 import android.database.DataSetObserver;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +62,7 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView tv = new TextView(parent.getContext());
         tv.setText(baseStat[2-position] + "");
-        tv.setTextSize(22);
+        tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         tv.setGravity(Gravity.CENTER);
         int color = 0;
         switch (position) {

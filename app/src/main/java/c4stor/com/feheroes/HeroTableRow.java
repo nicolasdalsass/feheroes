@@ -1,6 +1,7 @@
 package c4stor.com.feheroes;
 
 import android.content.Context;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
@@ -17,21 +18,25 @@ public class HeroTableRow extends TableRow {
     public int selectedPos = 1;
     public FEHAnalyserActivity parentActivity;
     public String attribute;
+    int[] selectedSpinners;
+    int spinnerPos;
 
-    public HeroTableRow(FEHAnalyserActivity parentActivity, String attribute, int[] attributeValues){
+    public HeroTableRow(FEHAnalyserActivity parentActivity, int[] selectedSpinners, int spinnerPos,  String attribute, int[] attributeValues){
         super(parentActivity);
         this.parentActivity = parentActivity;
         this.attribute = attribute;
         this.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.MATCH_PARENT));
-        this.setPadding(12, 0, 0, 12);
+        this.setPadding(3, 0, 0, 9);
+        this.selectedSpinners=selectedSpinners;
+        this.spinnerPos=spinnerPos;
 
 
         TextView b = new TextView(parentActivity);
         b.setText(attribute);
         b.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        b.setTextSize(22);
+        b.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         this.addView(b);
 
         Spinner lvl1Spinner = new Spinner(parentActivity);
@@ -40,11 +45,11 @@ public class HeroTableRow extends TableRow {
         lvl1Spinner.setLayoutParams(new TableRow.LayoutParams(0,
                 TableRow.LayoutParams.WRAP_CONTENT, 1));
         lvl1Spinner.setAdapter(new Level1StatSpinnerAdapter(attributeValues));
-        lvl1Spinner.setSelection(1);
+        lvl1Spinner.setSelection(selectedSpinners[spinnerPos]);
 
         final TextView lvl40Value = new TextView(parentActivity);
         lvl40Value.setPadding(5, 0, 0, 0);
-        lvl40Value.setTextSize(22);
+        lvl40Value.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         lvl40Value.setGravity(Gravity.CENTER_HORIZONTAL);
         lvl40Value.setLayoutParams(new TableRow.LayoutParams(0,
                 TableRow.LayoutParams.WRAP_CONTENT, 1));
@@ -94,6 +99,7 @@ public class HeroTableRow extends TableRow {
             if (tv.getText() == "?")
                 color = parent.getContext().getResources().getColor(R.color.divider);
             parentRow.selectedPos=position;
+            selectedSpinners[spinnerPos] = position;
 
             tv.setTextColor(color);
         }

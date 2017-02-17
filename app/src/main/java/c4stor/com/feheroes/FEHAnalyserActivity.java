@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +36,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
     Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> refMap = fiveStarsMap;
+    int[] selectedSpinners = new int[]{1, 1, 1, 1, 1};
 
     private HeroCollection collection = new HeroCollection();
 
@@ -69,21 +71,10 @@ public class FEHAnalyserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_roller);
-        View v = findViewById(R.id.activity_roller);
-        v.setOnTouchListener(new OnSwipeTouchListener(getBaseContext()) {
-            public void onSwipeRight() {
-                startCollectionActivity();
-            }
-
-            public void onSwipeLeft() {
-                onSwipeRight();
-            }
-        });
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(R.string.app_name);
         myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
         setSupportActionBar(myToolbar);
-
         onResume();
 
     }
@@ -195,6 +186,10 @@ public class FEHAnalyserActivity extends AppCompatActivity {
                 resource_id, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+        if (refMap == fourStarsMap)
+            spinner.setSelection(1);
+        else
+            spinner.setSelection(0);
     }
 
 
@@ -228,20 +223,20 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         TextView attributeHeader = new TextView(FEHAnalyserActivity.this);
         attributeHeader.setText(getResources().getString(R.string.attributeheader));
         attributeHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        attributeHeader.setTextSize(25);
+        attributeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         attributeHeader.setGravity(Gravity.LEFT);
         headers.addView(attributeHeader);
 
         TextView lvl1Header = new TextView(FEHAnalyserActivity.this);
         lvl1Header.setText(getResources().getString(R.string.lvl1));
         lvl1Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        lvl1Header.setTextSize(25);
+        lvl1Header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         lvl1Header.setGravity(Gravity.CENTER_HORIZONTAL);
         headers.addView(lvl1Header);
 
         TextView level40Header = new TextView(FEHAnalyserActivity.this);
         level40Header.setPadding(5, 0, 0, 0);
-        level40Header.setTextSize(25);
+        level40Header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         level40Header.setText(getResources().getString(R.string.lvl40));
         level40Header.setGravity(Gravity.CENTER_HORIZONTAL);
         level40Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -250,15 +245,15 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 
         final View vline = new View(FEHAnalyserActivity.this);
         vline.setLayoutParams(new
-                TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, 2));
+                TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
         vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
 
-        final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), hero.HP);
-        final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), hero.atk);
-        final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), hero.speed);
-        final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), hero.def);
-        final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), hero.res);
+        final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), selectedSpinners, 0, hero.HP);
+        final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), selectedSpinners, 1, hero.atk);
+        final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), selectedSpinners, 2, hero.speed);
+        final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), selectedSpinners, 3, hero.def);
+        final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), selectedSpinners, 4, hero.res);
         tv.addView(headers);
         tv.addView(vline);
 
@@ -319,8 +314,8 @@ public class FEHAnalyserActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    HeroTableRow makeTableRow(String attribute, int[] attributeValues) {
-        return new HeroTableRow(FEHAnalyserActivity.this, attribute, attributeValues);
+    HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues) {
+        return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues);
     }
 
 

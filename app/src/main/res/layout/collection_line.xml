@@ -11,7 +11,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="5" />
+        android:layout_weight="4" />
 
     <TextView
         android:id="@+id/collname"
@@ -19,40 +19,44 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:layout_weight="5"
+        android:paddingLeft="5dp"
         android:text="TextView"
-        android:textColor="@color/colorPrimaryText" />
+        android:textColor="@color/colorPrimaryText"
+        android:textSize="18sp"/>
 
     <TextView
         android:id="@+id/boons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="3"
+        android:layout_gravity="center"
+        android:layout_weight="2"
         android:text="TextView"
-        android:textColor="@color/high_green" />
+        android:textColor="@color/high_green"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/banes"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="3"
+        android:layout_gravity="center"
+        android:layout_weight="2"
         android:text="TextView"
-        android:textColor="@color/low_red" />
+        android:textColor="@color/low_red"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="3">
+        android:layout_weight="2">
 
         <Button
             android:id="@+id/deleteBtn"
             android:layout_width="@dimen/buttonremoveradius"
             android:layout_height="@dimen/buttonremoveradius"
-            android:layout_gravity="center_vertical"
+            android:layout_gravity="center_vertical|right"
             android:background="@drawable/removebutton"
             android:text="x"
             android:textColor="@color/low_red"
-            android:textSize="15sp" />
+            android:textSize="11sp" />
     </LinearLayout>
 </LinearLayout>

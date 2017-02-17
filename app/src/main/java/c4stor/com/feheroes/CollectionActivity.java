@@ -45,19 +45,6 @@ public class CollectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_collection);
-        View v = findViewById(R.id.collectionlist);
-        View.OnTouchListener swipeListener = new OnSwipeTouchListener(getBaseContext()) {
-            public void onSwipeRight() {
-                startFinderActivity();
-            }
-
-            public void onSwipeLeft() {
-                onSwipeRight();
-            }
-        };
-        v.setOnTouchListener(swipeListener);
-        View v2 = findViewById(R.id.nocollectiontext);
-        v2.setOnTouchListener(swipeListener);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         myToolbar.setTitle(R.string.mycollection);
         myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
