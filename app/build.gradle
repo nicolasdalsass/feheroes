@@ -7,7 +7,7 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 23
+        versionCode 25
         versionName "4.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
