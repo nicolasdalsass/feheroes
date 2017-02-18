@@ -20,5 +20,4 @@ public class Hero implements Serializable {
     public int[] def;
     public int[] speed;
     public int[] res;
-
 }

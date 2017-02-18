@@ -13,16 +13,37 @@
         android:layout_gravity="center_vertical"
         android:layout_weight="4" />
 
-    <TextView
-        android:id="@+id/collname"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
         android:layout_weight="5"
-        android:paddingLeft="5dp"
-        android:text="TextView"
-        android:textColor="@color/colorPrimaryText"
-        android:textSize="18sp"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/collname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18sp"
+            android:layout_margin="0dp"
+            android:gravity="bottom"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"/>
+
+        <TextView
+            android:id="@+id/collnamerarity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:layout_margin="0dp"
+            android:padding="0dp"
+            android:paddingStart="5dp"
+            android:paddingLeft="5dp"
+            android:textColor="@color/colorPrimaryText"
+            android:textSize="18sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/boons"
@@ -53,7 +74,7 @@
             android:id="@+id/deleteBtn"
             android:layout_width="@dimen/buttonremoveradius"
             android:layout_height="@dimen/buttonremoveradius"
-            android:layout_gravity="center_vertical|right"
+            android:layout_gravity="center_vertical|end"
             android:background="@drawable/removebutton"
             android:text="x"
             android:textColor="@color/low_red"

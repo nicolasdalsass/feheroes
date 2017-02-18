@@ -13,18 +13,19 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -94,7 +95,7 @@ public class CollectionActivity extends AppCompatActivity {
 
     private void initTextView() {
         TextView noCollectionText = (TextView) findViewById(R.id.nocollectiontext);
-        if(heroCollection.size() >0)
+        if (heroCollection.size() > 0)
             noCollectionText.setVisibility(View.INVISIBLE);
         else {
             noCollectionText.setText("You don't have anyone in your collection.\nAdd some using the + button in the IV finder.");
@@ -120,9 +121,6 @@ public class CollectionActivity extends AppCompatActivity {
             this.collection = collection;
         }
 
-        private String capitalize(final String line) {
-            return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-        }
 
         private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth, int finalWeight) {
             int widthLight = bitmap.getWidth();
@@ -161,6 +159,7 @@ public class CollectionActivity extends AppCompatActivity {
                 holder = new ViewHolder();
                 holder.collImage = (ImageView) v.findViewById(R.id.collimage);
                 holder.collName = (TextView) v.findViewById(R.id.collname);
+                holder.rarity = (TextView) v.findViewById(R.id.collnamerarity);
                 holder.boons = (TextView) v.findViewById(R.id.boons);
                 holder.banes = (TextView) v.findViewById(R.id.banes);
                 holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
@@ -171,7 +170,7 @@ public class CollectionActivity extends AppCompatActivity {
                 holder = (ViewHolder) v.getTag();
             }
 
-            HeroRoll hero = heroCollection.get(position);
+            final HeroRoll hero = heroCollection.get(position);
 
             int drawableId = getContext().getResources().getIdentifier(hero.hero.name.toLowerCase(), "drawable", getContext().getPackageName());
             Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
@@ -179,15 +178,15 @@ public class CollectionActivity extends AppCompatActivity {
             Drawable dCool = new BitmapDrawable(getContext().getResources(), c);
 
             holder.collImage.setImageDrawable(dCool);
-            int nameIdentifier = getContext().getResources().getIdentifier(hero.hero.name.toLowerCase(), "string", getContext().getPackageName());
+            holder.collName.setText(hero.getDisplayName(getContext()));
+
+
             StringBuilder sb = new StringBuilder();
-            sb.append(capitalize(getContext().getString(nameIdentifier)));
-            sb.append("\n");
             for (int i = 1; i <= hero.stars; i++) {
                 sb.append("★");
             }
 
-            holder.collName.setText(sb.toString());
+            holder.rarity.setText(sb.toString());
 
             StringBuilder boons = new StringBuilder();
 
@@ -219,6 +218,7 @@ public class CollectionActivity extends AppCompatActivity {
     static class ViewHolder {
         ImageView collImage;
         TextView collName;
+        TextView rarity;
         TextView boons;
         TextView banes;
         Button deleteButton;

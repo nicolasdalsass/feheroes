@@ -40,30 +40,42 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 
     private HeroCollection collection = new HeroCollection();
 
-    private void initHeroesMap(int resource, Map<String, Hero> heroMap) throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(resource);
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
-            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            heroMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-            line = reader.readLine();
-        }
-    }
-
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
     private Gson gson = new Gson();
 
-    private void initFiveStarsMapFromJson() throws IOException {
-        initHeroesMap(R.raw.fivestarjson, fiveStarsMap);
+    private void cleanStat(int[] stat){
+        if(stat[4]==-1 || stat[5]==-1 || stat[3]==-1){
+            stat[4]=-1 ;
+            stat[5]=-1 ;
+            stat[3]=-1;
+        }
     }
 
-    private void initFourStarsMap() throws IOException {
-        initHeroesMap(R.raw.fourstarjson, fourStarsMap);
+    private void initFromCombo() throws IOException {
+        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = reader.readLine();
+        while (line != null) {
+            Hero jH = gson.fromJson(line, Hero.class);
+            int level = Integer.valueOf(jH.name.substring(jH.name.length()-1));
+            jH.name = jH.name.substring(0, jH.name.length()-1);
+            cleanStat(jH.atk);
+            cleanStat(jH.HP);
+            cleanStat(jH.def);
+            cleanStat(jH.res);
+            cleanStat(jH.speed);
+            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
+            switch(level) {
+                case 4:
+                    fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                case 5:
+                    fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+            }
+            line = reader.readLine();
+        }
     }
 
 
@@ -111,8 +123,7 @@ public class FEHAnalyserActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         try {
-            initFiveStarsMapFromJson();
-            initFourStarsMap();
+            initFromCombo();
             collection = HeroCollection.loadFromStorage(getBaseContext());
         } catch (IOException e) {
         }

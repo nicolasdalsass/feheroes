@@ -1,4 +1,9 @@
 <resources>
+    <string name="seo1" translatable="false">Fire Emblem Heroes</string>
+    <string name="seo2" translatable="false">Fire Emblem</string>
+    <string name="seo3" translatable="false">IV calculator</string>
+    <string name="seo4" translatable="false">Fire Emblem boons</string>
+    <string name="seo5" translatable="false">Fire Emblem banes</string>
     <string name="app_name" translatable="false">IV Finder</string>
     <string name="banner_ad_unit_id" translatable="false">ca-app-pub-9891716354513435/4265001702</string>
     <string name="hp">HP</string>

@@ -62,8 +62,7 @@ public class HeroTableRow extends TableRow {
     }
 
     private String renderLvl40(int value) {
-        if (value < 0 ||
-                parentActivity.refMap == parentActivity.fourStarsMap)
+        if (value < 0 )
             return "?";
         else
             return value + "";
