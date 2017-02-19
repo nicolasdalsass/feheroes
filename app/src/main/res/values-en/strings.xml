@@ -114,4 +114,8 @@
     <string name="lvl40">Level 40</string>
     <string name="lvl1">Level 1</string>
     <string name="attributeheader">Attribute</string>
+    <string name="contactme">Contact me</string>
+    <string name="contactmetext">You can contact me for corrections, bug reports, or feature requests!\nMail contact.c4stor@gmail.com or pm me on reddit : u/C4stor</string>
+    <string name="export_collection">Export collection</string>
+    <string name="exportcollok">Collection copied to clipboard</string>
 </resources>

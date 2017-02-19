@@ -36,4 +36,29 @@ public class HeroRoll implements Serializable {
             return capitalize(c.getString(nameIdentifier));
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(capitalize(hero.name));
+                sb.append(",");
+        for(int i=0; i<stars;i++) {
+            sb.append("★");
+        }
+        sb.append(",");
+        for(int i=0;i<boons.size()-1;i++){
+            sb.append("+"+boons.get(i)+" ");
+        }
+        if(boons.size()>0) {
+            sb.append("+" + boons.get(boons.size() - 1));
+        }
+        sb.append(",");
+        for(int i=0;i<banes.size()-1;i++){
+            sb.append("+"+banes.get(i)+" ");
+        }
+        if(banes.size()>0) {
+            sb.append("-" + banes.get(banes.size() - 1));
+        }
+        return sb.toString();
+    }
 }

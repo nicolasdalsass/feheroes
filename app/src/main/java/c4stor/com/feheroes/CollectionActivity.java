@@ -1,7 +1,6 @@
 package c4stor.com.feheroes;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -14,18 +13,11 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,57 +25,36 @@ import android.widget.TextView;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 
-public class CollectionActivity extends AppCompatActivity {
+public class CollectionActivity extends ToolbaredActivity {
 
     private HeroCollection heroCollection;
 
-    private void startFinderActivity() {
-        Intent intent = new Intent(getBaseContext(), FEHAnalyserActivity.class);
-        startActivity(intent);
+
+
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_collection;
+    }
+
+    @Override
+    protected boolean isCollection() {
+        return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_collection);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.mycollection);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
         onResume();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.gotofinder:
-                startFinderActivity();
-                return true;
-            case R.id.gotocollection:
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
-        return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
         heroCollection = HeroCollection.loadFromStorage(getBaseContext());
-
         initListView();
         initTextView();
         adAdBanner();
-
     }
 
     private void adAdBanner() {
@@ -99,7 +70,6 @@ public class CollectionActivity extends AppCompatActivity {
             noCollectionText.setVisibility(View.INVISIBLE);
         else {
             noCollectionText.setText("You don't have anyone in your collection.\nAdd some using the + button in the IV finder.");
-
         }
     }
 

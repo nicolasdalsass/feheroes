@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FEHAnalyserActivity extends AppCompatActivity {
+public class FEHAnalyserActivity extends ToolbaredActivity {
 
     Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
@@ -80,44 +80,22 @@ public class FEHAnalyserActivity extends AppCompatActivity {
 
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_roller;
+    }
+
+    @Override
+    protected boolean isIVFinder() {
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_roller);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.app_name);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
         onResume();
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.gotofinder:
-                // User chose the "Settings" item, show the app settings UI...
-                return true;
-
-            case R.id.gotocollection:
-                startCollectionActivity();
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-
-        }
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
-        return true;
-    }
 
     @Override
     protected void onResume() {
