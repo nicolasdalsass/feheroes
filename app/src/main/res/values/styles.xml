@@ -7,6 +7,9 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:popupMenuStyle">@style/PopupMenu</item>
+    </style>
+
+    <style name="Toolbar" parent="AppTheme">
         <item name="android:textColorSecondary">@color/icons</item>
     </style>
 

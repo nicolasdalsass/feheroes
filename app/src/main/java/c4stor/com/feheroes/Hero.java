@@ -20,4 +20,20 @@ public class Hero implements Serializable {
     public int[] def;
     public int[] speed;
     public int[] res;
+
+    public void mergeWith(Hero extraData) {
+        mergeStat(this.HP, extraData.HP);
+        mergeStat(this.atk, extraData.atk);
+        mergeStat(this.def, extraData.def);
+        mergeStat(this.speed, extraData.speed);
+        mergeStat(this.res, extraData.res);
+    }
+
+    private void mergeStat(int[] thisStat, int[] otherStat) {
+        for (int i = 0; i < thisStat.length; i++) {
+            if (otherStat[i] != -1 && thisStat[i] != otherStat[i]) {
+                thisStat[i] = otherStat[i];
+            }
+        }
+    }
 }

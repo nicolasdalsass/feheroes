@@ -118,4 +118,5 @@
     <string name="contactmetext">You can contact me for corrections, bug reports, or feature requests!\nMail contact.c4stor@gmail.com or pm me on reddit : u/C4stor</string>
     <string name="export_collection">Export collection</string>
     <string name="exportcollok">Collection copied to clipboard</string>
+    <string name="collection">Collection</string>
 </resources>

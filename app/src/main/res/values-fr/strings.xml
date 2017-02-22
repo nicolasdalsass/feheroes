@@ -118,4 +118,5 @@
     <string name="contactmetext">Contactez moi pour des corrections de stats, des bugs, ou des demandes de features !\nMailez contact.c4stor@gmail.com ou pingez moi sur Reddit : u/C4stor</string>
     <string name="export_collection">Exporter la collection</string>
     <string name="exportcollok">Collection copiée dans le presse-papier</string>
+    <string name="collection">Collection</string>
 </resources>

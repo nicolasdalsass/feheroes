@@ -1,13 +1,8 @@
 package c4stor.com.feheroes;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -23,6 +18,8 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -32,6 +29,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class FEHAnalyserActivity extends ToolbaredActivity {
+
+    private static boolean webSyncDone = false;
 
     Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
@@ -46,29 +45,54 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
 
     private Gson gson = new Gson();
 
-    private void cleanStat(int[] stat){
-        if(stat[4]==-1 || stat[5]==-1 || stat[3]==-1){
-            stat[4]=-1 ;
-            stat[5]=-1 ;
-            stat[3]=-1;
+    private void cleanStat(int[] stat) {
+        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
+            stat[4] = -1;
+            stat[5] = -1;
+            stat[3] = -1;
         }
+    }
+
+    private void initHeroData() throws IOException {
+        File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
+        if (dataFile.exists()) {
+            try {
+                initFromInputStream(new FileInputStream(dataFile));
+            } catch (Exception e) {
+                initFromCombo();
+            }
+        } else {
+            initFromCombo();
+        }
+
+//        File wikiFile = new File(getBaseContext().getFilesDir(),"wiki.data");
+//        if(wikiFile.exists()){
+//            WikiParser parser = new WikiParser(getBaseContext());
+//            parser.parse(wikiFile);
+//            parser.enrichMap(fourStarsMap, parser.fourStarsMap);
+//            parser.enrichMap(fiveStarsMap, parser.fiveStarsMap);
+//        }
     }
 
     private void initFromCombo() throws IOException {
         InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
+        initFromInputStream(inputStream);
+    }
+
+    private void initFromInputStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
             Hero jH = gson.fromJson(line, Hero.class);
-            int level = Integer.valueOf(jH.name.substring(jH.name.length()-1));
-            jH.name = jH.name.substring(0, jH.name.length()-1);
+            int level = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
+            jH.name = jH.name.substring(0, jH.name.length() - 1);
             cleanStat(jH.atk);
             cleanStat(jH.HP);
             cleanStat(jH.def);
             cleanStat(jH.res);
             cleanStat(jH.speed);
             int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            switch(level) {
+            switch (level) {
                 case 4:
                     fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
                 case 5:
@@ -101,10 +125,11 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
     protected void onResume() {
         super.onResume();
         try {
-            initFromCombo();
-            collection = HeroCollection.loadFromStorage(getBaseContext());
+            initHeroData();
         } catch (IOException e) {
         }
+        collection = HeroCollection.loadFromStorage(getBaseContext());
+
 
         final Spinner spinnerHeroes = (Spinner) findViewById(R.id.spinner_heroes);
         spinnerHeroes.setOnItemSelectedListener(new HeroSpinnerListener());
@@ -298,14 +323,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
 
     }
 
-    private void startCollectionActivity() {
-        Intent intent = new Intent(getBaseContext(), CollectionActivity.class);
-        startActivity(intent);
-    }
-
     HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues) {
         return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues);
     }
-
-
 }

@@ -10,7 +10,7 @@
     <item
         android:id="@+id/gotocollection"
         android:icon="@drawable/collection"
-        android:title="@string/app_name"
+        android:title="@string/collection"
         app:showAsAction="ifRoom" />
 
     <item android:id="@+id/copycollectiontoclipboard"
