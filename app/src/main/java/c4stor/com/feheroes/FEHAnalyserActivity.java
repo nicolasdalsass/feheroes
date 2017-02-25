@@ -30,10 +30,9 @@ import java.util.TreeMap;
 
 public class FEHAnalyserActivity extends ToolbaredActivity {
 
-    private static boolean webSyncDone = false;
-
     Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
+    Map<String, Hero> threeStarsMap = new TreeMap<>();
     Map<String, Hero> refMap = fiveStarsMap;
     int[] selectedSpinners = new int[]{1, 1, 1, 1, 1};
 
@@ -53,24 +52,17 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         }
     }
 
+
     private void initHeroData() throws IOException {
         File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
-        if (dataFile.exists()) {
-            try {
-                initFromInputStream(new FileInputStream(dataFile));
-            } catch (Exception e) {
-                initFromCombo();
-            }
-        } else {
+//        if (dataFile.exists()) {
+//            try {
+//                initFromInputStream(new FileInputStream(dataFile));
+//            } catch (Exception e) {
+//                initFromCombo();
+//            }
+//        } else {
             initFromCombo();
-        }
-
-//        File wikiFile = new File(getBaseContext().getFilesDir(),"wiki.data");
-//        if(wikiFile.exists()){
-//            WikiParser parser = new WikiParser(getBaseContext());
-//            parser.parse(wikiFile);
-//            parser.enrichMap(fourStarsMap, parser.fourStarsMap);
-//            parser.enrichMap(fiveStarsMap, parser.fiveStarsMap);
 //        }
     }
 
@@ -93,10 +85,15 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
             cleanStat(jH.speed);
             int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
             switch (level) {
+                case 3:
+                    threeStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
                 case 4:
                     fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
                 case 5:
                     fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
             }
             line = reader.readLine();
         }
@@ -163,6 +160,19 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                         spinnerHeroes.setSelection(newPositionb);
                         refMap = fourStarsMap;
                         break;
+                    case 2:
+                        String heroSelectedc = "";
+                        if (spinnerHeroes.getSelectedItem() != null)
+                            heroSelectedc = ((Hero) spinnerHeroes.getSelectedItem()).name;
+                        Hero[] threeStarValues = threeStarsMap.values().toArray(new Hero[]{});
+                        int newPositionc = getNewPosition(heroSelectedc, threeStarValues);
+                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(getBaseContext(), threeStarValues);
+                        threeStarsAdapter.notifyDataSetChanged();
+                        spinnerHeroes.setAdapter(threeStarsAdapter);
+                        spinnerHeroes.setSelection(newPositionc);
+                        refMap = threeStarsMap;
+                        break;
+
                 }
             }
 
@@ -200,10 +210,13 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                 resource_id, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        if (refMap == fourStarsMap)
+        if (refMap == threeStarsMap) {
+            spinner.setSelection(2);
+        } else if (refMap == fourStarsMap) {
             spinner.setSelection(1);
-        else
+        } else {
             spinner.setSelection(0);
+        }
     }
 
 

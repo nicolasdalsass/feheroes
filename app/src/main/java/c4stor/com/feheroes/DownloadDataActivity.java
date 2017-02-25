@@ -145,11 +145,11 @@ public class DownloadDataActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(getBaseContext(), FEHAnalyserActivity.class);
                 startActivity(intent);
-            } else {
+            } /*else {
                 mProgressDialog.setIndeterminate(true);
                 final DownloadTask wikiDL = new DownloadTask(DownloadDataActivity.this, "wiki.data", true);
                 wikiDL.execute("http://feheroes.wiki/stats/stats.json");
-            }
+            }*/
         }
     }
 }

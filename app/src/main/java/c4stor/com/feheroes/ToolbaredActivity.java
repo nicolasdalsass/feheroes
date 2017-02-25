@@ -16,12 +16,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
+
 /**
  * Created by Nicolas on 19/02/2017.
  */
 
 public abstract class ToolbaredActivity extends AppCompatActivity {
 
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     protected abstract int getLayoutResource();
 
@@ -41,6 +44,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         myToolbar.setTitle(R.string.app_name);
         myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
         setSupportActionBar(myToolbar);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void startCollectionActivity() {
