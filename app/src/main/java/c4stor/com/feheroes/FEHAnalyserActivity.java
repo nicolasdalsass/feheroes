@@ -1,6 +1,7 @@
 package c4stor.com.feheroes;
 
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -30,75 +31,9 @@ import java.util.TreeMap;
 
 public class FEHAnalyserActivity extends ToolbaredActivity {
 
-    Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
-    Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
-    Map<String, Hero> threeStarsMap = new TreeMap<>();
-    Map<String, Hero> refMap = fiveStarsMap;
-    int[] selectedSpinners = new int[]{1, 1, 1, 1, 1};
 
-    private HeroCollection collection = new HeroCollection();
-
-    private String capitalize(final String line) {
-        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-    }
-
-    private Gson gson = new Gson();
-
-    private void cleanStat(int[] stat) {
-        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
-            stat[4] = -1;
-            stat[5] = -1;
-            stat[3] = -1;
-        }
-    }
-
-
-    private void initHeroData() throws IOException {
-        File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
-//        if (dataFile.exists()) {
-//            try {
-//                initFromInputStream(new FileInputStream(dataFile));
-//            } catch (Exception e) {
-//                initFromCombo();
-//            }
-//        } else {
-            initFromCombo();
-//        }
-    }
-
-    private void initFromCombo() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
-        initFromInputStream(inputStream);
-    }
-
-    private void initFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
-            int level = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
-            jH.name = jH.name.substring(0, jH.name.length() - 1);
-            cleanStat(jH.atk);
-            cleanStat(jH.HP);
-            cleanStat(jH.def);
-            cleanStat(jH.res);
-            cleanStat(jH.speed);
-            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            switch (level) {
-                case 3:
-                    threeStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 4:
-                    fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 5:
-                    fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-            }
-            line = reader.readLine();
-        }
-    }
-
+    protected Map<String, Hero> refMap = new TreeMap<>();
+    private int[] selectedSpinners = new int[]{1,1,1,1,1};
 
     @Override
     protected int getLayoutResource() {
@@ -113,6 +48,10 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbar.setTitle(R.string.app_name);
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
+        setSupportActionBar(myToolbar);
         onResume();
 
     }

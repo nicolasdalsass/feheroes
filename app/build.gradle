@@ -7,13 +7,21 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 34
-        versionName "7.0"
+        versionCode 41
+        versionName "7.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        beta {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        alpha {
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -24,7 +32,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile group: 'com.google.code.gson', name: 'gson', version: '2.4'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.7'
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.google.android.gms:play-services-ads:10.2.0'
     compile 'com.android.support:support-v4:25.2.0'

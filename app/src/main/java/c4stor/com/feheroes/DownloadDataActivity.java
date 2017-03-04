@@ -35,7 +35,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         mProgressDialog.setCancelable(true);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", true);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/combo");
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/comboV2702");
 
     }
 

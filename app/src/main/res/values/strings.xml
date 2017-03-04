@@ -125,4 +125,13 @@
     <string name="export_collection">Export collection</string>
     <string name="exportcollok">Collection copied to clipboard</string>
     <string name="collection">Collection</string>
+    <string name="lachesis">lachesis</string>
+    <string name="eldigan">eldigan</string>
+    <string name="sanaki">sanaki</string>
+    <string name="olwen">olwen</string>
+    <string name="reinhardt">reinhardt</string>
+    <string name="klein">klein</string>
+    <string name="sort_by_name">Name</string>
+    <string name="by_stars">By Rarity</string>
+    <string name="by_add_date">Date</string>
 </resources>

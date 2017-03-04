@@ -17,6 +17,16 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.gson.Gson;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Created by Nicolas on 19/02/2017.
@@ -36,14 +46,78 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return false;
     }
 
+    protected Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
+    protected Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
+    protected Map<String, Hero> threeStarsMap = new TreeMap<>();
+
+    protected HeroCollection collection = new HeroCollection();
+
+    protected String capitalize(final String line) {
+        return Character.toUpperCase(line.charAt(0)) + line.substring(1);
+    }
+
+    protected Gson gson = new Gson();
+
+    protected void cleanStat(int[] stat) {
+        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
+            stat[4] = -1;
+            stat[5] = -1;
+            stat[3] = -1;
+        }
+    }
+
+
+    protected void initHeroData() throws IOException {
+        File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
+        if (dataFile.exists()) {
+            try {
+                initFromInputStream(new FileInputStream(dataFile));
+            } catch (Exception e) {
+                initFromCombo();
+            }
+        } else {
+            initFromCombo();
+        }
+    }
+
+    protected void initFromCombo() throws IOException {
+        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
+        initFromInputStream(inputStream);
+    }
+
+    protected void initFromInputStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = reader.readLine();
+        while (line != null) {
+            Hero jH = gson.fromJson(line, Hero.class);
+            int level = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
+            jH.name = jH.name.substring(0, jH.name.length() - 1);
+            cleanStat(jH.atk);
+            cleanStat(jH.HP);
+            cleanStat(jH.def);
+            cleanStat(jH.res);
+            cleanStat(jH.speed);
+            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
+            switch (level) {
+                case 3:
+                    threeStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
+                case 4:
+                    fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
+                case 5:
+                    fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
+                    break;
+            }
+            line = reader.readLine();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.app_name);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
+
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 

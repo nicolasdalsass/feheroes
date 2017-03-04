@@ -20,8 +20,8 @@
     <string name="camilla">camilla</string>
     <string name="camus">camus</string>
     <string name="catria">catria</string>
-    <string name="cecilia">cécilia</string>
-    <string name="cherche">cherche</string>
+    <string name="cecilia">cecilia</string>
+    <string name="cherche">zelcher</string>
     <string name="chrom">chrom</string>
     <string name="clarine">clarine</string>
     <string name="cordelia">cordélia</string>
@@ -119,4 +119,13 @@
     <string name="export_collection">Exporter la collection</string>
     <string name="exportcollok">Collection copiée dans le presse-papier</string>
     <string name="collection">Collection</string>
+    <string name="eldigan">eldigan</string>
+    <string name="klein">klein</string>
+    <string name="olwen">olwen</string>
+    <string name="lachesis">lachesis</string>
+    <string name="reinhardt">reinhardt</string>
+    <string name="sanaki">sanaki</string>
+    <string name="by_stars">Rang</string>
+    <string name="by_add_date">Date</string>
+    <string name="sort_by_name">Nom</string>
 </resources>

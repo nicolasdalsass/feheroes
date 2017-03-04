@@ -1,0 +1,33 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/gotofinder"
+        android:icon="@drawable/search"
+        android:title="@string/app_name"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/sort"
+        android:icon="@drawable/sorticon"
+        android:title="Sort"
+        app:showAsAction="ifRoom">
+        <menu>
+            <item android:id="@+id/sortByName" android:title="@string/sort_by_name"></item>
+            <item android:id="@+id/sortByStars" android:title="@string/by_stars"></item>
+            <item android:id="@+id/sortByDate" android:title="@string/by_add_date"></item>
+
+        </menu>
+
+    </item>
+
+    <item android:id="@+id/copycollectiontoclipboard"
+        android:title="@string/export_collection"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/contact"
+        android:title="@string/contactme"
+        app:showAsAction="never" />
+
+</menu>
