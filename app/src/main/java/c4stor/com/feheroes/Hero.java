@@ -37,4 +37,9 @@ public class Hero implements Serializable {
             }
         }
     }
+
+    @Override
+    public String toString(){
+        return name;
+    }
 }

@@ -1,46 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/popupHeroName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"
-        android:paddingTop="4dp"
         android:paddingLeft="4dp"
-        android:paddingRight="4dp"/>
+        android:paddingRight="4dp"
+        android:paddingTop="4dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/colorPrimaryLight"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"/>
+        android:background="@color/colorPrimaryLight" />
 
     <TextView
         android:id="@+id/popupHeroHP"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/popupHeroAtk"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/popupHeroSpd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/popupHeroDef"
@@ -54,15 +55,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="18sp"
-        />
+        android:textSize="18sp" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="@color/colorPrimaryLight"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="4dp"/>
+        android:background="@color/colorPrimaryLight" />
 
 
     <TextView
@@ -70,15 +70,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="18sp" />
 
-
-    <Button
-        android:id="@+id/popupOk"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:gravity="center"
-        android:text="Ok" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:paddingBottom="4dp">
+
+        <Button
+            android:id="@+id/popupOk"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/roundbutton"
+            android:text="Ok"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="17sp"
+            android:layout_marginBottom="4dp"/>
+    </LinearLayout>
 </LinearLayout>

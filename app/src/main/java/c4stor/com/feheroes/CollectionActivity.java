@@ -1,6 +1,5 @@
 package c4stor.com.feheroes;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,17 +14,16 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -36,13 +34,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class CollectionActivity extends ToolbaredActivity {
 
     private HeroCollection heroCollection;
 
     private Comparator<HeroRoll> sorting = null;
+
+    private Map<HeroRoll, Integer> statVisibility = new HashMap<HeroRoll, Integer>();
+    private int defaultVisibility = View.GONE;
 
     @Override
     protected int getLayoutResource() {
@@ -110,16 +113,14 @@ public class CollectionActivity extends ToolbaredActivity {
             v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    HeroRoll rollClicked;
-                    if (sorting != null) {
-                        List<HeroRoll> collCopy = new ArrayList<>(heroCollection);
-                        Collections.sort(collCopy, sorting);
-                        rollClicked = collCopy.get(position);
+                    ViewHolder vh = (ViewHolder) view.getTag();
+                    if (vh.extraData.getVisibility() != View.GONE) {
+                        vh.extraData.setVisibility(View.GONE);
+                        statVisibility.remove(vh.hero);
                     } else {
-                        rollClicked = heroCollection.get(position);
+                        vh.extraData.setVisibility(View.VISIBLE);
+                        statVisibility.put(vh.hero, View.VISIBLE);
                     }
-                    showHeroDialog(rollClicked);
-                    Log.i("", "Long click at pos " + position);
                 }
             });
             HeroCollectionAdapter adapter = new HeroCollectionAdapter(getBaseContext(), heroCollection, sorting);
@@ -127,71 +128,6 @@ public class CollectionActivity extends ToolbaredActivity {
             adapter.notifyDataSetChanged();
         } else
             v.setVisibility(View.INVISIBLE);
-    }
-
-    public void showHeroDialog(HeroRoll hero) {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.heropopup);
-
-
-        final TextView heroName = (TextView) dialog.findViewById(R.id.popupHeroName);
-        final TextView heroHP = (TextView) dialog.findViewById(R.id.popupHeroHP);
-        final TextView heroAtk = (TextView) dialog.findViewById(R.id.popupHeroAtk);
-        final TextView heroSpd = (TextView) dialog.findViewById(R.id.popupHeroSpd);
-        final TextView heroDef = (TextView) dialog.findViewById(R.id.popupHeroDef);
-        final TextView heroRes = (TextView) dialog.findViewById(R.id.popupHeroRes);
-        Button okBtn = (Button) dialog.findViewById(R.id.popupOk);
-        heroName.setText(hero.getDisplayName(getBaseContext()));
-        Hero statHero = hero.hero;
-        if (hero.stars == 3 && threeStarsMap.containsKey(hero.hero.name)) {
-            statHero = threeStarsMap.get(hero.hero.name);
-        }
-        if (hero.stars == 4 && fourStarsMap.containsKey(hero.hero.name)) {
-            statHero = fourStarsMap.get(hero.hero.name);
-        }
-        if (hero.stars == 5 && fiveStarsMap.containsKey(hero.hero.name)) {
-            statHero = fiveStarsMap.get(hero.hero.name);
-        }
-        makePopupStat(heroHP, hero, statHero.HP, getResources().getString(R.string.hp));
-        makePopupStat(heroAtk, hero, statHero.atk, getResources().getString(R.string.atk));
-        makePopupStat(heroSpd, hero, statHero.speed, getResources().getString(R.string.spd));
-        makePopupStat(heroDef, hero, statHero.def, getResources().getString(R.string.def));
-        makePopupStat(heroRes, hero, statHero.res, getResources().getString(R.string.res));
-        okBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
-
-        TextView bstView = (TextView) dialog.findViewById(R.id.popupBST);
-        if (heroAtk.getText() != "?" && heroHP.getText() != "?" && heroDef.getText() != "?" && heroRes.getText() != "?" && heroSpd.getText() != "?") {
-            int bst = Integer.valueOf(heroAtk.getText().toString()) +
-                    Integer.valueOf(heroHP.getText().toString()) +
-                    Integer.valueOf(heroDef.getText().toString())+
-                    Integer.valueOf(heroSpd.getText().toString())+
-                    Integer.valueOf(heroRes.getText().toString());
-            bstView.setText(""+bst);
-        } else {
-            bstView.setText("?");
-        }
-
-        dialog.show();
-    }
-
-    private void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, String statName) {
-
-        if (hero.boons != null && hero.boons.contains(statName)) {
-            statTV.setText(makeText(stat[5]));
-            statTV.setTextColor(getResources().getColor(R.color.high_green));
-        } else if (hero.banes != null && hero.banes.contains(statName)) {
-            statTV.setText(makeText(stat[3]));
-            statTV.setTextColor(getResources().getColor(R.color.low_red));
-        } else {
-            statTV.setText(makeText(stat[4]));
-            statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
     }
 
     private String makeText(int i) {
@@ -211,6 +147,7 @@ public class CollectionActivity extends ToolbaredActivity {
                         return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
                     }
                 };
+                defaultVisibility=View.GONE;
                 initListView();
                 return true;
 
@@ -225,6 +162,72 @@ public class CollectionActivity extends ToolbaredActivity {
                     }
                 };
                 initListView();
+                defaultVisibility = View.GONE;
+                return true;
+            case R.id.sortByHP:
+                sorting = new Comparator<HeroRoll>() {
+                    @Override
+                    public int compare(HeroRoll o1, HeroRoll o2) {
+                        if (o1.getHP(getBaseContext()) != o2.getHP(getBaseContext()))
+                            return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext());
+                        else
+                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+                    }
+                };
+                initListView();
+                defaultVisibility = View.VISIBLE;
+                return true;
+            case R.id.sortByAtk:
+                sorting = new Comparator<HeroRoll>() {
+                    @Override
+                    public int compare(HeroRoll o1, HeroRoll o2) {
+                        if (o1.getAtk(getBaseContext()) != o2.getAtk(getBaseContext()))
+                            return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext());
+                        else
+                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+                    }
+                };
+                initListView();
+                defaultVisibility = View.VISIBLE;
+                return true;
+            case R.id.sortBySpd:
+                sorting = new Comparator<HeroRoll>() {
+                    @Override
+                    public int compare(HeroRoll o1, HeroRoll o2) {
+                        if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
+                            return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext());
+                        else
+                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+                    }
+                };
+                initListView();
+                defaultVisibility = View.VISIBLE;
+                return true;
+            case R.id.sortByDef:
+                sorting = new Comparator<HeroRoll>() {
+                    @Override
+                    public int compare(HeroRoll o1, HeroRoll o2) {
+                        if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
+                            return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext());
+                        else
+                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+                    }
+                };
+                initListView();
+                defaultVisibility = View.VISIBLE;
+                return true;
+            case R.id.sortByRes:
+                sorting = new Comparator<HeroRoll>() {
+                    @Override
+                    public int compare(HeroRoll o1, HeroRoll o2) {
+                        if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
+                            return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext());
+                        else
+                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+                    }
+                };
+                initListView();
+                defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortByDate:
                 sorting = null;
@@ -300,6 +303,12 @@ public class CollectionActivity extends ToolbaredActivity {
                 holder.boons = (TextView) v.findViewById(R.id.boons);
                 holder.banes = (TextView) v.findViewById(R.id.banes);
                 holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
+                holder.extraData = (LinearLayout) v.findViewById(R.id.hero40Line);
+                holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
+                holder.lvl40Atk = (TextView) v.findViewById(R.id.hero40LineAtk);
+                holder.lvl40Spd = (TextView) v.findViewById(R.id.hero40LineSpd);
+                holder.lvl40Def = (TextView) v.findViewById(R.id.hero40LineDef);
+                holder.lvl40Res = (TextView) v.findViewById(R.id.hero40LineRes);
                 // associate the holder with the view for later lookup
                 v.setTag(holder);
             } else {
@@ -308,6 +317,7 @@ public class CollectionActivity extends ToolbaredActivity {
             }
 
             final HeroRoll hero = getItemAtPos(position);
+            holder.hero = hero;
 
             int drawableId = getContext().getResources().getIdentifier(hero.hero.name.toLowerCase(), "drawable", getContext().getPackageName());
             Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
@@ -347,17 +357,63 @@ public class CollectionActivity extends ToolbaredActivity {
                     HeroCollectionAdapter.this.notifyDataSetChanged();
                 }
             });
+
+            Hero statHero = hero.hero;
+            if (hero.stars == 3 && threeStarsMap.containsKey(hero.hero.name)) {
+                statHero = threeStarsMap.get(hero.hero.name);
+            }
+            if (hero.stars == 4 && fourStarsMap.containsKey(hero.hero.name)) {
+                statHero = fourStarsMap.get(hero.hero.name);
+            }
+            if (hero.stars == 5 && fiveStarsMap.containsKey(hero.hero.name)) {
+                statHero = fiveStarsMap.get(hero.hero.name);
+            }
+            makePopupStat(holder.lvl40HP, hero, statHero.HP, getResources().getString(R.string.hp));
+            makePopupStat(holder.lvl40Atk, hero, statHero.atk, getResources().getString(R.string.atk));
+            makePopupStat(holder.lvl40Spd, hero, statHero.speed, getResources().getString(R.string.spd));
+            makePopupStat(holder.lvl40Def, hero, statHero.def, getResources().getString(R.string.def));
+            makePopupStat(holder.lvl40Res, hero, statHero.res, getResources().getString(R.string.res));
+            if (statVisibility.containsKey(hero)) {
+                //noinspection WrongConstant
+                holder.extraData.setVisibility(statVisibility.get(hero));
+            } else {
+                holder.extraData.setVisibility(defaultVisibility);
+            }
             return v;
+        }
+
+
+        private void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, String statName) {
+
+            if (hero.boons != null && hero.boons.contains(statName)) {
+                statTV.setText(statName+": "+makeText(stat[5]));
+                statTV.setTextColor(getResources().getColor(R.color.high_green));
+            } else if (hero.banes != null && hero.banes.contains(statName)) {
+                statTV.setText(statName+": "+makeText(stat[3]));
+                statTV.setTextColor(getResources().getColor(R.color.low_red));
+            } else {
+                statTV.setText(statName+": "+makeText(stat[4]));
+                statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
+            }
         }
     }
 
     static class ViewHolder {
+        HeroRoll hero;
         ImageView collImage;
         TextView collName;
         TextView rarity;
         TextView boons;
         TextView banes;
         Button deleteButton;
+        LinearLayout extraData;
+        TextView lvl40HP;
+        TextView lvl40Atk;
+        TextView lvl40Spd;
+        TextView lvl40Def;
+        TextView lvl40Res;
+        Boolean visible = false;
+
         int position;
     }
 }
