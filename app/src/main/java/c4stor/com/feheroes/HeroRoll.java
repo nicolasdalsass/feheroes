@@ -51,6 +51,19 @@ public class HeroRoll implements Serializable {
         return getStat(c, R.string.spd, hero.speed);
     }
 
+    public int getBST(Context c) {
+        int hp= getHP(c);
+        int a = getAtk(c);
+        int d = getDef(c);
+        int s = getSpeed(c);
+        int r = getRes(c);
+        if(a<0 || hp <0 || d <0 || s <0 || r <0){
+            return -1;
+        } else {
+            return hp+a+d+s+r;
+        }
+    }
+
     public int getDef(Context c) {
         return getStat(c, R.string.def, hero.def);
     }

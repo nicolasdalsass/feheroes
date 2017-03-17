@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -46,9 +46,11 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return false;
     }
 
-    protected Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
-    protected Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
-    protected Map<String, Hero> threeStarsMap = new TreeMap<>();
+    protected static Map<String, Hero> fiveStarsMap = null;
+    protected static Map<String, Hero> fourStarsMap = null;
+    protected static Map<String, Hero> threeStarsMap = null;
+    protected static Map<Integer, Skill> skills = null;
+
 
     protected HeroCollection collection = new HeroCollection();
 
@@ -66,26 +68,63 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         }
     }
 
-
-    protected void initHeroData() throws IOException {
-        File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
-        if (dataFile.exists()) {
-            try {
-                initFromInputStream(new FileInputStream(dataFile));
-            } catch (Exception e) {
-                initFromCombo();
+    protected void initSkills() throws IOException {
+        if(skills==null) {
+            skills = new HashMap<>();
+            File dataFile = new File(getBaseContext().getFilesDir(), "skills.data");
+            if (dataFile.exists()) {
+                try {
+                    initSkillsFromInputStream(new FileInputStream(dataFile));
+                } catch (Exception e) {
+                    initSkillsLocally();
+                }
+            } else {
+                initSkillsLocally();
             }
-        } else {
-            initFromCombo();
         }
     }
 
-    protected void initFromCombo() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
-        initFromInputStream(inputStream);
+    protected void initSkillsLocally() throws IOException {
+        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.skillsjson);
+        initSkillsFromInputStream(inputStream);
     }
 
-    protected void initFromInputStream(InputStream inputStream) throws IOException {
+    protected void initSkillsFromInputStream(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = reader.readLine();
+        while (line != null) {
+            if (line.length() > 0) {
+                Skill skill = gson.fromJson(line, Skill.class);
+                skills.put(skill.id, skill);
+            }
+            line = reader.readLine();
+        }
+    }
+
+    protected void initHeroData() throws IOException {
+        if(threeStarsMap==null) {
+            threeStarsMap=new TreeMap<>();
+            fourStarsMap=new TreeMap<>();
+            fiveStarsMap=new TreeMap<>();
+            File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
+            if (dataFile.exists()) {
+                try {
+                    initHeroesFromInputStream(new FileInputStream(dataFile));
+                } catch (Exception e) {
+                    initHeroesFromCombo();
+                }
+            } else {
+                initHeroesFromCombo();
+            }
+        }
+    }
+
+    protected void initHeroesFromCombo() throws IOException {
+        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
+        initHeroesFromInputStream(inputStream);
+    }
+
+    protected void initHeroesFromInputStream(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
@@ -117,8 +156,12 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
-
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        try {
+            initHeroData();
+            initSkills();
+        } catch (IOException e) {
+        }
     }
 
     private void startCollectionActivity() {
@@ -165,17 +208,17 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     }
 
     private void copyCollectionToClipboard() {
-       HeroCollection c=  HeroCollection.loadFromStorage(getBaseContext());
+        HeroCollection c = HeroCollection.loadFromStorage(getBaseContext());
         StringBuilder sb = new StringBuilder();
-        for(HeroRoll hero : c){
+        for (HeroRoll hero : c) {
             sb.append(hero.toString());
             sb.append("\n");
         }
         ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         ClipData clip = ClipData.newPlainText("HeroCollection", sb.toString());
-        Log.i("",sb.toString());
+        Log.i("", sb.toString());
         clipboard.setPrimaryClip(clip);
-        Toast.makeText(getBaseContext(), R.string.exportcollok,Toast.LENGTH_SHORT).show();
+        Toast.makeText(getBaseContext(), R.string.exportcollok, Toast.LENGTH_SHORT).show();
     }
 
     public static class ContactMeDialogFragment extends DialogFragment {
@@ -195,7 +238,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     }
 
     private void displayContactDialog() {
-        new ContactMeDialogFragment().show(getSupportFragmentManager(),"");
+        new ContactMeDialogFragment().show(getSupportFragmentManager(), "");
     }
 
 

@@ -29,13 +29,13 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage("Downloading latest data");
+        mProgressDialog.setMessage(getString(R.string.downloading));
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         mProgressDialog.setCancelable(true);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", true);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/comboV2702");
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1403withskills");
 
     }
 

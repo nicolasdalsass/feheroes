@@ -30,6 +30,7 @@ public class WikiParser {
     }
     Map<String, Hero> fiveStarsMap = new TreeMap<String, Hero>();
     Map<String, Hero> fourStarsMap = new TreeMap<String, Hero>();
+    Map<String, Hero> threeStarsMap = new TreeMap<String, Hero>();
 
 
     private GsonBuilder builder = new GsonBuilder();
@@ -44,8 +45,7 @@ public class WikiParser {
         }
     }
 
-    public void parse(File wikiFile) throws IOException {
-        InputStream is = new FileInputStream(wikiFile);
+    public void parse(InputStream is) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(is));
         StringBuilder sb = new StringBuilder();
         String line = null;
@@ -58,18 +58,18 @@ public class WikiParser {
 
     public void parse(String jsondata) {
 
-        LinkedTreeMap<String, LinkedTreeMap<String, LinkedTreeMap<String, List<Double>>>> o = (LinkedTreeMap) builder.create().fromJson(jsondata, Object.class);
+        LinkedTreeMap<String, LinkedTreeMap<String, LinkedTreeMap<String, List<String>>>> o = (LinkedTreeMap) builder.create().fromJson(jsondata, Object.class);
 
-        for (Map.Entry<String, LinkedTreeMap<String, LinkedTreeMap<String, List<Double>>>> entry : o.entrySet()) {
+        for (Map.Entry<String, LinkedTreeMap<String, LinkedTreeMap<String, List<String>>>> entry : o.entrySet()) {
 
             if (entry.getValue().containsKey("4")) {
 
                 String key = "4";
-                List<Double> atkStuff = entry.getValue().get(key).get("atk");
-                List<Double> hpStuff = entry.getValue().get(key).get("hp");
-                List<Double> defStuff = entry.getValue().get(key).get("def");
-                List<Double> resStuff = entry.getValue().get(key).get("res");
-                List<Double> spdStuff = entry.getValue().get(key).get("spd");
+                List<String> atkStuff = entry.getValue().get(key).get("atk");
+                List<String> hpStuff = entry.getValue().get(key).get("hp");
+                List<String> defStuff = entry.getValue().get(key).get("def");
+                List<String> resStuff = entry.getValue().get(key).get("res");
+                List<String> spdStuff = entry.getValue().get(key).get("spd");
                 Hero hero = new Hero();
                 hero.name = entry.getKey();
                 hero.atk = makeStatFromStuff(atkStuff);
@@ -86,11 +86,11 @@ public class WikiParser {
             if (entry.getValue().containsKey("5")) {
 
                 String key = "5";
-                List<Double> atkStuff = entry.getValue().get(key).get("atk");
-                List<Double> hpStuff = entry.getValue().get(key).get("hp");
-                List<Double> defStuff = entry.getValue().get(key).get("def");
-                List<Double> resStuff = entry.getValue().get(key).get("res");
-                List<Double> spdStuff = entry.getValue().get(key).get("spd");
+                List<String> atkStuff = entry.getValue().get(key).get("atk");
+                List<String> hpStuff = entry.getValue().get(key).get("hp");
+                List<String> defStuff = entry.getValue().get(key).get("def");
+                List<String> resStuff = entry.getValue().get(key).get("res");
+                List<String> spdStuff = entry.getValue().get(key).get("spd");
                 Hero hero = new Hero();
                 hero.name = entry.getKey();
                 hero.atk = makeStatFromStuff(atkStuff);
@@ -103,6 +103,27 @@ public class WikiParser {
                     fiveStarsMap.put(capitalize(context.getResources().getString(nameIdentifier)), hero);
                 }
             }
+
+            if (entry.getValue().containsKey("3")) {
+
+                String key = "3";
+                List<String> atkStuff = entry.getValue().get(key).get("atk");
+                List<String> hpStuff = entry.getValue().get(key).get("hp");
+                List<String> defStuff = entry.getValue().get(key).get("def");
+                List<String> resStuff = entry.getValue().get(key).get("res");
+                List<String> spdStuff = entry.getValue().get(key).get("spd");
+                Hero hero = new Hero();
+                hero.name = entry.getKey();
+                hero.atk = makeStatFromStuff(atkStuff);
+                hero.HP = makeStatFromStuff(hpStuff);
+                hero.def = makeStatFromStuff(defStuff);
+                hero.res = makeStatFromStuff(resStuff);
+                hero.speed = makeStatFromStuff(spdStuff);
+                int nameIdentifier = context.getResources().getIdentifier(hero.name.toLowerCase(), "string", context.getPackageName());
+                if(nameIdentifier!=0){
+                    threeStarsMap.put(capitalize(context.getResources().getString(nameIdentifier)), hero);
+                }
+            }
         }
 
     }
@@ -112,14 +133,14 @@ public class WikiParser {
     }
 
 
-    private int[] makeStatFromStuff(List<Double> stuff) {
+    private int[] makeStatFromStuff(List<String> stuff) {
         int[] result = new int[]{-1, -1, -1, -1, -1, -1};
         for (int i = 0; i < stuff.size(); i++) {
             try {
-                int j = stuff.get(i).intValue();
+                int j = Integer.valueOf(stuff.get(i));
                 result[i] = j;
 
-            } catch (ClassCastException e) {
+            } catch (NumberFormatException e) {
 
             }
         }

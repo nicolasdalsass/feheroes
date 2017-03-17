@@ -1,5 +1,7 @@
 package c4stor.com.feheroes;
 
+import android.util.Log;
+
 import java.io.Serializable;
 
 /**
@@ -20,11 +22,13 @@ public class Hero implements Serializable {
     public int[] def;
     public int[] speed;
     public int[] res;
+    public int[] skills1;
+    public int[] skills40;
 
 
     public void mergeWith(Hero extraData) {
         mergeStat(this.HP, extraData.HP);
-        mergeStat(this.atk, extraData.atk);
+//        mergeStat(this.atk, extraData.atk);
         mergeStat(this.def, extraData.def);
         mergeStat(this.speed, extraData.speed);
         mergeStat(this.res, extraData.res);
@@ -34,6 +38,7 @@ public class Hero implements Serializable {
         for (int i = 0; i < thisStat.length; i++) {
             if (otherStat[i] != -1 && thisStat[i] != otherStat[i]) {
                 thisStat[i] = otherStat[i];
+                Log.d("","Found diff");
             }
         }
     }

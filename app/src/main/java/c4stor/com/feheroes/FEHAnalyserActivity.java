@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,14 +18,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +28,10 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
 
 
     protected Map<String, Hero> refMap = new TreeMap<>();
-    private int[] selectedSpinners = new int[]{1,1,1,1,1};
+    private int[] selectedSpinners = new int[]{1, 1, 1, 1, 1};
+    private int[] neutralSpinners = new int[]{1, 1, 1, 1, 1};
+    private boolean resetSpinners = false;
+    private static boolean nakedHeroes = false;
 
     @Override
     protected int getLayoutResource() {
@@ -56,14 +54,37 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
+        MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
+        if (nakedHeroes)
+            nakedView.setTitle(R.string.no_skills);
+        else
+            nakedView.setTitle(R.string.skills_on);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toggleNakedView:
+                nakedHeroes = !nakedHeroes;
+                invalidateOptionsMenu();
+                Hero hero = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
+                populateTableWithHero(hero);
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            initHeroData();
-        } catch (IOException e) {
-        }
         collection = HeroCollection.loadFromStorage(getBaseContext());
 
 
@@ -74,6 +95,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         spinnerStars.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                resetSpinners = false;
                 switch (position) {
                     case 0:
                         String heroSelected = "";
@@ -165,6 +187,9 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
             Hero selectedHero = (Hero) parent.getItemAtPosition(position);
+            if (resetSpinners)
+                selectedSpinners = neutralSpinners.clone();
+            resetSpinners = true;
             FEHAnalyserActivity.this.populateTableWithHero(selectedHero);
 
         }
@@ -214,12 +239,15 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                 TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
         vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
 
+        int[] lvl1mods = calculateMods(hero, 1, nakedHeroes);
+        int[] lvl40mods = calculateMods(hero, 40, nakedHeroes);
 
-        final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), selectedSpinners, 0, hero.HP);
-        final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), selectedSpinners, 1, hero.atk);
-        final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), selectedSpinners, 2, hero.speed);
-        final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), selectedSpinners, 3, hero.def);
-        final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), selectedSpinners, 4, hero.res);
+
+        final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), selectedSpinners, 0, hero.HP, lvl1mods[0], lvl40mods[0]);
+        final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), selectedSpinners, 1, hero.atk, lvl1mods[1], lvl40mods[1]);
+        final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), selectedSpinners, 2, hero.speed, lvl1mods[2], lvl40mods[2]);
+        final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), selectedSpinners, 3, hero.def, lvl1mods[3], lvl40mods[3]);
+        final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), selectedSpinners, 4, hero.res, lvl1mods[4], lvl40mods[4]);
         tv.addView(headers);
         tv.addView(vline);
 
@@ -238,11 +266,30 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         tv.addView(trDef);
         tv.addView(trRes);
 
+        TableRow skillsRow = new TableRow(this);
+        TextView skillsText = new TextView(this);
+        StringBuilder sb = new StringBuilder();
+        for (int skill : hero.skills40) {
+            Skill s = skills.get(skill);
+            sb.append(s.name).append(",");
+        }
+        skillsText.setText(sb.toString().substring(0, sb.toString().length() - 1));
+        skillsRow.addView(skillsText);
+        TableRow.LayoutParams params = new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.MATCH_PARENT);
+        params.span = 3;
+        tv.addView(skillsRow);
+        skillsRow.setLayoutParams(params);
+
         Button addButton = (Button) findViewById(R.id.addToCollectionBtn);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Hero h = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
+                int nameIdentifier = getBaseContext().getResources().getIdentifier(hero.name.toLowerCase(), "string", getBaseContext().getPackageName());
+                String localizedName = capitalize(getBaseContext().getString(nameIdentifier));
+
                 List<String> boons = new ArrayList<String>();
                 List<String> banes = new ArrayList<String>();
                 if (trDef.selectedPos == 0)
@@ -266,16 +313,43 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                 if (trMght.selectedPos == 2)
                     banes.add(trMght.attribute);
                 int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
-                HeroRoll hr = new HeroRoll(hero, stars, boons, banes);
+                HeroRoll hr = new HeroRoll(h, stars, boons, banes);
                 collection.add(hr);
                 collection.save(getBaseContext());
-                Toast.makeText(getBaseContext(), hero.name + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), localizedName + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();
             }
         });
 
     }
 
-    HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues) {
-        return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues);
+    HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues, int lvl1mod, int lvl40mod) {
+        return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues, lvl1mod, lvl40mod);
+    }
+
+    private int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
+
+        int[] result = new int[]{0, 0, 0, 0, 0};
+        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
+            for (int skill : hero.skills1) {
+                int[] mods = skills.get(skill).mods;
+                result[0] += mods[0];
+                result[1] += mods[1];
+                result[2] += mods[2];
+                result[3] += mods[3];
+                result[4] += mods[4];
+            }
+        } else {
+            if (hero.skills40 != null && nakedHeroes) {
+                for (int skill : hero.skills40) {
+                    int[] mods = skills.get(skill).mods;
+                    result[0] += mods[0];
+                    result[1] += mods[1];
+                    result[2] += mods[2];
+                    result[3] += mods[3];
+                    result[4] += mods[4];
+                }
+            }
+        }
+        return result;
     }
 }

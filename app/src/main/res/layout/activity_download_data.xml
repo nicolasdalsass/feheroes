@@ -8,6 +8,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="c4stor.com.feheroes.DownloadDataActivity">
+    tools:context="c4stor.com.feheroes.DownloadDataActivity"
+    android:layout_gravity="center|center_horizontal"
+    android:gravity="center|center_horizontal">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/ic_launcher"
+        android:minHeight="240dp"
+        android:minWidth="240dp"
+
+        />
 
 </RelativeLayout>

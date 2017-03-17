@@ -124,8 +124,18 @@
     <string name="sanaki">sanaki</string>
     <string name="reinhardt">reinhardt</string>
     <string name="olwen">olwen</string>
-    <string name="lachesis">olwen</string>
+    <string name="lachesis">lachesis</string>
     <string name="by_stars">Rank</string>
     <string name="by_add_date">Date</string>
     <string name="sort_by_name">Name</string>
+    <string name="bst">Σ</string>
+    <string name="downloading">Downloading latest data</string>
+    <string name="ninian">ninian</string>
+    <string name="lucius">lucius</string>
+    <string name="jaffar">jaffar</string>
+    <string name="rebecca">rebecca</string>
+    <string name="priscilla">priscilla</string>
+    <string name="karel">karel</string>
+    <string name="no_skills">Skills Off</string>
+    <string name="skills_on">Skills On</string>
 </resources>

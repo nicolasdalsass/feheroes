@@ -6,7 +6,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
-import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
@@ -17,9 +16,11 @@ import android.widget.TextView;
 public class Level1StatSpinnerAdapter implements SpinnerAdapter {
 
     private int[] baseStat;
+    private int mod;
 
-    public Level1StatSpinnerAdapter(int[] baseStat) {
+    public Level1StatSpinnerAdapter(int[] baseStat, int mod) {
         this.baseStat = baseStat;
+        this.mod = mod;
 
     }
 
@@ -45,12 +46,12 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
 
     @Override
     public Object getItem(int position) {
-        return baseStat[2-position];
+        return baseStat[2 - position] - mod;
     }
 
     @Override
     public long getItemId(int position) {
-        return baseStat[2-position];
+        return baseStat[2 - position] - mod;
     }
 
     @Override
@@ -61,19 +62,19 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView tv = new TextView(parent.getContext());
-        tv.setText(baseStat[2-position] + "");
+        tv.setText((baseStat[2 - position] - mod) + "");
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         tv.setGravity(Gravity.CENTER);
         int color = 0;
         switch (position) {
             case 0:
-                color=parent.getContext().getResources().getColor(R.color.high_green);
+                color = parent.getContext().getResources().getColor(R.color.high_green);
                 break;
             case 1:
-                color=parent.getContext().getResources().getColor(R.color.colorPrimary);
+                color = parent.getContext().getResources().getColor(R.color.colorPrimary);
                 break;
             case 2:
-                color=parent.getContext().getResources().getColor(R.color.low_red);
+                color = parent.getContext().getResources().getColor(R.color.low_red);
                 break;
 
         }

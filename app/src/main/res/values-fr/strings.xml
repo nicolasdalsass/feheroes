@@ -15,7 +15,7 @@
     <string name="bartre">bartre</string>
     <string name="beruka">beruka</string>
     <string name="bruno">bruno</string>
-    <string name="caeda">caeda</string>
+    <string name="caeda">shiida</string>
     <string name="cain">cain</string>
     <string name="camilla">camilla</string>
     <string name="camus">camus</string>
@@ -128,4 +128,14 @@
     <string name="by_stars">Rang</string>
     <string name="by_add_date">Date</string>
     <string name="sort_by_name">Nom</string>
+    <string name="bst">Σ</string>
+    <string name="downloading">Téléchargement des dernières données</string>
+    <string name="ninian">ninian</string>
+    <string name="lucius">lucius</string>
+    <string name="jaffar">jaffar</string>
+    <string name="rebecca">rebecca</string>
+    <string name="priscilla">priscilla</string>
+    <string name="karel">karel</string>
+    <string name="no_skills">Skills Off</string>
+    <string name="skills_on">Skills On</string>
 </resources>

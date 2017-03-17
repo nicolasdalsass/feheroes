@@ -20,11 +20,17 @@ public class HeroTableRow extends TableRow {
     public String attribute;
     int[] selectedSpinners;
     int spinnerPos;
+    int lvl1mod;
+    int lvl40mod;
+    int lvl1Value;
+    int lvl40Value;
 
-    public HeroTableRow(FEHAnalyserActivity parentActivity, int[] selectedSpinners, int spinnerPos,  String attribute, int[] attributeValues){
+    public HeroTableRow(FEHAnalyserActivity parentActivity, int[] selectedSpinners, int spinnerPos,  String attribute, int[] attributeValues, int lvl1mod, int lvl40mod){
         super(parentActivity);
         this.parentActivity = parentActivity;
         this.attribute = attribute;
+        this.lvl1mod=lvl1mod;
+        this.lvl40mod=lvl40mod;
         this.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.MATCH_PARENT));
@@ -44,7 +50,7 @@ public class HeroTableRow extends TableRow {
 
         lvl1Spinner.setLayoutParams(new TableRow.LayoutParams(0,
                 TableRow.LayoutParams.WRAP_CONTENT, 1));
-        lvl1Spinner.setAdapter(new Level1StatSpinnerAdapter(attributeValues));
+        lvl1Spinner.setAdapter(new Level1StatSpinnerAdapter(attributeValues, lvl1mod));
         lvl1Spinner.setSelection(selectedSpinners[spinnerPos]);
 
         final TextView lvl40Value = new TextView(parentActivity);
@@ -62,6 +68,7 @@ public class HeroTableRow extends TableRow {
     }
 
     private String renderLvl40(int value) {
+        lvl40Value=value;
         if (value < 0 )
             return "?";
         else
@@ -82,7 +89,8 @@ public class HeroTableRow extends TableRow {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            tv.setText(renderLvl40(attributeValues[5 - position]));
+            tv.setText(renderLvl40(attributeValues[5 - position] - lvl40mod));
+            parentRow.lvl1Value = attributeValues[2 - position] - lvl1mod;
             int color = 0;
             switch (position) {
                 case 0:
