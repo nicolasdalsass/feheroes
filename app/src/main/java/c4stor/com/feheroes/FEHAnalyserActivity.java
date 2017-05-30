@@ -2,14 +2,13 @@ package c4stor.com.feheroes;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -59,10 +58,13 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbarmenu, menu);
         MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
-        if (nakedHeroes)
+        if (nakedHeroes) {
             nakedView.setTitle(R.string.no_skills);
-        else
+            nakedView.getIcon().setAlpha(130);
+        } else {
             nakedView.setTitle(R.string.skills_on);
+            nakedView.getIcon().setAlpha(255);
+        }
         return true;
     }
 
@@ -103,7 +105,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelected = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] fiveStarsValues = fiveStarsMap.values().toArray(new Hero[]{});
                         int newPosition = getNewPosition(heroSelected, fiveStarsValues);
-                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(getBaseContext(), fiveStarsValues);
+                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, fiveStarsValues);
                         fiveStarsAdapater.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(fiveStarsAdapater);
                         spinnerHeroes.setSelection(newPosition);
@@ -115,7 +117,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelectedb = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] fourStarsValues = fourStarsMap.values().toArray(new Hero[]{});
                         int newPositionb = getNewPosition(heroSelectedb, fourStarsValues);
-                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(getBaseContext(), fourStarsValues);
+                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, fourStarsValues);
                         fourStarAdapter.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(fourStarAdapter);
                         spinnerHeroes.setSelection(newPositionb);
@@ -127,7 +129,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelectedc = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] threeStarValues = threeStarsMap.values().toArray(new Hero[]{});
                         int newPositionc = getNewPosition(heroSelectedc, threeStarValues);
-                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(getBaseContext(), threeStarValues);
+                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, threeStarValues);
                         threeStarsAdapter.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(threeStarsAdapter);
                         spinnerHeroes.setSelection(newPositionc);
@@ -146,6 +148,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         populateSpinner(R.id.spinner_stars, R.array.stars_array);
 
         adAdBanner();
+//        disableAdBanner();
     }
 
     private int getNewPosition(String selectedValue, Hero[] values) {
@@ -165,10 +168,15 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         mPublisherAdView.loadAd(adRequest);
     }
 
+    private void disableAdBanner() {
+        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
+        mPublisherAdView.setVisibility(View.GONE);
+    }
+
     private void populateSpinner(int id, int resource_id) {
         Spinner spinner = (Spinner) findViewById(id);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                resource_id, android.R.layout.simple_spinner_item);
+                resource_id, R.layout.spinneritem_nopadding);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         if (refMap == threeStarsMap) {
@@ -204,34 +212,21 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         TableLayout tv = (TableLayout) findViewById(R.id.herotable);
         tv.removeAllViewsInLayout();
 
-        TableRow headers = new TableRow(FEHAnalyserActivity.this);
+        TableRow headers = (TableRow) View.inflate(this, R.layout.herotitlerow, null);
 
         headers.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.MATCH_PARENT));
-        headers.setPadding(0, 0, 0, 10);
+        headers.setPadding(0, 10, 0, 4);
 
-        TextView attributeHeader = new TextView(FEHAnalyserActivity.this);
+        TextView attributeHeader = (TextView) headers.findViewById(R.id.herotitlelabel);
         attributeHeader.setText(getResources().getString(R.string.attributeheader));
-        attributeHeader.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        attributeHeader.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        attributeHeader.setGravity(Gravity.LEFT);
-        headers.addView(attributeHeader);
 
-        TextView lvl1Header = new TextView(FEHAnalyserActivity.this);
+        TextView lvl1Header = (TextView) headers.findViewById(R.id.title1);
         lvl1Header.setText(getResources().getString(R.string.lvl1));
-        lvl1Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        lvl1Header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-        lvl1Header.setGravity(Gravity.CENTER_HORIZONTAL);
-        headers.addView(lvl1Header);
 
-        TextView level40Header = new TextView(FEHAnalyserActivity.this);
-        level40Header.setPadding(5, 0, 0, 0);
-        level40Header.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+        TextView level40Header = (TextView) headers.findViewById(R.id.title40);
         level40Header.setText(getResources().getString(R.string.lvl40));
-        level40Header.setGravity(Gravity.CENTER_HORIZONTAL);
-        level40Header.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-        headers.addView(level40Header);
 
 
         final View vline = new View(FEHAnalyserActivity.this);
@@ -256,7 +251,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         blankRow.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
                 TableRow.LayoutParams.MATCH_PARENT));
-        blankRow.setPadding(0, 0, 0, 20);
+        blankRow.setPadding(0, 0, 0, 10);
 
         tv.addView(blankRow);
 
@@ -266,22 +261,22 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         tv.addView(trDef);
         tv.addView(trRes);
 
-        TableRow skillsRow = new TableRow(this);
-        TextView skillsText = new TextView(this);
-        StringBuilder sb = new StringBuilder();
-        for (int skill : hero.skills40) {
-            Skill s = skills.get(skill);
-            sb.append(s.name).append(",");
-        }
-        skillsText.setText(sb.toString().substring(0, sb.toString().length() - 1));
-        skillsRow.addView(skillsText);
-        TableRow.LayoutParams params = new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.MATCH_PARENT);
-        params.span = 3;
-        tv.addView(skillsRow);
-        skillsRow.setLayoutParams(params);
+        if (!nakedHeroes) {
+            TableRow skillsRow = (TableRow) View.inflate(this, R.layout.skillsrow, null);
+            TextView skillsLabel = (TextView) skillsRow.findViewById(R.id.skillsLabel);
+            LinearLayout skills1 = (LinearLayout) skillsRow.findViewById(R.id.skills1);
+            LinearLayout skills40 = (LinearLayout) skillsRow.findViewById(R.id.skills40);
+            skillsLabel.setText(R.string.skills);
 
+            updateSkillView(skills1, hero.skills1);
+            updateSkillView(skills40, hero.skills40);
+
+            skillsRow.setLayoutParams(new TableRow.LayoutParams(
+                    TableRow.LayoutParams.MATCH_PARENT,
+                    TableRow.LayoutParams.MATCH_PARENT));
+            skillsRow.setPadding(3, 0, 0, 18);
+            tv.addView(skillsRow);
+        }
         Button addButton = (Button) findViewById(R.id.addToCollectionBtn);
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -324,32 +319,5 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
 
     HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues, int lvl1mod, int lvl40mod) {
         return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues, lvl1mod, lvl40mod);
-    }
-
-    private int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
-
-        int[] result = new int[]{0, 0, 0, 0, 0};
-        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
-            for (int skill : hero.skills1) {
-                int[] mods = skills.get(skill).mods;
-                result[0] += mods[0];
-                result[1] += mods[1];
-                result[2] += mods[2];
-                result[3] += mods[3];
-                result[4] += mods[4];
-            }
-        } else {
-            if (hero.skills40 != null && nakedHeroes) {
-                for (int skill : hero.skills40) {
-                    int[] mods = skills.get(skill).mods;
-                    result[0] += mods[0];
-                    result[1] += mods[1];
-                    result[2] += mods[2];
-                    result[3] += mods[3];
-                    result[4] += mods[4];
-                }
-            }
-        }
-        return result;
     }
 }

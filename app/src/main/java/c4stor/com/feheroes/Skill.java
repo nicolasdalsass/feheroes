@@ -5,7 +5,7 @@ package c4stor.com.feheroes;
  */
 
 public class Skill {
-    int id;
-    String name;
-    int[] mods;
+    public int id;
+    public String name;
+    public int[] mods;
 }

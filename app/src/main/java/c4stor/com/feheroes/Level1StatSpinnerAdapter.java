@@ -62,7 +62,13 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         TextView tv = new TextView(parent.getContext());
-        tv.setText((baseStat[2 - position] - mod) + "");
+        String text;
+        if(baseStat[2-position]==-1){
+            text="?";
+        } else {
+            text = (baseStat[2 - position] - mod) + "";
+        }
+        tv.setText(text);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         tv.setGravity(Gravity.CENTER);
         int color = 0;
@@ -78,6 +84,8 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
                 break;
 
         }
+        if (tv.getText() == "?")
+            color = parent.getContext().getResources().getColor(R.color.divider);
         tv.setTextColor(color);
         ViewGroup.LayoutParams params = tv.getLayoutParams();
         tv.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));

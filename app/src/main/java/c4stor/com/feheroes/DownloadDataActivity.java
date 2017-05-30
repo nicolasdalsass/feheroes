@@ -18,24 +18,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 public class DownloadDataActivity extends AppCompatActivity {
 
-    ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
 
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.downloading));
-        mProgressDialog.setIndeterminate(true);
-        mProgressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mProgressDialog.setCancelable(true);
-
-        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", true);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1403withskills");
+        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false);
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v3005");
 
     }
 
@@ -113,22 +107,6 @@ public class DownloadDataActivity extends AppCompatActivity {
             }
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
-            mProgressDialog.show();
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... progress) {
-            super.onProgressUpdate(progress);
-            // if we get here, length is known, now set indeterminate to false
-            mProgressDialog.setIndeterminate(false);
-            mProgressDialog.setMax(100);
-            mProgressDialog.setProgress(progress[0]);
-        }
 
 
         @Override
@@ -145,11 +123,15 @@ public class DownloadDataActivity extends AppCompatActivity {
                 }
                 Intent intent = new Intent(getBaseContext(), FEHAnalyserActivity.class);
                 startActivity(intent);
-            } /*else {
-                mProgressDialog.setIndeterminate(true);
-                final DownloadTask wikiDL = new DownloadTask(DownloadDataActivity.this, "wiki.data", true);
-                wikiDL.execute("http://feheroes.wiki/stats/stats.json");
-            }*/
+            } else {
+                final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);
+                String skillsFile = "allskills.json";
+                if(Locale.getDefault().getDisplayLanguage().startsWith("fr"))
+                {
+                    skillsFile = "allskills-fr.json";
+                }
+                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/"+skillsFile);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@
     <item
         android:id="@+id/toggleNakedView"
         android:title="@string/no_skills"
+        android:icon="@drawable/skill_icon"
         app:showAsAction="ifRoom"/>
 
     <item android:id="@+id/copycollectiontoclipboard"

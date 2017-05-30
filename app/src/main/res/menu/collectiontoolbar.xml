@@ -13,29 +13,53 @@
         android:title="Sort"
         app:showAsAction="always">
         <menu>
-            <item android:id="@+id/sortByName" android:title="@string/sort_by_name"></item>
-            <item android:id="@+id/sortByStars" android:title="@string/by_stars"></item>
-            <item android:id="@+id/sortByHP" android:title="@string/hp"></item>
-            <item android:id="@+id/sortByAtk" android:title="@string/atk"></item>
-            <item android:id="@+id/sortBySpd" android:title="@string/spd"></item>
-            <item android:id="@+id/sortByDef" android:title="@string/def"></item>
-            <item android:id="@+id/sortByRes" android:title="@string/res"></item>
-            <item android:id="@+id/sortByBST" android:title="@string/bst"></item>
-            <item android:id="@+id/sortByDate" android:title="@string/by_add_date"></item>
-
+            <item
+                android:id="@+id/sortByName"
+                android:title="@string/sort_by_name"/>
+            <item
+                android:id="@+id/sortByStars"
+                android:title="@string/by_stars"/>
+            <item
+                android:id="@+id/sortByHP"
+                android:title="@string/hp"/>
+            <item
+                android:id="@+id/sortByAtk"
+                android:title="@string/atk"/>
+            <item
+                android:id="@+id/sortBySpd"
+                android:title="@string/spd"/>
+            <item
+                android:id="@+id/sortByDef"
+                android:title="@string/def"/>
+            <item
+                android:id="@+id/sortByRes"
+                android:title="@string/res"/>
+            <item
+                android:id="@+id/sortByBST"
+                android:title="@string/bst"/>
+            <item
+                android:id="@+id/sortByDate"
+                android:title="@string/by_add_date"/>
         </menu>
-
     </item>
 
     <item
         android:id="@+id/undo"
         android:icon="@drawable/undo"
         android:title="Undo"
-        app:showAsAction="always"/>
+        app:showAsAction="always" />
 
-    <item android:id="@+id/copycollectiontoclipboard"
+    <item
+        android:id="@+id/toggleNakedView"
+        android:icon="@drawable/skill_icon"
+        android:title="@string/no_skills"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/copycollectiontoclipboard"
         android:title="@string/export_collection"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/contact"

@@ -67,7 +67,7 @@
     <string name="michalis">michalis</string>
     <string name="minerva">minerva</string>
     <string name="narcian">narcian</string>
-    <string name="navarre">navarre</string>
+    <string name="navarre">nabarl</string>
     <string name="niles">niles</string>
     <string name="nino">nino</string>
     <string name="nowi">nowi</string>
@@ -138,4 +138,26 @@
     <string name="karel">karel</string>
     <string name="no_skills">Skills Off</string>
     <string name="skills_on">Skills On</string>
+    <string name="skills">Aptitudes</string>
+    <string name="camillaeaster">Camilla de Pâques</string>
+    <string name="chromeaster">Chrom de Pâques</string>
+    <string name="lucinaeaster">Lucina de Pâques</string>
+    <string name="xandereaster">Xander de Pâques</string>
+    <string name="alm">alm</string>
+    <string name="clair">clair</string>
+    <string name="faye">faye</string>
+    <string name="lukas">lukas</string>
+    <string name="titania">titania</string>
+    <string name="soren">soren</string>
+    <string name="mist">mist</string>
+    <string name="ike">ike</string>
+    <string name="mae">mae</string>
+    <string name="genny">genny</string>
+    <string name="celica">celica</string>
+    <string name="boey">boey</string>
+    <string name="lloyd">lloyd</string>
+    <string name="caedabridal">Shiida - Mariée</string>
+    <string name="charlottebridal">Charlotte - Mariée</string>
+    <string name="lynbridal">Lyn - Mariée</string>
+    <string name="cordeliabridal">Cordelia - Mariée</string>
 </resources>

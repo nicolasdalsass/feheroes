@@ -138,4 +138,26 @@
     <string name="karel">カレル</string>
     <string name="no_skills">Skills Off</string>
     <string name="skills_on">Skills On</string>
+    <string name="skills">Skills</string>
+    <string name="camillaeaster">カミラ(うさ耳)</string>
+    <string name="chromeaster">クロム(うさ耳)</string>
+    <string name="lucinaeaster">ルキナ(うさ耳)</string>
+    <string name="xandereaster">マークス(うさ耳)</string>
+    <string name="alm">アルム</string>
+    <string name="faye">エフィ</string>
+    <string name="clair">クレア</string>
+    <string name="lukas">ルカ</string>
+    <string name="titania">ティアマト</string>
+    <string name="ike">アイク</string>
+    <string name="soren">セネリオ</string>
+    <string name="mist">ミスト</string>
+    <string name="genny">ジェニー</string>
+    <string name="celica">セリカ</string>
+    <string name="boey">ボーイ</string>
+    <string name="mae">メイ</string>
+    <string name="lloyd">ロイド</string>
+    <string name="caedabridal">シーダ(花嫁)</string>
+    <string name="charlottebridal">シャーロッテ(花嫁)</string>
+    <string name="lynbridal">リン(花嫁)</string>
+    <string name="cordeliabridal">ティアモ(花嫁)</string>
 </resources>

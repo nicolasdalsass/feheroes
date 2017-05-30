@@ -13,6 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -27,6 +30,8 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+
+import c4stor.com.feheroes.skillview.SkillTextView;
 
 /**
  * Created by Nicolas on 19/02/2017.
@@ -49,7 +54,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected static Map<String, Hero> fiveStarsMap = null;
     protected static Map<String, Hero> fourStarsMap = null;
     protected static Map<String, Hero> threeStarsMap = null;
-    protected static Map<Integer, Skill> skills = null;
+    protected static Map<Integer, Skill> skillsMap = null;
 
 
     protected HeroCollection collection = new HeroCollection();
@@ -69,8 +74,8 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     }
 
     protected void initSkills() throws IOException {
-        if(skills==null) {
-            skills = new HashMap<>();
+        if(skillsMap==null) {
+            skillsMap = new HashMap<>();
             File dataFile = new File(getBaseContext().getFilesDir(), "skills.data");
             if (dataFile.exists()) {
                 try {
@@ -95,7 +100,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         while (line != null) {
             if (line.length() > 0) {
                 Skill skill = gson.fromJson(line, Skill.class);
-                skills.put(skill.id, skill);
+                skillsMap.put(skill.id, skill);
             }
             line = reader.readLine();
         }
@@ -247,5 +252,85 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbarmenu, menu);
         return true;
+    }
+
+    private void resetSkillTextView(TextView tv){
+        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        tv.setText("");
+    }
+
+    protected void updateSkillView(LinearLayout layout, int[] skills) {
+        TextView wpnTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_wpn);
+        TextView spTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_special);
+        TextView assistTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_assist);
+        TextView aTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_a);
+        TextView bTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_b);
+        TextView cTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_c);
+        resetSkillTextView(wpnTV);
+        resetSkillTextView(spTV);
+        resetSkillTextView(assistTV);
+        resetSkillTextView(aTV);
+        resetSkillTextView(bTV);
+        resetSkillTextView(cTV);
+        String weapon = "";
+        String assist = "";
+        String special = "";
+        String a = "";
+        String b = "";
+        String c = "";
+        for (int i : skills) {
+            if (i < 10000) {
+                weapon = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, wpnTV, SkillTextView.WEAPON_TYPE, weapon);
+                wpnTV.setVisibility(View.VISIBLE);
+            } else if (i >= 10000 && i < 20000) {
+                assist = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, assistTV, SkillTextView.ASSIST_TYPE, assist);
+                assistTV.setVisibility(View.VISIBLE);
+            } else if (i >= 20000 && i < 30000) {
+                special = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, spTV, SkillTextView.SPECIAL_TYPE, special);
+                spTV.setVisibility(View.VISIBLE);
+            } else if (i >= 30000 && i < 40000) {
+                a = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, aTV, SkillTextView.PASSIVE_TYPE, a);
+                aTV.setVisibility(View.VISIBLE);
+            } else if (i >= 40000 && i < 50000) {
+                b = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, bTV, SkillTextView.PASSIVE_TYPE, b);
+                bTV.setVisibility(View.VISIBLE);
+            } else if (i >= 50000 ) {
+                c = skillsMap.get(i).name;
+                SkillTextView.makeSkillView(this, cTV, SkillTextView.PASSIVE_TYPE, c);
+                cTV.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
+    protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
+
+        int[] result = new int[]{0, 0, 0, 0, 0};
+        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
+            for (int skill : hero.skills1) {
+                int[] mods = skillsMap.get(skill).mods;
+                result[0] += mods[0];
+                result[1] += mods[1];
+                result[2] += mods[2];
+                result[3] += mods[3];
+                result[4] += mods[4];
+            }
+        } else {
+            if (hero.skills40 != null && nakedHeroes) {
+                for (int skill : hero.skills40) {
+                    int[] mods = skillsMap.get(skill).mods;
+                    result[0] += mods[0];
+                    result[1] += mods[1];
+                    result[2] += mods[2];
+                    result[3] += mods[3];
+                    result[4] += mods[4];
+                }
+            }
+        }
+        return result;
     }
 }

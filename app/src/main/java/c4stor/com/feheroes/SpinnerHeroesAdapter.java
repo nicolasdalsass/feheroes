@@ -1,5 +1,6 @@
 package c4stor.com.feheroes;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,8 +27,15 @@ import android.widget.TextView;
 
 public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
 
+    private int height;
+    private int width;
+
     public SpinnerHeroesAdapter(Context context, Hero[] values) {
         super(context, android.R.layout.simple_spinner_item, values);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        height = displayMetrics.heightPixels;
+        width = displayMetrics.widthPixels;
 
     }
 
@@ -34,7 +43,7 @@ public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    private View makeView(int position, View convertView, Context context, int imageWidth, int imageHeight) {
+    private View makeView(int position, View convertView, Context context, int imageWidth) {
         View v = convertView;
         ViewHolderSpinner holder; // to reference the child views for later actions
 
@@ -60,21 +69,22 @@ public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
         holder.heroName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
         int drawableId = getContext().getResources().getIdentifier(hero.name.toLowerCase(), "drawable", getContext().getPackageName());
         Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
-        Bitmap c = getRoundedCroppedBitmap(b, imageWidth, imageHeight);
+        Bitmap c = getRoundedCroppedBitmap(b, imageWidth, imageWidth);
         Drawable dCool = new BitmapDrawable(getContext().getResources(), c);
         holder.heroIcon.setImageDrawable(dCool);
+        v.setPadding(0,2,0,2);
         return v;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return makeView(position, convertView, parent.getContext(), 140, 140);
+        return makeView(position, convertView, parent.getContext(),  Math.min(200,Math.min(height/5, width/5)));
 
     }
 
     @Override
     public View getDropDownView(int position, View convertView, ViewGroup parent) {
-        return makeView(position, convertView, parent.getContext(), 80, 80);
+        return makeView(position, convertView, parent.getContext(), Math.min(140, Math.min(height/8, width/8)));
     }
 
     private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth, int finalWeight) {

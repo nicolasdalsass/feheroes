@@ -144,4 +144,26 @@
     <string name="karel">karel</string>
     <string name="no_skills">Skills Off</string>
     <string name="skills_on">Skills On</string>
+    <string name="skills">Skills</string>
+    <string name="camillaeaster">Camilla - Easter Festival</string>
+    <string name="chromeaster">Chrom - Easter Festival</string>
+    <string name="xandereaster">Xander - Easter Festival</string>
+    <string name="lucinaeaster">Lucina - Easter Festival</string>
+    <string name="alm">alm</string>
+    <string name="clair">clair</string>
+    <string name="faye">faye</string>
+    <string name="lukas">lukas</string>
+    <string name="ike">ike</string>
+    <string name="mist">mist</string>
+    <string name="soren">soren</string>
+    <string name="titania">titania</string>
+    <string name="celica">celica</string>
+    <string name="boey">boey</string>
+    <string name="genny">genny</string>
+    <string name="mae">mae</string>
+    <string name="lloyd">lloyd</string>
+    <string name="caedabridal">Caeda - Bridal</string>
+    <string name="charlottebridal">Charlotte - Bridal</string>
+    <string name="lynbridal">Lyn - Bridal</string>
+    <string name="cordeliabridal">Cordelia - Bridal</string>
 </resources>
