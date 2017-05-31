@@ -1,0 +1,50 @@
+{
+  "project_info": {
+    "project_number": "614299903516",
+    "firebase_url": "https://iv-check-fire-emblem-heroes.firebaseio.com",
+    "project_id": "iv-check-fire-emblem-heroes",
+    "storage_bucket": "iv-check-fire-emblem-heroes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:614299903516:android:516b0094f8c680b2",
+        "android_client_info": {
+          "package_name": "c4stor.com.feheroes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "614299903516-je8uf02hiibc0q3ge6d9c3ulrs4b2p6f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "c4stor.com.feheroes",
+            "certificate_hash": "280f4ae1741f980234aeebea5d2894ed926eab7a"
+          }
+        },
+        {
+          "client_id": "614299903516-8gs6k04f3efs471ilu118k6e4d98nulj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCKVXAnNox3_uuZy2l283fZJMfntC5BqrE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
