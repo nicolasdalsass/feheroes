@@ -407,22 +407,7 @@ public class CollectionActivity extends ToolbaredActivity {
                         (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.collection_line, null);
                 // cache view fields into the holder
-                holder = new ViewHolder();
-                holder.globalLayout= (LinearLayout) v.findViewById(R.id.collection_line_layout);
-                holder.collImage = (ImageView) v.findViewById(R.id.collimage);
-                holder.collName = (TextView) v.findViewById(R.id.collname);
-                holder.rarity = (Spinner) v.findViewById(R.id.collnamerarity);
-                holder.boons = (TextView) v.findViewById(R.id.boons);
-                holder.banes = (TextView) v.findViewById(R.id.banes);
-                holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
-                holder.extraData = (LinearLayout) v.findViewById(R.id.hero40Line);
-                holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
-                holder.lvl40Atk = (TextView) v.findViewById(R.id.hero40LineAtk);
-                holder.lvl40Spd = (TextView) v.findViewById(R.id.hero40LineSpd);
-                holder.lvl40Def = (TextView) v.findViewById(R.id.hero40LineDef);
-                holder.lvl40Res = (TextView) v.findViewById(R.id.hero40LineRes);
-                holder.lvl40BST = (TextView) v.findViewById(R.id.hero40LineBST);
-                holder.skills = (LinearLayout) v.findViewById(R.id.collection_skill);
+                holder = initViewHolder(v);
                 // associate the holder with the view for later lookup
                 v.setTag(holder);
             } else {
@@ -438,40 +423,64 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.hero = hero;
             refreshHero(hero);
 
-            int drawableId = getContext().getResources().getIdentifier(hero.hero.name.toLowerCase(), "drawable", getContext().getPackageName());
-            Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
+            drawHeroPortrait(holder, hero);
 
-            int circleRadius = Math.min(140, Math.min(height / 5, width / 5));
-            Bitmap c = getRoundedCroppedBitmap(b, circleRadius, circleRadius);
-            Drawable dCool = new BitmapDrawable(getContext().getResources(), c);
+            selectHeroRarity(holder, hero);
+            setRarityItemListener(holder, hero);
 
-            holder.collImage.setImageDrawable(dCool);
-            holder.collName.setText(hero.getDisplayName(getContext()));
+            showSkills(holder, hero);
+
+            showHeroBoons(holder, hero);
+            showHeroBanes(holder, hero);
+            calculateHeroStats(holder, hero);
+
+            setDeleteButtonListener(holder, hero);
 
 
-            /*StringBuilder sb = new StringBuilder();
-            for (int i = 1; i <= hero.stars; i++) {
-                sb.append("★");
-            }*/
-            ArrayAdapter<CharSequence> adapter;
-            if (threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
-                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array, R.layout.spinneritem_nopadding);
-            } else if (fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
-                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_4_5, R.layout.spinneritem_nopadding);
+            if (statVisibility.containsKey(hero)) {
+                //noinspection WrongConstant
+                holder.extraData.setVisibility(statVisibility.get(hero));
             } else {
-                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_5, R.layout.spinneritem_nopadding);
+                holder.extraData.setVisibility(defaultVisibility);
             }
+            return v;
+        }
 
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            holder.rarity.setAdapter(adapter);
-            if (hero.stars == 3) {
-                holder.rarity.setSelection(2);
-            } else if (hero.stars == 4) {
-                holder.rarity.setSelection(1);
-            } else {
-                holder.rarity.setSelection(0);
-            }
+        private void calculateHeroStats(ViewHolder holder, HeroRoll hero) {
+            int[] mods = calculateMods(hero.hero, 40, !skillsOn);
+            makePopupStat(holder.lvl40HP, hero, hero.hero.HP, mods[0], getResources().getString(R.string.hp));
+            makePopupStat(holder.lvl40Atk, hero, hero.hero.atk, mods[1], getResources().getString(R.string.atk));
+            makePopupStat(holder.lvl40Spd, hero, hero.hero.speed, mods[2], getResources().getString(R.string.spd));
+            makePopupStat(holder.lvl40Def, hero, hero.hero.def, mods[3], getResources().getString(R.string.def));
+            makePopupStat(holder.lvl40Res, hero, hero.hero.res, mods[4], getResources().getString(R.string.res));
 
+            int totalMods = mods[0] + mods[1] + mods[2] + mods[3] + mods[4];
+            String bstText = hero.getBST(getContext()) < 0 ? "?" : hero.getBST(getContext()) - totalMods + "";
+            holder.lvl40BST.setText(
+                    getResources().getString(R.string.bst) + " " +
+                            bstText);
+            holder.lvl40BST.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        private void setDeleteButtonListener(ViewHolder holder, final HeroRoll hero) {
+            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = CollectionActivity.this.collection.indexOf(hero);
+                    CollectionActivity.this.collection.remove(hero);
+                    SuppressedItem s = new SuppressedItem();
+                    s.position = position;
+                    s.heroRoll = hero;
+                    supressedItems.add(s);
+                    CollectionActivity.this.collection.save(getBaseContext());
+                    invalidateOptionsMenu();
+                    makeView();
+                    HeroCollectionAdapter.this.notifyDataSetChanged();
+                }
+            });
+        }
+
+        private void setRarityItemListener(ViewHolder holder, final HeroRoll hero) {
             holder.rarity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -498,68 +507,43 @@ public class CollectionActivity extends ToolbaredActivity {
 
                 }
             });
+        }
 
-            if (skillsOn && hero.hero.skills40 != null) {
-                updateSkillView(holder.skills, hero.hero.skills40);
-                holder.skills.setVisibility(View.VISIBLE);
+        private void selectHeroRarity(ViewHolder holder, HeroRoll hero) {
+            ArrayAdapter<CharSequence> adapter;
+            if (threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array, R.layout.spinneritem_nopadding);
+            } else if (fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_4_5, R.layout.spinneritem_nopadding);
             } else {
-                holder.skills.setVisibility(View.GONE);
+                adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_5, R.layout.spinneritem_nopadding);
             }
 
-            StringBuilder boons = new StringBuilder();
-
-            for (String s : hero.boons) {
-                boons.append("+").append(s).append(" ");
-            }
-            holder.boons.setText(boons);
-
-            StringBuilder banes = new StringBuilder();
-
-            for (String s : hero.banes) {
-                banes.append("-").append(s).append(" ");
-            }
-            holder.banes.setText(banes);
-
-            holder.deleteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int position = CollectionActivity.this.collection.indexOf(hero);
-                    CollectionActivity.this.collection.remove(hero);
-                    SuppressedItem s = new SuppressedItem();
-                    s.position = position;
-                    s.heroRoll = hero;
-                    supressedItems.add(s);
-                    CollectionActivity.this.collection.save(getBaseContext());
-                    invalidateOptionsMenu();
-                    makeView();
-                    HeroCollectionAdapter.this.notifyDataSetChanged();
-                }
-            });
-            int[] mods = calculateMods(hero.hero, 40, !skillsOn);
-            int totalMods = mods[0] + mods[1] + mods[2] + mods[3] + mods[4];
-
-            makePopupStat(holder.lvl40HP, hero, hero.hero.HP, mods[0], getResources().getString(R.string.hp));
-            makePopupStat(holder.lvl40Atk, hero, hero.hero.atk, mods[1], getResources().getString(R.string.atk));
-            makePopupStat(holder.lvl40Spd, hero, hero.hero.speed, mods[2], getResources().getString(R.string.spd));
-            makePopupStat(holder.lvl40Def, hero, hero.hero.def, mods[3], getResources().getString(R.string.def));
-            makePopupStat(holder.lvl40Res, hero, hero.hero.res, mods[4], getResources().getString(R.string.res));
-
-            String bstText = hero.getBST(getContext()) < 0 ? "?" : hero.getBST(getContext()) - totalMods + "";
-            holder.lvl40BST.setText(
-                    getResources().getString(R.string.bst) + " " +
-                            bstText);
-            holder.lvl40BST.setTextColor(getResources().getColor(R.color.colorPrimary));
-            if (statVisibility.containsKey(hero)) {
-                //noinspection WrongConstant
-                holder.extraData.setVisibility(statVisibility.get(hero));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            holder.rarity.setAdapter(adapter);
+            if (hero.stars == 3) {
+                holder.rarity.setSelection(2);
+            } else if (hero.stars == 4) {
+                holder.rarity.setSelection(1);
             } else {
-                holder.extraData.setVisibility(defaultVisibility);
+                holder.rarity.setSelection(0);
             }
-            return v;
+        }
+
+        private void drawHeroPortrait(ViewHolder holder, HeroRoll hero) {
+            int drawableId = getContext().getResources().getIdentifier(hero.hero.name.toLowerCase(), "drawable", getContext().getPackageName());
+            Bitmap b = BitmapFactory.decodeResource(getContext().getResources(), drawableId);
+
+            int circleRadius = Math.min(140, Math.min(height / 5, width / 5));
+            Bitmap c = getRoundedCroppedBitmap(b, circleRadius, circleRadius);
+            Drawable dCool = new BitmapDrawable(getContext().getResources(), c);
+
+            holder.collImage.setImageDrawable(dCool);
+            holder.collName.setText(hero.getDisplayName(getContext()));
         }
 
 
-        private void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
+        public void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
 
             if (hero.boons != null && hero.boons.contains(statName)) {
                 statTV.setText(statName + " " + makeText(stat[5] - mod));
@@ -571,6 +555,55 @@ public class CollectionActivity extends ToolbaredActivity {
                 statTV.setText(statName + " " + makeText(stat[4] - mod));
                 statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
+        }
+    }
+
+    @NonNull
+    private ViewHolder initViewHolder(View v) {
+        ViewHolder holder;
+        holder = new ViewHolder();
+        holder.globalLayout= (LinearLayout) v.findViewById(R.id.collection_line_layout);
+        holder.collImage = (ImageView) v.findViewById(R.id.collimage);
+        holder.collName = (TextView) v.findViewById(R.id.collname);
+        holder.rarity = (Spinner) v.findViewById(R.id.collnamerarity);
+        holder.boons = (TextView) v.findViewById(R.id.boons);
+        holder.banes = (TextView) v.findViewById(R.id.banes);
+        holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
+        holder.extraData = (LinearLayout) v.findViewById(R.id.hero40Line);
+        holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
+        holder.lvl40Atk = (TextView) v.findViewById(R.id.hero40LineAtk);
+        holder.lvl40Spd = (TextView) v.findViewById(R.id.hero40LineSpd);
+        holder.lvl40Def = (TextView) v.findViewById(R.id.hero40LineDef);
+        holder.lvl40Res = (TextView) v.findViewById(R.id.hero40LineRes);
+        holder.lvl40BST = (TextView) v.findViewById(R.id.hero40LineBST);
+        holder.skills = (LinearLayout) v.findViewById(R.id.collection_skill);
+        return holder;
+    }
+
+    private void showHeroBanes(ViewHolder holder, HeroRoll hero) {
+        StringBuilder banes = new StringBuilder();
+
+        for (String s : hero.banes) {
+            banes.append("-").append(s).append("\n");
+        }
+        holder.banes.setText(banes);
+    }
+
+    private void showHeroBoons(ViewHolder holder, HeroRoll hero) {
+        StringBuilder boons = new StringBuilder();
+
+        for (String s : hero.boons) {
+            boons.append("+").append(s).append("\n");
+        }
+        holder.boons.setText(boons);
+    }
+
+    private void showSkills(ViewHolder holder, HeroRoll hero) {
+        if (skillsOn && hero.hero.skills40 != null) {
+            updateSkillView(holder.skills, hero.hero.skills40);
+            holder.skills.setVisibility(View.VISIBLE);
+        } else {
+            holder.skills.setVisibility(View.GONE);
         }
     }
 
