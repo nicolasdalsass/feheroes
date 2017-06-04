@@ -169,118 +169,42 @@ public class CollectionActivity extends ToolbaredActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortByName:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByName();
                 defaultVisibility = View.GONE;
                 initListView();
                 return true;
-
             case R.id.sortByStars:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        if (o1.stars != o2.stars)
-                            return o2.stars - o1.stars;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
-                initListView();
+                sortByStar();
+                //why no initListView(); here?
                 defaultVisibility = View.GONE;
                 return true;
             case R.id.sortByHP:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int mod1 = calculateMods(o1.hero, 40, !skillsOn)[0];
-                        int mod2 = calculateMods(o2.hero, 40, !skillsOn)[0];
-                        if (o1.getHP(getBaseContext()) - mod1 != o2.getHP(getBaseContext()) - mod2)
-                            return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByHP();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortByAtk:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int mod1 = calculateMods(o1.hero, 40, !skillsOn)[1];
-                        int mod2 = calculateMods(o2.hero, 40, !skillsOn)[1];
-                        if (o1.getAtk(getBaseContext()) - mod1 != o2.getAtk(getBaseContext()) - mod2)
-                            return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByAtk();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortBySpd:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int mod1 = calculateMods(o1.hero, 40, !skillsOn)[2];
-                        int mod2 = calculateMods(o2.hero, 40, !skillsOn)[2];
-                        if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
-                            return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortBySpd();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortByDef:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int mod1 = calculateMods(o1.hero, 40, !skillsOn)[3];
-                        int mod2 = calculateMods(o2.hero, 40, !skillsOn)[3];
-                        if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
-                            return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByDef();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortByRes:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int mod1 = calculateMods(o1.hero, 40, !skillsOn)[4];
-                        int mod2 = calculateMods(o2.hero, 40, !skillsOn)[4];
-                        if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
-                            return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByRes();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
             case R.id.sortByBST:
-                sorting = new Comparator<HeroRoll>() {
-                    @Override
-                    public int compare(HeroRoll o1, HeroRoll o2) {
-                        int[] m1 = calculateMods(o1.hero, 40, !skillsOn);
-                        int[] m2 = calculateMods(o2.hero, 40, !skillsOn);
-                        int mod1 = m1[0] + m1[1] + m1[2] + m1[3] + m1[4];
-                        int mod2 = m2[0] + m2[1] + m2[2] + m2[3] + m2[4];
-                        if (o1.getBST(getBaseContext()) - mod1 != o2.getBST(getBaseContext()) - mod2)
-                            return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) - mod2 + mod1;
-                        else
-                            return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
-                    }
-                };
+                sortByBST();
                 initListView();
                 defaultVisibility = View.VISIBLE;
                 return true;
@@ -289,14 +213,7 @@ public class CollectionActivity extends ToolbaredActivity {
                 initListView();
                 return true;
             case R.id.undo:
-                if (supressedItems.size() > 0) {
-                    SuppressedItem suppressedItem = supressedItems.get(supressedItems.size() - 1);
-                    collection.add(suppressedItem.position, suppressedItem.heroRoll);
-                    collection.save(getBaseContext());
-                    supressedItems.remove(supressedItems.size() - 1);
-                    invalidateOptionsMenu();
-                    initListView();
-                }
+                undoHeroSupression();
                 return true;
             case R.id.toggleNakedView:
                 skillsOn = !skillsOn;
@@ -307,6 +224,125 @@ public class CollectionActivity extends ToolbaredActivity {
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void undoHeroSupression() {
+        if (supressedItems.size() > 0) {
+            SuppressedItem suppressedItem = supressedItems.get(supressedItems.size() - 1);
+            collection.add(suppressedItem.position, suppressedItem.heroRoll);
+            collection.save(getBaseContext());
+            supressedItems.remove(supressedItems.size() - 1);
+            invalidateOptionsMenu();
+            initListView();
+        }
+    }
+
+    private void sortByBST() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int[] m1 = calculateMods(o1.hero, 40, !skillsOn);
+                int[] m2 = calculateMods(o2.hero, 40, !skillsOn);
+                int mod1 = m1[0] + m1[1] + m1[2] + m1[3] + m1[4];
+                int mod2 = m2[0] + m2[1] + m2[2] + m2[3] + m2[4];
+                if (o1.getBST(getBaseContext()) - mod1 != o2.getBST(getBaseContext()) - mod2)
+                    return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortByRes() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[4];
+                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[4];
+                if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
+                    return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortByDef() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[3];
+                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[3];
+                if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
+                    return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortBySpd() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[2];
+                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[2];
+                if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
+                    return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortByAtk() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[1];
+                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[1];
+                if (o1.getAtk(getBaseContext()) - mod1 != o2.getAtk(getBaseContext()) - mod2)
+                    return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortByHP() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[0];
+                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[0];
+                if (o1.getHP(getBaseContext()) - mod1 != o2.getHP(getBaseContext()) - mod2)
+                    return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) - mod2 + mod1;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+    }
+
+    private void sortByStar() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                if (o1.stars != o2.stars)
+                    return o2.stars - o1.stars;
+                else
+                    return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
+        initListView();
+    }
+
+    private void sortByName() {
+        sorting = new Comparator<HeroRoll>() {
+            @Override
+            public int compare(HeroRoll o1, HeroRoll o2) {
+                return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
+            }
+        };
     }
 
     public class HeroCollectionAdapter extends ArrayAdapter<HeroRoll> {
