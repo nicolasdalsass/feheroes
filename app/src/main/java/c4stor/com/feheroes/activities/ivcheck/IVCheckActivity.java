@@ -1,6 +1,7 @@
 package c4stor.com.feheroes.activities.ivcheck;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -91,6 +92,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         }
     }
 
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -102,49 +104,31 @@ public class IVCheckActivity extends ToolbaredActivity {
 
         Spinner spinnerStars = (Spinner) findViewById(R.id.spinner_stars);
         spinnerStars.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                resetSpinners = false;
-                switch (position) {
-                    case 0:
-                        String heroSelected = "";
-                        if (spinnerHeroes.getSelectedItem() != null)
-                            heroSelected = ((Hero) spinnerHeroes.getSelectedItem()).name;
-                        Hero[] fiveStarsValues = fiveStarsMap.values().toArray(new Hero[]{});
-                        int newPosition = getNewPosition(heroSelected, fiveStarsValues);
-                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(IVCheckActivity.this, fiveStarsValues);
-                        fiveStarsAdapater.notifyDataSetChanged();
-                        spinnerHeroes.setAdapter(fiveStarsAdapater);
-                        spinnerHeroes.setSelection(newPosition);
-                        refMap = fiveStarsMap;
-                        break;
-                    case 1:
-                        String heroSelectedb = "";
-                        if (spinnerHeroes.getSelectedItem() != null)
-                            heroSelectedb = ((Hero) spinnerHeroes.getSelectedItem()).name;
-                        Hero[] fourStarsValues = fourStarsMap.values().toArray(new Hero[]{});
-                        int newPositionb = getNewPosition(heroSelectedb, fourStarsValues);
-                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, fourStarsValues);
-                        fourStarAdapter.notifyDataSetChanged();
-                        spinnerHeroes.setAdapter(fourStarAdapter);
-                        spinnerHeroes.setSelection(newPositionb);
-                        refMap = fourStarsMap;
-                        break;
-                    case 2:
-                        String heroSelectedc = "";
-                        if (spinnerHeroes.getSelectedItem() != null)
-                            heroSelectedc = ((Hero) spinnerHeroes.getSelectedItem()).name;
-                        Hero[] threeStarValues = threeStarsMap.values().toArray(new Hero[]{});
-                        int newPositionc = getNewPosition(heroSelectedc, threeStarValues);
-                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, threeStarValues);
-                        threeStarsAdapter.notifyDataSetChanged();
-                        spinnerHeroes.setAdapter(threeStarsAdapter);
-                        spinnerHeroes.setSelection(newPositionc);
-                        refMap = threeStarsMap;
-                        break;
-
-                }
+        @Override
+        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            resetSpinners = false;
+            switch (position) {
+                case 0:
+                    refMap = fiveStarsMap;
+                    break;
+                case 1:
+                    refMap = fourStarsMap;
+                    break;
+                case 2:
+                    refMap = threeStarsMap;
+                    break;
             }
+            String selectedHero = "";
+            if (spinnerHeroes.getSelectedItem() != null) {
+                selectedHero = ((Hero) spinnerHeroes.getSelectedItem()).name;
+            }
+            Hero[] refStarValues = refMap.values().toArray(new Hero[]{});
+            int newPositionc = getNewPosition(selectedHero, refStarValues);
+            ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
+            threeStarsAdapter.notifyDataSetChanged();
+            spinnerHeroes.setAdapter(threeStarsAdapter);
+            spinnerHeroes.setSelection(newPositionc);
+        }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -155,7 +139,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         populateSpinner();
 
         adAdBanner();
-        disableAdBanner();
+        //disableAdBanner();
     }
 
     private int getNewPosition(String selectedValue, Hero[] values) {
@@ -219,49 +203,17 @@ public class IVCheckActivity extends ToolbaredActivity {
         TableLayout tv = (TableLayout) findViewById(R.id.herotable);
         tv.removeAllViewsInLayout();
 
-        TableRow headers = (TableRow) View.inflate(this, R.layout.herotitlerow, null);
-
-        headers.setLayoutParams(new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.MATCH_PARENT));
-        headers.setPadding(0, 10, 0, 4);
-
-        TextView attributeHeader = (TextView) headers.findViewById(R.id.herotitlelabel);
-        attributeHeader.setText(getResources().getString(R.string.attributeheader));
-
-        TextView lvl1Header = (TextView) headers.findViewById(R.id.title1);
-        lvl1Header.setText(getResources().getString(R.string.lvl1));
-
-        TextView level40Header = (TextView) headers.findViewById(R.id.title40);
-        level40Header.setText(getResources().getString(R.string.lvl40));
-
-
-        final View vline = new View(IVCheckActivity.this);
-        vline.setLayoutParams(new
-                TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
-        vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        tv.addView(createHeaders());
+        tv.addView(createLine());
+        tv.addView(createPaddingRow());
 
         int[] lvl1mods = calculateMods(hero, 1, nakedHeroes);
         int[] lvl40mods = calculateMods(hero, 40, nakedHeroes);
-
-
         final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), selectedSpinners, 0, hero.HP, lvl1mods[0], lvl40mods[0]);
         final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), selectedSpinners, 1, hero.atk, lvl1mods[1], lvl40mods[1]);
         final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), selectedSpinners, 2, hero.speed, lvl1mods[2], lvl40mods[2]);
         final HeroTableRow trDef = makeTableRow(getBaseContext().getResources().getString(R.string.def), selectedSpinners, 3, hero.def, lvl1mods[3], lvl40mods[3]);
         final HeroTableRow trRes = makeTableRow(getBaseContext().getResources().getString(R.string.res), selectedSpinners, 4, hero.res, lvl1mods[4], lvl40mods[4]);
-        tv.addView(headers);
-        tv.addView(vline);
-
-        TableRow blankRow = new TableRow(IVCheckActivity.this);
-
-        blankRow.setLayoutParams(new TableRow.LayoutParams(
-                TableRow.LayoutParams.MATCH_PARENT,
-                TableRow.LayoutParams.MATCH_PARENT));
-        blankRow.setPadding(0, 0, 0, 10);
-
-        tv.addView(blankRow);
-
         tv.addView(trHP);
         tv.addView(trMght);
         tv.addView(trSpd);
@@ -269,23 +221,10 @@ public class IVCheckActivity extends ToolbaredActivity {
         tv.addView(trRes);
 
         if (!nakedHeroes) {
-            TableRow skillsRow = (TableRow) View.inflate(this, R.layout.skillsrow, null);
-            TextView skillsLabel = (TextView) skillsRow.findViewById(R.id.skillsLabel);
-            LinearLayout skills1 = (LinearLayout) skillsRow.findViewById(R.id.skills1);
-            LinearLayout skills40 = (LinearLayout) skillsRow.findViewById(R.id.skills40);
-            skillsLabel.setText(R.string.skills);
-
-            updateSkillView(skills1, hero.skills1);
-            updateSkillView(skills40, hero.skills40);
-
-            skillsRow.setLayoutParams(new TableRow.LayoutParams(
-                    TableRow.LayoutParams.MATCH_PARENT,
-                    TableRow.LayoutParams.MATCH_PARENT));
-            skillsRow.setPadding(3, 0, 0, 18);
-            tv.addView(skillsRow);
+            tv.addView(createSkillsRow(hero));
         }
-        Button addButton = (Button) findViewById(R.id.addToCollectionBtn);
-        addButton.setOnClickListener(new View.OnClickListener() {
+        Button addHeroButton = (Button) findViewById(R.id.addToCollectionBtn);
+        addHeroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Hero h = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
@@ -322,6 +261,64 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
         });
 
+    }
+
+    @NonNull
+    private TableRow createSkillsRow(Hero hero) {
+        TableRow skillsRow = (TableRow) View.inflate(this, R.layout.skillsrow, null);
+        TextView skillsLabel = (TextView) skillsRow.findViewById(R.id.skillsLabel);
+        LinearLayout skills1 = (LinearLayout) skillsRow.findViewById(R.id.skills1);
+        LinearLayout skills40 = (LinearLayout) skillsRow.findViewById(R.id.skills40);
+        skillsLabel.setText(R.string.skills);
+
+        updateSkillView(skills1, hero.skills1);
+        updateSkillView(skills40, hero.skills40);
+
+        skillsRow.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.MATCH_PARENT));
+        skillsRow.setPadding(3, 0, 0, 18);
+        return skillsRow;
+    }
+
+    @NonNull
+    private View createLine() {
+        final View vline = new View(IVCheckActivity.this);
+        vline.setLayoutParams(new
+                TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
+        vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+        vline.setPadding(0, 0, 0, 10);
+        return vline;
+    }
+
+    @NonNull
+    private TableRow createPaddingRow() {
+        TableRow blankRow = new TableRow(IVCheckActivity.this);
+
+        blankRow.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.MATCH_PARENT));
+        return blankRow;
+    }
+
+    @NonNull
+    private TableRow createHeaders() {
+        TableRow headers = (TableRow) View.inflate(this, R.layout.herotitlerow, null);
+
+        headers.setLayoutParams(new TableRow.LayoutParams(
+                TableRow.LayoutParams.MATCH_PARENT,
+                TableRow.LayoutParams.MATCH_PARENT));
+        headers.setPadding(0, 10, 0, 4);
+
+        TextView attributeHeader = (TextView) headers.findViewById(R.id.herotitlelabel);
+        attributeHeader.setText(getResources().getString(R.string.attributeheader));
+
+        TextView lvl1Header = (TextView) headers.findViewById(R.id.title1);
+        lvl1Header.setText(getResources().getString(R.string.lvl1));
+
+        TextView level40Header = (TextView) headers.findViewById(R.id.title40);
+        level40Header.setText(getResources().getString(R.string.lvl40));
+        return headers;
     }
 
     HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues, int lvl1mod, int lvl40mod) {
