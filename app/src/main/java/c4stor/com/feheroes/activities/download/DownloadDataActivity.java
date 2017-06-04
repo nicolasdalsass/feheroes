@@ -1,6 +1,5 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.download;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -19,6 +18,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
+
+import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 
 public class DownloadDataActivity extends AppCompatActivity {
 
@@ -62,9 +64,9 @@ public class DownloadDataActivity extends AppCompatActivity {
             if (!isOnline()) {
                 return null;
             }
-            InputStream input = null;
-            OutputStream output = null;
-            HttpURLConnection connection = null;
+            InputStream input;
+            OutputStream output;
+            HttpURLConnection connection;
             try {
                 URL url = new URL(sUrl[0]);
                 connection = (HttpURLConnection) url.openConnection();
@@ -112,7 +114,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (goToFinder) {
-                if ("web" == result) {
+                if ("web".equals(result)) {
                     Toast t = Toast.makeText(context, "Hero data synchronized from web", Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
@@ -121,7 +123,7 @@ public class DownloadDataActivity extends AppCompatActivity {
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                 }
-                Intent intent = new Intent(getBaseContext(), FEHAnalyserActivity.class);
+                Intent intent = new Intent(getBaseContext(), IVCheckActivity.class);
                 startActivity(intent);
             } else {
                 final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);

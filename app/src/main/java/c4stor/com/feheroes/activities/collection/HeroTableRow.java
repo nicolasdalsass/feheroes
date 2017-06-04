@@ -1,6 +1,5 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.collection;
 
-import android.content.Context;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -9,6 +8,10 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
+import c4stor.com.feheroes.activities.ivcheck.Level1StatSpinnerAdapter;
+
 /**
  * Created by Nicolas on 15/02/2017.
  */
@@ -16,7 +19,7 @@ import android.widget.TextView;
 public class HeroTableRow extends TableRow {
 
     public int selectedPos = 1;
-    public FEHAnalyserActivity parentActivity;
+    public IVCheckActivity parentActivity;
     public String attribute;
     int[] selectedSpinners;
     int spinnerPos;
@@ -25,7 +28,7 @@ public class HeroTableRow extends TableRow {
     int lvl1Value;
     int lvl40Value;
 
-    public HeroTableRow(FEHAnalyserActivity parentActivity, int[] selectedSpinners, int spinnerPos,  String attribute, int[] attributeValues, int lvl1mod, int lvl40mod){
+    public HeroTableRow(IVCheckActivity parentActivity, int[] selectedSpinners, int spinnerPos, String attribute, int[] attributeValues, int lvl1mod, int lvl40mod){
         super(parentActivity);
         this.parentActivity = parentActivity;
         this.attribute = attribute;

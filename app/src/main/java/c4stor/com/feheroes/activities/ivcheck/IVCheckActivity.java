@@ -1,4 +1,4 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.ivcheck;
 
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,7 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-public class FEHAnalyserActivity extends ToolbaredActivity {
+import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.ToolbaredActivity;
+import c4stor.com.feheroes.activities.collection.HeroTableRow;
+import c4stor.com.feheroes.model.Hero;
+import c4stor.com.feheroes.model.HeroCollection;
+import c4stor.com.feheroes.model.HeroRoll;
+
+public class IVCheckActivity extends ToolbaredActivity {
 
 
     protected Map<String, Hero> refMap = new TreeMap<>();
@@ -105,7 +112,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelected = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] fiveStarsValues = fiveStarsMap.values().toArray(new Hero[]{});
                         int newPosition = getNewPosition(heroSelected, fiveStarsValues);
-                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, fiveStarsValues);
+                        ArrayAdapter fiveStarsAdapater = new SpinnerHeroesAdapter(IVCheckActivity.this, fiveStarsValues);
                         fiveStarsAdapater.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(fiveStarsAdapater);
                         spinnerHeroes.setSelection(newPosition);
@@ -117,7 +124,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelectedb = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] fourStarsValues = fourStarsMap.values().toArray(new Hero[]{});
                         int newPositionb = getNewPosition(heroSelectedb, fourStarsValues);
-                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, fourStarsValues);
+                        ArrayAdapter fourStarAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, fourStarsValues);
                         fourStarAdapter.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(fourStarAdapter);
                         spinnerHeroes.setSelection(newPositionb);
@@ -129,7 +136,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                             heroSelectedc = ((Hero) spinnerHeroes.getSelectedItem()).name;
                         Hero[] threeStarValues = threeStarsMap.values().toArray(new Hero[]{});
                         int newPositionc = getNewPosition(heroSelectedc, threeStarValues);
-                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(FEHAnalyserActivity.this, threeStarValues);
+                        ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, threeStarValues);
                         threeStarsAdapter.notifyDataSetChanged();
                         spinnerHeroes.setAdapter(threeStarsAdapter);
                         spinnerHeroes.setSelection(newPositionc);
@@ -145,10 +152,10 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
             }
         });
 
-        populateSpinner(R.id.spinner_stars, R.array.stars_array);
+        populateSpinner();
 
         adAdBanner();
-//        disableAdBanner();
+        disableAdBanner();
     }
 
     private int getNewPosition(String selectedValue, Hero[] values) {
@@ -173,10 +180,10 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         mPublisherAdView.setVisibility(View.GONE);
     }
 
-    private void populateSpinner(int id, int resource_id) {
-        Spinner spinner = (Spinner) findViewById(id);
+    private void populateSpinner() {
+        Spinner spinner = (Spinner) findViewById(R.id.spinner_stars);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                resource_id, R.layout.spinneritem_nopadding);
+                R.array.stars_array, R.layout.spinneritem_nopadding);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         if (refMap == threeStarsMap) {
@@ -198,7 +205,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
             if (resetSpinners)
                 selectedSpinners = neutralSpinners.clone();
             resetSpinners = true;
-            FEHAnalyserActivity.this.populateTableWithHero(selectedHero);
+            IVCheckActivity.this.populateTableWithHero(selectedHero);
 
         }
 
@@ -229,7 +236,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         level40Header.setText(getResources().getString(R.string.lvl40));
 
 
-        final View vline = new View(FEHAnalyserActivity.this);
+        final View vline = new View(IVCheckActivity.this);
         vline.setLayoutParams(new
                 TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, 2));
         vline.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
@@ -246,7 +253,7 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
         tv.addView(headers);
         tv.addView(vline);
 
-        TableRow blankRow = new TableRow(FEHAnalyserActivity.this);
+        TableRow blankRow = new TableRow(IVCheckActivity.this);
 
         blankRow.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
@@ -285,8 +292,8 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
                 int nameIdentifier = getBaseContext().getResources().getIdentifier(hero.name.toLowerCase(), "string", getBaseContext().getPackageName());
                 String localizedName = capitalize(getBaseContext().getString(nameIdentifier));
 
-                List<String> boons = new ArrayList<String>();
-                List<String> banes = new ArrayList<String>();
+                List<String> boons = new ArrayList<>();
+                List<String> banes = new ArrayList<>();
                 if (trDef.selectedPos == 0)
                     boons.add(trDef.attribute);
                 if (trHP.selectedPos == 0)
@@ -318,6 +325,6 @@ public class FEHAnalyserActivity extends ToolbaredActivity {
     }
 
     HeroTableRow makeTableRow(String attribute, int[] selectedSpinners, int spinnerPos, int[] attributeValues, int lvl1mod, int lvl40mod) {
-        return new HeroTableRow(FEHAnalyserActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues, lvl1mod, lvl40mod);
+        return new HeroTableRow(IVCheckActivity.this, selectedSpinners, spinnerPos, attribute, attributeValues, lvl1mod, lvl40mod);
     }
 }

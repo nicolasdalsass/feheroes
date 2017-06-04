@@ -1,4 +1,4 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.collection;
 
 import android.app.Activity;
 import android.content.Context;
@@ -42,6 +42,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import c4stor.com.feheroes.activities.ToolbaredActivity;
+import c4stor.com.feheroes.model.HeroCollection;
+import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.R;
+
 public class CollectionActivity extends ToolbaredActivity {
 
     private static Comparator<HeroRoll> sorting = null;
@@ -49,7 +54,7 @@ public class CollectionActivity extends ToolbaredActivity {
 
     private List<SuppressedItem> supressedItems = new ArrayList<>();
 
-    private static Map<HeroRoll, Integer> statVisibility = new HashMap<HeroRoll, Integer>();
+    private static Map<HeroRoll, Integer> statVisibility = new HashMap<>();
     private static int defaultVisibility = View.GONE;
 
     @Override
@@ -408,11 +413,11 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.collName.setText(hero.getDisplayName(getContext()));
 
 
-            StringBuilder sb = new StringBuilder();
+            /*StringBuilder sb = new StringBuilder();
             for (int i = 1; i <= hero.stars; i++) {
                 sb.append("★");
-            }
-            ArrayAdapter<CharSequence> adapter = null;
+            }*/
+            ArrayAdapter<CharSequence> adapter;
             if (threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array, R.layout.spinneritem_nopadding);
             } else if (fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
@@ -468,14 +473,14 @@ public class CollectionActivity extends ToolbaredActivity {
             StringBuilder boons = new StringBuilder();
 
             for (String s : hero.boons) {
-                boons.append("+" + s + " ");
+                boons.append("+").append(s).append(" ");
             }
             holder.boons.setText(boons);
 
             StringBuilder banes = new StringBuilder();
 
             for (String s : hero.banes) {
-                banes.append("-" + s + " ");
+                banes.append("-").append(s).append(" ");
             }
             holder.banes.setText(banes);
 

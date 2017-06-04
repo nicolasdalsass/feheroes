@@ -1,10 +1,8 @@
-package c4stor.com.feheroes.skillview;
+package c4stor.com.feheroes.activities.ivcheck;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import c4stor.com.feheroes.R;
 

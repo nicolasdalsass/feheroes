@@ -1,9 +1,11 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.model;
 
 import android.content.Context;
 
 import java.io.Serializable;
 import java.util.List;
+
+import c4stor.com.feheroes.R;
 
 /**
  * Created by Nicolas on 15/02/2017.
@@ -92,17 +94,17 @@ public class HeroRoll implements Serializable {
         }
         sb.append(",");
         for (int i = 0; i < boons.size() - 1; i++) {
-            sb.append("+" + boons.get(i) + " ");
+            sb.append("+").append(boons.get(i)).append(" ");
         }
         if (boons.size() > 0) {
-            sb.append("+" + boons.get(boons.size() - 1));
+            sb.append("+").append(boons.get(boons.size() - 1));
         }
         sb.append(",");
         for (int i = 0; i < banes.size() - 1; i++) {
-            sb.append("+" + banes.get(i) + " ");
+            sb.append("+").append(banes.get(i)).append(" ");
         }
         if (banes.size() > 0) {
-            sb.append("-" + banes.get(banes.size() - 1));
+            sb.append("-").append(banes.get(banes.size() - 1));
         }
         return sb.toString();
     }

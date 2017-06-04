@@ -29,7 +29,7 @@
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingRight="@dimen/activity_horizontal_margin"
             android:paddingTop="@dimen/activity_vertical_margin"
-            tools:context="c4stor.com.feheroes.FEHAnalyserActivity">
+            tools:context="c4stor.com.feheroes.activities.ivcheck.IVCheckActivity">
 
 
             <LinearLayout

@@ -1,4 +1,4 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities;
 
 import android.app.Dialog;
 import android.content.ClipData;
@@ -31,7 +31,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import c4stor.com.feheroes.skillview.SkillTextView;
+import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.collection.CollectionActivity;
+import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
+import c4stor.com.feheroes.activities.ivcheck.SkillTextView;
+import c4stor.com.feheroes.model.Hero;
+import c4stor.com.feheroes.model.HeroCollection;
+import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.model.Skill;
 
 /**
  * Created by Nicolas on 19/02/2017.
@@ -178,7 +185,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private void startFinderActivity() {
         if (!isIVFinder()) {
-            Intent intent = new Intent(getBaseContext(), FEHAnalyserActivity.class);
+            Intent intent = new Intent(getBaseContext(), IVCheckActivity.class);
             startActivity(intent);
         }
     }
@@ -272,12 +279,12 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         resetSkillTextView(aTV);
         resetSkillTextView(bTV);
         resetSkillTextView(cTV);
-        String weapon = "";
-        String assist = "";
-        String special = "";
-        String a = "";
-        String b = "";
-        String c = "";
+        String weapon;
+        String assist;
+        String special;
+        String a;
+        String b;
+        String c;
         for (int i : skills) {
             if (i < 10000) {
                 weapon = skillsMap.get(i).name;
