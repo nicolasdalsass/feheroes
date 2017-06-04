@@ -175,38 +175,38 @@ public class CollectionActivity extends ToolbaredActivity {
                 return true;
             case R.id.sortByStars:
                 sortByStar();
-                //why no initListView(); here?
                 defaultVisibility = View.GONE;
+                initListView();
                 return true;
             case R.id.sortByHP:
                 sortByHP();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortByAtk:
                 sortByAtk();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortBySpd:
                 sortBySpd();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortByDef:
                 sortByDef();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortByRes:
                 sortByRes();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortByBST:
                 sortByBST();
-                initListView();
                 defaultVisibility = View.VISIBLE;
+                initListView();
                 return true;
             case R.id.sortByDate:
                 sorting = null;
@@ -214,6 +214,7 @@ public class CollectionActivity extends ToolbaredActivity {
                 return true;
             case R.id.undo:
                 undoHeroSupression();
+                initListView();
                 return true;
             case R.id.toggleNakedView:
                 skillsOn = !skillsOn;
@@ -233,7 +234,6 @@ public class CollectionActivity extends ToolbaredActivity {
             collection.save(getBaseContext());
             supressedItems.remove(supressedItems.size() - 1);
             invalidateOptionsMenu();
-            initListView();
         }
     }
 
@@ -333,7 +333,6 @@ public class CollectionActivity extends ToolbaredActivity {
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
         };
-        initListView();
     }
 
     private void sortByName() {
