@@ -1,4 +1,4 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.ivcheck;
 
 import android.database.DataSetObserver;
 import android.util.TypedValue;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.SpinnerAdapter;
 import android.widget.TextView;
+
+import c4stor.com.feheroes.R;
 
 /**
  * Created by Nicolas on 09/02/2017.
@@ -87,7 +89,7 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
         if (tv.getText() == "?")
             color = parent.getContext().getResources().getColor(R.color.divider);
         tv.setTextColor(color);
-        ViewGroup.LayoutParams params = tv.getLayoutParams();
+        //ViewGroup.LayoutParams params = tv.getLayoutParams();
         tv.setLayoutParams(new AbsListView.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT));
         return tv;
     }

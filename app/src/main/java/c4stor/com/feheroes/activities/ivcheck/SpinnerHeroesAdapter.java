@@ -1,4 +1,4 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.activities.ivcheck;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,6 +20,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import c4stor.com.feheroes.model.Hero;
+import c4stor.com.feheroes.R;
 
 /**
  * Created by Nicolas on 14/02/2017.

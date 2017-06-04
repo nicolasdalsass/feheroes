@@ -1,7 +1,6 @@
-package c4stor.com.feheroes;
+package c4stor.com.feheroes.model;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
