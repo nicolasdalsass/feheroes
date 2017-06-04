@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
-        // Context of the app under test.
+        // Context of the app under test. Sample pull request
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("c4stor.com.feheroes", appContext.getPackageName());
