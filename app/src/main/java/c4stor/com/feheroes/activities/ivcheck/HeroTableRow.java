@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.activities.collection;
+package c4stor.com.feheroes.activities.ivcheck;
 
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -9,8 +9,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import c4stor.com.feheroes.R;
-import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
-import c4stor.com.feheroes.activities.ivcheck.Level1StatSpinnerAdapter;
 
 /**
  * Created by Nicolas on 15/02/2017.
