@@ -52,17 +52,15 @@
     </LinearLayout>
 
 
-
-
     <LinearLayout
         android:id="@+id/hero40Line"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/heroDescriptionLayout"
         android:orientation="horizontal"
-        android:visibility="gone"
-        android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        android:layout_below="@id/heroDescriptionLayout">
+        android:paddingTop="6dp"
+        android:visibility="visible">
 
 
         <TextView

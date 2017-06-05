@@ -556,7 +556,7 @@ public class CollectionActivity extends ToolbaredActivity {
         }
 
 
-        public void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
+        private void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
 
             if (hero.boons != null && hero.boons.contains(statName)) {
                 statTV.setText(statName + " " + makeText(stat[5] - mod));
