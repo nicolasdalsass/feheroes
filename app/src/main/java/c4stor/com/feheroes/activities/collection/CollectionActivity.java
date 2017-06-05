@@ -154,6 +154,16 @@ public class CollectionActivity extends ToolbaredActivity {
                     }
                 }
             });
+            v.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                    ViewHolder vh = (ViewHolder) view.getTag();
+                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
+                    intent.putExtra("position", collection.indexOf(vh.hero));
+                    startActivity(intent);
+                    return true;
+                }
+            });
             HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, collection, sorting);
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -426,15 +436,6 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.hero = hero;
             refreshHero(hero);
 
-            v.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", collection.indexOf(hero));
-                    startActivity(intent);
-                    return true;
-                }
-            });
             drawHeroPortrait(holder, hero);
 
             selectHeroRarity(holder, hero);
