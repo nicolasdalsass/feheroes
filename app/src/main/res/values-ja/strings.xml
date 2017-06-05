@@ -161,6 +161,7 @@
     <string name="lynbridal">リン(花嫁)</string>
     <string name="cordeliabridal">ティアモ(花嫁)</string>
     <string name="comment">コメント</string>
+    <string name="save_comment">Save comment</string>
     <string name="empty_collection">You don\'t have anyone in your collection.<br/>Add some using the + button in the IV finder.</string>
 
 </resources>

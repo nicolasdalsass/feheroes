@@ -430,9 +430,9 @@ public class CollectionActivity extends ToolbaredActivity {
                 @Override
                 public boolean onLongClick(View v) {
                     Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", position);
+                    intent.putExtra("position", collection.indexOf(hero));
                     startActivity(intent);
-                    return false;
+                    return true;
                 }
             });
             drawHeroPortrait(holder, hero);
