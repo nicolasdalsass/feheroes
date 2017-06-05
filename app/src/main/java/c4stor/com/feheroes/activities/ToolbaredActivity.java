@@ -34,7 +34,6 @@ import java.util.TreeMap;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
-import c4stor.com.feheroes.activities.ivcheck.SkillTextView;
 import c4stor.com.feheroes.model.Hero;
 import c4stor.com.feheroes.model.HeroCollection;
 import c4stor.com.feheroes.model.HeroRoll;
@@ -51,6 +50,10 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected abstract int getLayoutResource();
 
     protected boolean isIVFinder() {
+        return false;
+    }
+
+    protected boolean isHeroPage() {
         return false;
     }
 

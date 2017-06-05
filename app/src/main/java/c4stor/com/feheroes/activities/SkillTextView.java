@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.activities.ivcheck;
+package c4stor.com.feheroes.activities;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;

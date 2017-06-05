@@ -109,7 +109,7 @@
     <string name="julia">ユリア</string>
     <string name="seliph">セリス</string>
     <string name="eirika">エイリーク</string>
-    <string name="addedtocollection">added to collection.</string>
+    <string name="addedtocollection">Added to collection.</string>
     <string name="mycollection">収集</string>
     <string name="attributeheader">項目</string>
     <string name="lvl1">レベル1</string>
@@ -160,4 +160,7 @@
     <string name="charlottebridal">シャーロッテ(花嫁)</string>
     <string name="lynbridal">リン(花嫁)</string>
     <string name="cordeliabridal">ティアモ(花嫁)</string>
+    <string name="comment">コメント</string>
+    <string name="empty_collection">You don\'t have anyone in your collection.<br/>Add some using the + button in the IV finder.</string>
+
 </resources>

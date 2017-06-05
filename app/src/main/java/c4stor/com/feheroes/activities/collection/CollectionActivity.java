@@ -2,6 +2,7 @@ package c4stor.com.feheroes.activities.collection;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -33,6 +34,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +46,7 @@ import java.util.List;
 import java.util.Map;
 
 import c4stor.com.feheroes.activities.ToolbaredActivity;
+import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
 import c4stor.com.feheroes.model.HeroCollection;
 import c4stor.com.feheroes.model.HeroRoll;
 import c4stor.com.feheroes.R;
@@ -128,7 +132,7 @@ public class CollectionActivity extends ToolbaredActivity {
         if (collection.size() > 0)
             noCollectionText.setVisibility(View.GONE);
         else {
-            noCollectionText.setText("You don't have anyone in your collection.\nAdd some using the + button in the IV finder.");
+            noCollectionText.setText(R.string.empty_collection);
         }
     }
 
@@ -422,6 +426,15 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.hero = hero;
             refreshHero(hero);
 
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
+                    intent.putExtra("position", position);
+                    startActivity(intent);
+                    return false;
+                }
+            });
             drawHeroPortrait(holder, hero);
 
             selectHeroRarity(holder, hero);
@@ -615,6 +628,8 @@ public class CollectionActivity extends ToolbaredActivity {
             hero.hero = threeStarsMap.get(hero.getDisplayName(this));
         }
     }
+
+
 
     static class ViewHolder {
         HeroRoll hero;
