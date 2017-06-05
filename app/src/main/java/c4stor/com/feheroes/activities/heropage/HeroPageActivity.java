@@ -14,7 +14,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
@@ -35,6 +38,9 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private HeroRoll heroRoll;
     private ImageView heroPortrait;
+    EditText comment;
+    Button saveComment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +62,10 @@ public class HeroPageActivity extends ToolbaredActivity {
         setSupportActionBar(myToolbar);
 
         heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
+        comment = (EditText) findViewById(R.id.heroComment);
+        saveComment = (Button)findViewById(R.id.saveButton);
+        saveComment.setOnClickListener(saveCommentListener);
+
 
         onResume();
     }
@@ -71,7 +81,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     private void adAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdViewColl);
+        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
         PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
         PublisherAdRequest adRequest = b.build();
         mPublisherAdView.loadAd(adRequest);
@@ -79,7 +89,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
 
     private void disableAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdViewColl);
+        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
         mPublisherAdView.setVisibility(View.GONE);
     }
 
@@ -87,8 +97,17 @@ public class HeroPageActivity extends ToolbaredActivity {
     protected void onResume() {
         super.onResume();
         drawHeroPortrait();
-        //adAdBanner();
+        showComment();
+        adAdBanner();
         //disableAdBanner();
+    }
+
+    private void showComment() {
+        if (heroRoll.getComment() == null) {
+            comment.setHint(R.string.comment);
+        } else {
+            comment.setText(heroRoll.getComment());
+        }
     }
 
     private void drawHeroPortrait() {
@@ -122,4 +141,14 @@ public class HeroPageActivity extends ToolbaredActivity {
         return Bitmap.createScaledBitmap(
                 output, finalWidth, finalWidth, true);
     }
+
+    private View.OnClickListener saveCommentListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String commentString = comment.getText().toString();
+            Toast.makeText(getBaseContext(), commentString, Toast.LENGTH_SHORT).show();
+            heroRoll.setComment(commentString);
+            collection.save(getBaseContext());
+        }
+    };
 }
