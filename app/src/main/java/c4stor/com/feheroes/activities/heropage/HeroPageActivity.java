@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
@@ -38,9 +39,15 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private HeroRoll heroRoll;
     private ImageView heroPortrait;
-    EditText comment;
-    Button saveComment;
-
+    private EditText comment;
+    private Button saveComment;
+    private TextView hp;
+    private TextView atk;
+    private TextView spd;
+    private TextView def;
+    private TextView res;
+    private TextView bst;
+    protected boolean skillsOn = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +72,12 @@ public class HeroPageActivity extends ToolbaredActivity {
         comment = (EditText) findViewById(R.id.heroComment);
         saveComment = (Button)findViewById(R.id.saveButton);
         saveComment.setOnClickListener(saveCommentListener);
+        hp = (TextView) findViewById(R.id.hero40LineHP);
+        atk = (TextView) findViewById(R.id.hero40LineAtk);
+        spd = (TextView) findViewById(R.id.hero40LineSpd);
+        def = (TextView) findViewById(R.id.hero40LineDef);
+        res = (TextView) findViewById(R.id.hero40LineRes);
+        bst = (TextView) findViewById(R.id.hero40LineBST);
 
 
         onResume();
@@ -98,8 +111,47 @@ public class HeroPageActivity extends ToolbaredActivity {
         super.onResume();
         drawHeroPortrait();
         showComment();
+        calculateHeroStats();
         adAdBanner();
         //disableAdBanner();
+    }
+
+    //this whole chunk of code is redundant with CollectionActivity's
+    private void calculateHeroStats() {
+        int[] mods = calculateMods(heroRoll.hero, 40, !skillsOn);
+        makePopupStat(hp, heroRoll, heroRoll.hero.HP, mods[0], getResources().getString(R.string.hp));
+        makePopupStat(atk, heroRoll, heroRoll.hero.atk, mods[1], getResources().getString(R.string.atk));
+        makePopupStat(spd, heroRoll, heroRoll.hero.speed, mods[2], getResources().getString(R.string.spd));
+        makePopupStat(def, heroRoll, heroRoll.hero.def, mods[3], getResources().getString(R.string.def));
+        makePopupStat(res, heroRoll, heroRoll.hero.res, mods[4], getResources().getString(R.string.res));
+
+        int totalMods = mods[0] + mods[1] + mods[2] + mods[3] + mods[4];
+        String bstText = heroRoll.getBST(getBaseContext()) < 0 ? "?" : heroRoll.getBST(getBaseContext()) - totalMods + "";
+        bst.setText(
+                getResources().getString(R.string.bst) + " " +
+                        bstText);
+        bst.setTextColor(getResources().getColor(R.color.colorPrimary));
+    }
+
+    public void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
+
+        if (hero.boons != null && hero.boons.contains(statName)) {
+            statTV.setText(statName + " " + makeText(stat[5] - mod));
+            statTV.setTextColor(getResources().getColor(R.color.high_green));
+        } else if (hero.banes != null && hero.banes.contains(statName)) {
+            statTV.setText(statName + " " + makeText(stat[3] - mod));
+            statTV.setTextColor(getResources().getColor(R.color.low_red));
+        } else {
+            statTV.setText(statName + " " + makeText(stat[4] - mod));
+            statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+    }
+
+    private String makeText(int i) {
+        if (i < 0)
+            return "?";
+        else
+            return i + "";
     }
 
     private void showComment() {
@@ -145,9 +197,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private View.OnClickListener saveCommentListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String commentString = comment.getText().toString();
-            Toast.makeText(getBaseContext(), commentString, Toast.LENGTH_SHORT).show();
-            heroRoll.setComment(commentString);
+            heroRoll.setComment(comment.getText().toString());
             collection.save(getBaseContext());
         }
     };
