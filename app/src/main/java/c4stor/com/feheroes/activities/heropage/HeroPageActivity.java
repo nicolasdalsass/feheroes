@@ -42,15 +42,20 @@ public class HeroPageActivity extends ToolbaredActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 
         Intent intent = getIntent();
-        int heroPosition = Integer.valueOf(intent.getStringExtra("position"));
+        int heroPosition = intent.getIntExtra("position", 1);
+        collection = HeroCollection.loadFromStorage(getBaseContext());
         this.heroRoll = collection.get(heroPosition);
 
-        myToolbar.setTitle(heroRoll.getDisplayName(this));
+        StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
+        sb.append(" ");
+        for (int i = 0; i < heroRoll.stars; i++) {
+            sb.append("★");
+        }
+        myToolbar.setTitle(sb.toString());
         myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
         setSupportActionBar(myToolbar);
 
-
-        //heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
+        heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
 
         onResume();
     }
@@ -81,13 +86,8 @@ public class HeroPageActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        collection = HeroCollection.loadFromStorage(getBaseContext());
-        try {
-            initHeroData();
-        } catch (IOException e) {
-
-        }
-        adAdBanner();
+        drawHeroPortrait();
+        //adAdBanner();
         //disableAdBanner();
     }
 
@@ -95,12 +95,10 @@ public class HeroPageActivity extends ToolbaredActivity {
         int drawableId = this.getResources().getIdentifier(heroRoll.hero.name.toLowerCase(), "drawable", this.getPackageName());
         Bitmap b = BitmapFactory.decodeResource(this.getResources(), drawableId);
 
-        int circleRadius = Math.min(140, Math.min(b.getHeight() / 5, b.getWidth() / 5));
+        int circleRadius = Math.min(100, Math.min(b.getHeight(), b.getWidth()));
         Bitmap c = getRoundedCroppedBitmap(b, circleRadius, circleRadius);
-        Drawable dCool = new BitmapDrawable(this.getResources(), c);
-
-        //holder.collImage.setImageDrawable(dCool);
-        //holder.collName.setText(hero.getDisplayName(getContext()));
+        Drawable drawable = new BitmapDrawable(this.getResources(), c);
+        heroPortrait.setImageDrawable(drawable);
     }
 
     private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth, int finalWeight) {

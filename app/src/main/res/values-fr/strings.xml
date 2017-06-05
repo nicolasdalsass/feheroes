@@ -166,5 +166,6 @@
     <string name="roderick">Roderick</string>
     <string name="maskedmarth">Marth (masqué)</string>
     <string name="comment">Commentaire</string>
+    <string name="save_comment">Sauvegarder commentaire</string>
     <string name="empty_collection">Vous n\avez personne dans votre collection.<br/>Ajoutez en en utilisant le boutton + de l\'IV finder.</string>
 </resources>

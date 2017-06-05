@@ -18,26 +18,39 @@
         app:popupTheme="@style/PopupMenu"
         android:layout_alignParentTop="true"/>
 
-    <ImageView
-        android:id="@+id/heroPortrait"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/my_toolbar"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/heroPortrait"
-        android:id="@+id/heroStars"/>
-
-    <EditText
-        android:id="@+id/heroComment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:lines="5"
-        android:hint="@string/comment"
         android:layout_below="@id/my_toolbar"
-        android:layout_toRightOf="@id/heroPortrait" />
+        android:id="@+id/heroDescriptionLayout">
+        <ImageView
+            android:id="@+id/heroPortrait"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"/>
+
+        <EditText
+            android:id="@+id/heroComment"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:lines="5"
+            android:layout_weight="80"
+            android:hint="@string/comment" />
+
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            android:text="@string/save_comment" />
+
+    </LinearLayout>
+
+
 
 
     <LinearLayout
@@ -48,7 +61,7 @@
         android:visibility="gone"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
-        android:layout_below="@id/heroPortrait">
+        android:layout_below="@id/heroDescriptionLayout">
 
 
         <TextView
