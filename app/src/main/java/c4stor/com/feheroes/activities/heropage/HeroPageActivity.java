@@ -13,10 +13,13 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +50,8 @@ public class HeroPageActivity extends ToolbaredActivity {
     private TextView def;
     private TextView res;
     private TextView bst;
-    protected boolean skillsOn = false;
+    protected boolean skillsOn = true;
+    private LinearLayout skills;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,9 +82,24 @@ public class HeroPageActivity extends ToolbaredActivity {
         def = (TextView) findViewById(R.id.hero40LineDef);
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
-
+        skills = (LinearLayout) findViewById(R.id.collection_skill);
 
         onResume();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
+        MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
+        if (!skillsOn) {
+            nakedView.setTitle(R.string.no_skills);
+            nakedView.getIcon().setAlpha(130);
+        } else {
+            nakedView.setTitle(R.string.skills_on);
+            nakedView.getIcon().setAlpha(255);
+        }
+        return true;
     }
 
     @Override
@@ -112,6 +131,8 @@ public class HeroPageActivity extends ToolbaredActivity {
         drawHeroPortrait();
         showComment();
         calculateHeroStats();
+        showSkills();
+
         adAdBanner();
         //disableAdBanner();
     }
@@ -152,6 +173,15 @@ public class HeroPageActivity extends ToolbaredActivity {
             return "?";
         else
             return i + "";
+    }
+
+    private void showSkills() {
+        if (skillsOn && heroRoll.hero.skills40 != null) {
+            updateSkillView(skills, heroRoll.hero.skills40);
+            skills.setVisibility(View.VISIBLE);
+        } else {
+            skills.setVisibility(View.GONE);
+        }
     }
 
     private void showComment() {

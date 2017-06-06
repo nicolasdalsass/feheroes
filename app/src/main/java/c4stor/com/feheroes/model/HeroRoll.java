@@ -94,23 +94,23 @@ public class HeroRoll implements Serializable {
             sb.append("★");
         }
         sb.append(",");
-        for (int i = 0; i < boons.size() - 1; i++) {
-            sb.append("+").append(boons.get(i)).append(" ");
-        }
-        if (boons.size() > 0) {
-            sb.append("+").append(boons.get(boons.size() - 1));
-        }
+        appendBoonsOrBanes(sb, boons, '+');
         sb.append(",");
-        for (int i = 0; i < banes.size() - 1; i++) {
-            sb.append("+").append(banes.get(i)).append(" ");
-        }
-        if (banes.size() > 0) {
-            sb.append("-").append(banes.get(banes.size() - 1));
-        }
+        appendBoonsOrBanes(sb, banes, '-');
+        sb.append(",");
         if (comment != null) {
             sb.append(comment);
         }
         return sb.toString();
+    }
+
+    private void appendBoonsOrBanes(StringBuilder sb, List<String> list, char plusMinus) {
+        for (int i = 0; i < list.size() -1; i++) {
+            sb.append(plusMinus).append(list.get(i)).append(" ");
+        }
+        if (list.size() > 0) {
+            sb.append(plusMinus).append(list.get(list.size() - 1));
+        }
     }
 
     public String getComment() {
