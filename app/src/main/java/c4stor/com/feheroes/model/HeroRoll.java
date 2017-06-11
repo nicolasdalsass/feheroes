@@ -18,7 +18,13 @@ public class HeroRoll implements Serializable {
     public int stars;
     public List<String> boons;
     public List<String> banes;
-    private String comment;
+    public String comment;
+    public int equippedWeapon;
+    public int equippedAssist;
+    public int equippedSpecial;
+    public int equippedA;
+    public int equippedB;
+    public int equippedC;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
@@ -111,13 +117,5 @@ public class HeroRoll implements Serializable {
         if (list.size() > 0) {
             sb.append(plusMinus).append(list.get(list.size() - 1));
         }
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 }

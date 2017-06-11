@@ -16,9 +16,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -148,19 +145,6 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
         }
         return 0;
-    }
-
-
-    private void adAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
-        PublisherAdRequest adRequest = b.build();
-        mPublisherAdView.loadAd(adRequest);
-    }
-
-    private void disableAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        mPublisherAdView.setVisibility(View.GONE);
     }
 
     private void populateSpinner() {

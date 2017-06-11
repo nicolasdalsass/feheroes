@@ -32,11 +32,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,11 +40,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
 import c4stor.com.feheroes.model.HeroCollection;
 import c4stor.com.feheroes.model.HeroRoll;
-import c4stor.com.feheroes.R;
 
 public class CollectionActivity extends ToolbaredActivity {
 
@@ -112,19 +107,6 @@ public class CollectionActivity extends ToolbaredActivity {
         initTextView();
         adAdBanner();
 //        disableAdBanner();
-    }
-
-    private void adAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdViewColl);
-        PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
-        PublisherAdRequest adRequest = b.build();
-        mPublisherAdView.loadAd(adRequest);
-    }
-
-
-    private void disableAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdViewColl);
-        mPublisherAdView.setVisibility(View.GONE);
     }
 
     private void initTextView() {
@@ -404,8 +386,7 @@ public class CollectionActivity extends ToolbaredActivity {
             paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
             canvas.drawBitmap(bitmap, 0, 0, paintImage);
 
-            return Bitmap.createScaledBitmap(
-                    output, finalWidth, finalWidth, true);
+            return Bitmap.createScaledBitmap(output, finalWidth, finalWidth, true);
         }
 
         @NonNull
@@ -582,7 +563,7 @@ public class CollectionActivity extends ToolbaredActivity {
         holder.boons = (TextView) v.findViewById(R.id.boons);
         holder.banes = (TextView) v.findViewById(R.id.banes);
         holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
-        holder.extraData = (LinearLayout) v.findViewById(R.id.hero40Line);
+        holder.extraData = (LinearLayout) v.findViewById(R.id.hero40StatLine);
         holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
         holder.lvl40Atk = (TextView) v.findViewById(R.id.hero40LineAtk);
         holder.lvl40Spd = (TextView) v.findViewById(R.id.hero40LineSpd);
