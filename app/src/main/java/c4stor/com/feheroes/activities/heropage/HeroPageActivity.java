@@ -13,17 +13,23 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
+import c4stor.com.feheroes.model.Hero;
 import c4stor.com.feheroes.model.HeroCollection;
 import c4stor.com.feheroes.model.HeroRoll;
 
@@ -36,7 +42,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     private HeroRoll heroRoll;
     private ImageView heroPortrait;
     private EditText comment;
-    private Button saveComment;
     private TextView hp;
     private TextView atk;
     private TextView spd;
@@ -46,13 +51,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     protected boolean skillsOn = true;
     private LinearLayout skills;
 
-    private View.OnClickListener saveCommentListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            heroRoll.comment = comment.getText().toString();
-            collection.save(getBaseContext());
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +73,24 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
         comment = (EditText) findViewById(R.id.heroComment);
-        saveComment = (Button)findViewById(R.id.saveButton);
-        saveComment.setOnClickListener(saveCommentListener);
+        comment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //do nothing
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                heroRoll.comment = s.toString();
+                collection.save(getBaseContext());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //do nothing
+            }
+        });
+
         hp = (TextView) findViewById(R.id.hero40LineHP);
         atk = (TextView) findViewById(R.id.hero40LineAtk);
         spd = (TextView) findViewById(R.id.hero40LineSpd);
@@ -165,10 +179,25 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showSkills() {
         if (skillsOn && heroRoll.hero.skills40 != null) {
-            updateSkillView(skills, heroRoll.hero.skills40);
+            updateSkillView(skills, heroRoll.hero.skills40);;
             skills.setVisibility(View.VISIBLE);
         } else {
             skills.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.toggleNakedView:
+                skillsOn = !skillsOn;
+                showSkills();
+                invalidateOptionsMenu();
+                return true;
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
         }
     }
 
