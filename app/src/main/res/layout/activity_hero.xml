@@ -26,27 +26,18 @@
             android:id="@+id/heroPortrait"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="20dp"
             android:layout_marginBottom="10dp"
             android:layout_width="100dp"
             android:layout_height="100dp"/>
 
         <EditText
             android:id="@+id/heroComment"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lines="5"
             android:layout_weight="80"
             android:hint="@string/comment" />
-
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="20"
-            android:layout_gravity="center"
-            android:text="@string/save_comment" />
 
     </LinearLayout>
 
@@ -115,79 +106,73 @@
         android:id="@+id/heroSkills"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:visibility="visible"
-        android:paddingBottom="3dp"
-        android:layout_below="@id/hero40StatLine">
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="30dp"
+        android:paddingRight="30dp"
+        android:layout_below="@id/hero40StatLine"
+        android:gravity="center">
+
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp">
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/vertical_skill_tv_wpn"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/vertical_skill_tv_assist"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/vertical_skill_tv_special"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-        </LinearLayout>
+                android:textSize="18sp" />
 
+        </LinearLayout>
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp">
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:layout_gravity="center">
 
             <TextView
                 android:id="@+id/vertical_skill_tv_a"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
+                android:textSize="18sp" />
             <TextView
                 android:id="@+id/vertical_skill_tv_b"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/vertical_skill_tv_c"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="18sp" />
         </LinearLayout>
-
     </LinearLayout>
 
     <com.google.android.gms.ads.doubleclick.PublisherAdView
@@ -195,6 +180,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         ads:adSize="SMART_BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
 </RelativeLayout>
