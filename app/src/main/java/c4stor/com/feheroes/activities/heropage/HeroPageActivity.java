@@ -46,6 +46,14 @@ public class HeroPageActivity extends ToolbaredActivity {
     protected boolean skillsOn = true;
     private LinearLayout skills;
 
+    private View.OnClickListener saveCommentListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            heroRoll.comment = comment.getText().toString();
+            collection.save(getBaseContext());
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -104,8 +112,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     protected int getLayoutResource() {
         return R.layout.activity_hero;
     }
-
-
 
     @Override
     protected void onResume() {
@@ -204,12 +210,4 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         return Bitmap.createScaledBitmap(output, finalWidth, finalWidth, true);
     }
-
-    private View.OnClickListener saveCommentListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            heroRoll.comment = comment.getText().toString();
-            collection.save(getBaseContext());
-        }
-    };
 }
