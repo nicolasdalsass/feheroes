@@ -21,16 +21,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
-
-import java.io.IOException;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.activities.collection.CollectionActivity;
 import c4stor.com.feheroes.model.HeroCollection;
 import c4stor.com.feheroes.model.HeroRoll;
 
@@ -82,7 +75,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         def = (TextView) findViewById(R.id.hero40LineDef);
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
-        skills = (LinearLayout) findViewById(R.id.collection_skill);
+        skills = (LinearLayout) findViewById(R.id.heroSkills);
 
         onResume();
     }
@@ -112,18 +105,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         return R.layout.activity_hero;
     }
 
-    private void adAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
-        PublisherAdRequest adRequest = b.build();
-        mPublisherAdView.loadAd(adRequest);
-    }
 
-
-    private void disableAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        mPublisherAdView.setVisibility(View.GONE);
-    }
 
     @Override
     protected void onResume() {
@@ -185,10 +167,10 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     private void showComment() {
-        if (heroRoll.getComment() == null) {
+        if (heroRoll.comment == null) {
             comment.setHint(R.string.comment);
         } else {
-            comment.setText(heroRoll.getComment());
+            comment.setText(heroRoll.comment);
         }
     }
 
@@ -220,14 +202,13 @@ public class HeroPageActivity extends ToolbaredActivity {
         paintImage.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_ATOP));
         canvas.drawBitmap(bitmap, 0, 0, paintImage);
 
-        return Bitmap.createScaledBitmap(
-                output, finalWidth, finalWidth, true);
+        return Bitmap.createScaledBitmap(output, finalWidth, finalWidth, true);
     }
 
     private View.OnClickListener saveCommentListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            heroRoll.setComment(comment.getText().toString());
+            heroRoll.comment = comment.getText().toString();
             collection.save(getBaseContext());
         }
     };

@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="20"
-            android:text="TextView"
+            android:text="Boons"
             android:textColor="@color/high_green"
             android:textSize="18sp" />
 
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="20"
-            android:text="TextView"
+            android:text="Banes"
             android:textColor="@color/low_red"
             android:textSize="18sp" />
 
@@ -90,12 +90,12 @@
                 android:background="@drawable/removebutton"
                 android:text="x"
                 android:textColor="@color/low_red"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/hero40Line"
+        android:id="@+id/hero40StatLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"

@@ -2,7 +2,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
@@ -53,7 +52,7 @@
 
 
     <LinearLayout
-        android:id="@+id/hero40Line"
+        android:id="@+id/hero40StatLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/heroDescriptionLayout"
@@ -113,13 +112,12 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/collection_skill"
+        android:id="@+id/heroSkills"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:visibility="gone"
+        android:visibility="visible"
         android:paddingBottom="3dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -188,6 +186,7 @@
                 android:textColor="@color/colorPrimary"
                 android:textSize="14sp" />
         </LinearLayout>
+
     </LinearLayout>
 
     <com.google.android.gms.ads.doubleclick.PublisherAdView

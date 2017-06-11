@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +19,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
+import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 
@@ -238,6 +241,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     public static class ContactMeDialogFragment extends DialogFragment {
         @Override
+        @NonNull
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -264,57 +268,78 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return true;
     }
 
-    private void resetSkillTextView(TextView tv){
-        tv.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
-        tv.setText("");
-    }
-
     protected void updateSkillView(LinearLayout layout, int[] skills) {
-        TextView wpnTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_wpn);
-        TextView spTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_special);
-        TextView assistTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_assist);
-        TextView aTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_a);
-        TextView bTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_b);
-        TextView cTV = (TextView) layout.findViewById(R.id.vertical_skill_tv_c);
-        resetSkillTextView(wpnTV);
-        resetSkillTextView(spTV);
-        resetSkillTextView(assistTV);
-        resetSkillTextView(aTV);
-        resetSkillTextView(bTV);
-        resetSkillTextView(cTV);
-        String weapon;
-        String assist;
-        String special;
-        String a;
-        String b;
-        String c;
+        TextView wpnTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_wpn);
+        TextView assistTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_assist);
+        TextView spTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_special);
+        TextView aTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_a);
+        TextView bTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_b);
+        TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
-            if (i < 10000) {
-                weapon = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, wpnTV, SkillTextView.WEAPON_TYPE, weapon);
+            if (isWeapon(i)) {
+                SkillTextView.makeSkillView(this, wpnTV, SkillTextView.WEAPON_TYPE, skillsMap.get(i).name);
                 wpnTV.setVisibility(View.VISIBLE);
-            } else if (i >= 10000 && i < 20000) {
-                assist = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, assistTV, SkillTextView.ASSIST_TYPE, assist);
+            } else if (isAssist(i)) {
+                SkillTextView.makeSkillView(this, assistTV, SkillTextView.ASSIST_TYPE, skillsMap.get(i).name);
                 assistTV.setVisibility(View.VISIBLE);
-            } else if (i >= 20000 && i < 30000) {
-                special = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, spTV, SkillTextView.SPECIAL_TYPE, special);
+            } else if (isSpecial(i)) {
+                SkillTextView.makeSkillView(this, spTV, SkillTextView.SPECIAL_TYPE, skillsMap.get(i).name);
                 spTV.setVisibility(View.VISIBLE);
-            } else if (i >= 30000 && i < 40000) {
-                a = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, aTV, SkillTextView.PASSIVE_TYPE, a);
+            } else if (isPassiveA(i)) {
+                SkillTextView.makeSkillView(this, aTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
                 aTV.setVisibility(View.VISIBLE);
-            } else if (i >= 40000 && i < 50000) {
-                b = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, bTV, SkillTextView.PASSIVE_TYPE, b);
+            } else if (isPassiveB(i)) {
+                SkillTextView.makeSkillView(this, bTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
                 bTV.setVisibility(View.VISIBLE);
-            } else if (i >= 50000 ) {
-                c = skillsMap.get(i).name;
-                SkillTextView.makeSkillView(this, cTV, SkillTextView.PASSIVE_TYPE, c);
+            } else if (isPassiveC(i)) {
+                SkillTextView.makeSkillView(this, cTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
                 cTV.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    private TextView findAndResetSkillTextView(LinearLayout layout, int id) {
+        TextView textView = (TextView) layout.findViewById(id);
+        textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
+        textView.setText("");
+        return textView;
+    }
+
+    private boolean isPassiveC(int i) {
+        return i >= 50000;
+    }
+
+    private boolean isPassiveB(int i) {
+        return i >= 40000 && i < 50000;
+    }
+
+    private boolean isPassiveA(int i) {
+        return i >= 30000 && i < 40000;
+    }
+
+    private boolean isSpecial(int i) {
+        return i >= 20000 && i < 30000;
+    }
+
+    private boolean isAssist(int i) {
+        return i >= 10000 && i < 20000;
+    }
+
+    private boolean isWeapon(int i) {
+        return 0 < i && i < 10000;
+    }
+
+    protected void adAdBanner() {
+        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
+        PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
+        PublisherAdRequest adRequest = b.build();
+        mPublisherAdView.loadAd(adRequest);
+    }
+
+
+    protected void disableAdBanner() {
+        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
+        mPublisherAdView.setVisibility(View.GONE);
     }
 
     protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
