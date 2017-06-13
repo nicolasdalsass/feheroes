@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.model;
+package c4stor.com.feheroes.model.skill;
 
 /**
  * Created by Nicolas on 17/03/2017.

@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.model;
+package c4stor.com.feheroes.model.hero;
 
 import android.content.Context;
 

@@ -23,9 +23,9 @@ import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.Hero;
-import c4stor.com.feheroes.model.HeroCollection;
-import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class IVCheckActivity extends ToolbaredActivity {
 
