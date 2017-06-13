@@ -21,7 +21,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import c4stor.com.feheroes.model.Hero;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.R;
 
 /**

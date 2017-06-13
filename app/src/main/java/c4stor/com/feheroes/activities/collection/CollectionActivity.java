@@ -43,8 +43,8 @@ import java.util.Map;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
-import c4stor.com.feheroes.model.HeroCollection;
-import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class CollectionActivity extends ToolbaredActivity {
 

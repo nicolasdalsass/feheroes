@@ -37,10 +37,10 @@ import java.util.TreeMap;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
-import c4stor.com.feheroes.model.Hero;
-import c4stor.com.feheroes.model.HeroCollection;
-import c4stor.com.feheroes.model.HeroRoll;
-import c4stor.com.feheroes.model.Skill;
+import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroRoll;
+import c4stor.com.feheroes.model.skill.Skill;
 
 /**
  * Created by Nicolas on 19/02/2017.

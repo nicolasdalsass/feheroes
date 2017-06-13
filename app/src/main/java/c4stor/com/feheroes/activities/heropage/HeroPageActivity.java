@@ -15,23 +15,18 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.Hero;
-import c4stor.com.feheroes.model.HeroCollection;
-import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroRoll;
 
 /**
  * Created by eclogia on 04/06/17.
