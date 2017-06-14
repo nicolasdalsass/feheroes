@@ -12,4 +12,9 @@ public class AndInheritance implements Inheritance {
         this.condition1 = condition1;
         this.condition2 = condition2;
     }
+
+    @Override
+    public boolean inheritedBy(Inheritance inheritance) {
+        return condition1.inheritedBy(inheritance) && condition2.inheritedBy(inheritance);
+    }
 }

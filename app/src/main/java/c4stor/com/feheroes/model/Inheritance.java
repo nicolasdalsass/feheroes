@@ -6,4 +6,6 @@ package c4stor.com.feheroes.model;
 
 public interface Inheritance {
 
+    boolean inheritedBy(Inheritance inheritance);
+
 }
