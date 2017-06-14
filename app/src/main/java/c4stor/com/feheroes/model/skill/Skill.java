@@ -8,4 +8,5 @@ public class Skill {
     public int id;
     public String name;
     public int[] mods;
+    public Inheritance inheritance;
 }

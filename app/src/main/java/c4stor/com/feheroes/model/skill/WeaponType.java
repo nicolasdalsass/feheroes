@@ -6,11 +6,12 @@ import static c4stor.com.feheroes.model.skill.WeaponColor.GREEN;
 import static c4stor.com.feheroes.model.skill.WeaponColor.RED;
 
 
-public enum WeaponType {
+public enum WeaponType implements Inheritance {
     SWORD(RED), LANCE(BLUE), AXE(GREEN),
     RTOME(RED), BTOME(BLUE), GTOME(GREEN),
     RBREATH(RED), BBREATH(BLUE), GBREATH(GREEN),
-    BOW(COLORLESS), DAGGER(COLORLESS), STAFF(COLORLESS);
+    BOW(COLORLESS), DAGGER(COLORLESS), STAFF(COLORLESS),
+    NONE(WeaponColor.NONE), ALL(WeaponColor.ALL);
 
     public WeaponColor color;
 
