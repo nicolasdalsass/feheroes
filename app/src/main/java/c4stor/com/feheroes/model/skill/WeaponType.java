@@ -1,5 +1,7 @@
 package c4stor.com.feheroes.model.skill;
 
+import c4stor.com.feheroes.model.Inheritance;
+
 import static c4stor.com.feheroes.model.skill.WeaponColor.BLUE;
 import static c4stor.com.feheroes.model.skill.WeaponColor.COLORLESS;
 import static c4stor.com.feheroes.model.skill.WeaponColor.GREEN;

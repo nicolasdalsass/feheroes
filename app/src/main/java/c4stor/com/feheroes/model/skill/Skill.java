@@ -1,5 +1,7 @@
 package c4stor.com.feheroes.model.skill;
 
+import c4stor.com.feheroes.model.Inheritance;
+
 /**
  * Created by Nicolas on 17/03/2017.
  */
