@@ -6,6 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.skill.Weapon;
 
 /**
  * Created by Nicolas on 15/02/2017.
@@ -19,12 +21,12 @@ public class HeroRoll implements Serializable {
     public List<String> boons;
     public List<String> banes;
     public String comment;
-    public int equippedWeapon;
-    public int equippedAssist;
-    public int equippedSpecial;
-    public int equippedA;
-    public int equippedB;
-    public int equippedC;
+    public List<Weapon> weapons;
+    public List<Skill> assists;
+    public List<Skill> specials;
+    public List<Skill> passivesA;
+    public List<Skill> passivesB;
+    public List<Skill> passivesC;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
