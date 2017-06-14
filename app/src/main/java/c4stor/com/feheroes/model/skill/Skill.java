@@ -9,4 +9,5 @@ public class Skill {
     public String name;
     public int[] mods;
     public Inheritance inheritance;
+    public SkillState state;
 }

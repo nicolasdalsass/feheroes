@@ -2,6 +2,8 @@ package c4stor.com.feheroes.model.hero;
 
 import java.io.Serializable;
 
+import c4stor.com.feheroes.model.skill.WeaponType;
+
 /**
  * Created by Nicolas on 11/02/2017.
  */
@@ -22,6 +24,9 @@ public class Hero implements Serializable {
     public int[] res;
     public int[] skills1;
     public int[] skills40;
+
+    public WeaponType weaponType;
+    public MovementType movementType;
 
     @Override
     public String toString(){
