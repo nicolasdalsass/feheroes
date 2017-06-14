@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.model.skill;
+package c4stor.com.feheroes.model;
 
 /**
  * Created by eclogia on 13/06/17.
