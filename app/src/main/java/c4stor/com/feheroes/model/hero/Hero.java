@@ -2,6 +2,7 @@ package c4stor.com.feheroes.model.hero;
 
 import java.io.Serializable;
 
+import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.WeaponType;
 
 /**
@@ -31,5 +32,10 @@ public class Hero implements Serializable {
     @Override
     public String toString(){
         return name;
+    }
+
+    public boolean canInherit(Skill skill) {
+        //Seems a bit weak, but should work as long as there isn't a condition involving both weapon and movement type somewhere.
+        return skill.inheritanceRestriction.inheritedBy(weaponType) || skill.inheritanceRestriction.inheritedBy(movementType);
     }
 }
