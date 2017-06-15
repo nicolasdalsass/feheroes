@@ -90,9 +90,14 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         if(skillsMap==null) {
             skillsMap = new HashMap<>();
             File dataFile = new File(getBaseContext().getFilesDir(), "skills.data");
+            File localFile = new File(getBaseContext().getFilesDir(), "skills.local");
             if (dataFile.exists()) {
                 try {
-                    initSkillsFromInputStream(new FileInputStream(dataFile));
+                    if (localFile.exists()) {
+                        initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localFile));
+                    } else {
+                        initSkillsFromInputStream(new FileInputStream(dataFile));
+                    }
                 } catch (Exception e) {
                     initSkillsLocally();
                 }
@@ -105,6 +110,23 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected void initSkillsLocally() throws IOException {
         InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.skillsjson);
         initSkillsFromInputStream(inputStream);
+    }
+
+    protected void initSkillsFromInputStream(InputStream mainIS, InputStream localIS) throws IOException {
+        BufferedReader mainReader = new BufferedReader(new InputStreamReader(mainIS));
+        BufferedReader localReader = new BufferedReader(new InputStreamReader(localIS));
+        String mainLine = mainReader.readLine();
+        String localLine = localReader.readLine();
+        while (mainLine != null && localLine != null) {
+            if (mainLine.length() > 0 && localLine.length() > 0) {
+                Skill skill = gson.fromJson(mainLine, Skill.class);
+                Skill localSkill = gson.fromJson(localLine, Skill.class);
+                skill.name = localSkill.name;
+                skillsMap.put(skill.id, skill);
+            }
+            mainLine = mainReader.readLine();
+            localLine = localReader.readLine();
+        }
     }
 
     protected void initSkillsFromInputStream(InputStream inputStream) throws IOException {

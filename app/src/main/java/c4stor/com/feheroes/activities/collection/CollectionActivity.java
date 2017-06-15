@@ -424,8 +424,8 @@ public class CollectionActivity extends ToolbaredActivity {
 
             showSkills(holder, hero);
 
-            showHeroBoons(holder, hero);
-            showHeroBanes(holder, hero);
+            showBoonsOrBanes(holder.boons, hero.boons, '+');
+            showBoonsOrBanes(holder.banes, hero.banes, '-');
             calculateHeroStats(holder, hero);
 
             setDeleteButtonListener(holder, hero);
@@ -574,22 +574,15 @@ public class CollectionActivity extends ToolbaredActivity {
         return holder;
     }
 
-    private void showHeroBanes(ViewHolder holder, HeroRoll hero) {
-        StringBuilder banes = new StringBuilder();
-
-        for (String s : hero.banes) {
-            banes.append("-").append(s).append("\n");
+    private void showBoonsOrBanes(TextView textView, List<String> list, char plusMinus) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size() -1; i++) {
+            sb.append(plusMinus).append(list.get(i)).append("\n");
         }
-        holder.banes.setText(banes);
-    }
-
-    private void showHeroBoons(ViewHolder holder, HeroRoll hero) {
-        StringBuilder boons = new StringBuilder();
-
-        for (String s : hero.boons) {
-            boons.append("+").append(s).append("\n");
+        if (list.size() > 0) {
+            sb.append(plusMinus).append(list.get(list.size() - 1));
         }
-        holder.boons.setText(boons);
+        textView.setText(sb);
     }
 
     private void showSkills(ViewHolder holder, HeroRoll hero) {

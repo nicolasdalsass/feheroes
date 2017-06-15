@@ -127,12 +127,11 @@ public class DownloadDataActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);
-                String skillsFile = "allskills.json";
-                if(Locale.getDefault().getDisplayLanguage().startsWith("fr"))
-                {
-                    skillsFile = "allskills-fr.json";
+                if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
+                    final DownloadTask localDownloadTask = new DownloadTask(context, "skills.local", true);
+                    localDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
                 }
-                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/"+skillsFile);
+                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
             }
         }
     }
