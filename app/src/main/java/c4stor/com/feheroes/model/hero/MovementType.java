@@ -1,11 +1,16 @@
 package c4stor.com.feheroes.model.hero;
 
-import c4stor.com.feheroes.model.Inheritance;
+import c4stor.com.feheroes.model.InheritanceRestriction;
 
 /**
  * Created by eclogia on 14/06/17.
  */
 
-public enum MovementType implements Inheritance {
-    INFANTRY, ARMOR, CAVALRY, FLIER
+public enum MovementType implements InheritanceRestriction {
+    INFANTRY, ARMOR, CAVALRY, FLIER;
+
+    @Override
+    public boolean inheritedBy(InheritanceRestriction inheritanceRestriction) {
+        return inheritanceRestriction == this;
+    }
 }
