@@ -7,8 +7,8 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 69
-        versionName "13.0 - Bridal Shower"
+        versionCode 70
+        versionName "14.0 - Echoes of Mystery"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

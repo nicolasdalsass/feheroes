@@ -162,5 +162,9 @@
     <string name="cordeliabridal">ティアモ(花嫁)</string>
     <string name="comment">コメント</string>
     <string name="empty_collection">You don\'t have anyone in your collection.<br/>Add some using the + button in the IV finder.</string>
-
+    <string name="athena">アテナ</string>
+    <string name="katarina">カタリナ</string>
+    <string name="luke">ルーク</string>
+    <string name="roderick">ロディ</string>
+    <string name="maskedmarth">仮面マルス</string>
 </resources>
