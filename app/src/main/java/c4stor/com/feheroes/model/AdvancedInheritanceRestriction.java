@@ -14,7 +14,8 @@ public enum AdvancedInheritanceRestriction implements InheritanceRestrictionType
     NOT_RED(new OrInheritanceRestrictionType(LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH, BOW, DAGGER, STAFF)),
     NOT_BLUE(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, AXE, GTOME, GBREATH, BOW, DAGGER, STAFF)),
     NOT_GREEN(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, BOW, DAGGER, STAFF)),
-    NOT_COlORLESS(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH));
+    NOT_COlORLESS(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH)),
+    DRAGON(new OrInheritanceRestrictionType(RBREATH, BBREATH, GBREATH));
 
     private InheritanceRestrictionType restriction;
 
