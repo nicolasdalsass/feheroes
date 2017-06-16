@@ -115,13 +115,15 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected void initSkillsFromInputStream(InputStream mainIS, InputStream localIS) throws IOException {
         BufferedReader mainReader = new BufferedReader(new InputStreamReader(mainIS));
         BufferedReader localReader = new BufferedReader(new InputStreamReader(localIS));
+        //HEAVILY relies on both files having matching lines
         String mainLine = mainReader.readLine();
         String localLine = localReader.readLine();
         while (mainLine != null && localLine != null) {
             if (mainLine.length() > 0 && localLine.length() > 0) {
                 Skill skill = gson.fromJson(mainLine, Skill.class);
                 Skill localSkill = gson.fromJson(localLine, Skill.class);
-                skill.name = localSkill.name;
+                if (skill.id == localSkill.id)
+                    skill.name = localSkill.name;
                 skillsMap.put(skill.id, skill);
             }
             mainLine = mainReader.readLine();
