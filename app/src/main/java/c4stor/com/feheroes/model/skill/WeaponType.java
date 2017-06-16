@@ -1,23 +1,23 @@
 package c4stor.com.feheroes.model.skill;
 
-import c4stor.com.feheroes.model.InheritanceRestrictionType;
+import c4stor.com.feheroes.model.InheritanceRestriction;
 
 
 
-public enum WeaponType implements InheritanceRestrictionType {
+public enum WeaponType implements InheritanceRestriction {
     SWORD, LANCE, AXE,
     RTOME, BTOME, GTOME,
     RBREATH, BBREATH, GBREATH,
     BOW, DAGGER, STAFF,
     NON_INHERITABLE, NO_RESTRICTIONS {
         @Override
-        public boolean isInheritanceCompatibleWith(InheritanceRestrictionType inheritanceRestrictionType) {
+        public boolean isCompatibleWith(InheritanceRestriction inheritanceRestrictionType) {
             return true;
         }
     };
 
     @Override
-    public boolean isInheritanceCompatibleWith(InheritanceRestrictionType inheritanceRestrictionType) {
+    public boolean isCompatibleWith(InheritanceRestriction inheritanceRestrictionType) {
         return inheritanceRestrictionType == this;
     }
 }

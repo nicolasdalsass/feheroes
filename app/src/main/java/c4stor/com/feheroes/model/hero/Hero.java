@@ -36,6 +36,6 @@ public class Hero implements Serializable {
 
     public boolean canInherit(Skill skill) {
         //Seems a bit weak, but should work as long as there isn't a condition involving both weapon and movement type somewhere.
-        return skill.inheritanceRestrictionType.isInheritanceCompatibleWith(weaponType) || skill.inheritanceRestrictionType.isInheritanceCompatibleWith(movementType);
+        return skill.inheritance.isCompatibleWith(weaponType) || skill.inheritance.isCompatibleWith(movementType);
     }
 }
