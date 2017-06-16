@@ -31,7 +31,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306");
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306-inheritance.json");
 
     }
 
@@ -131,7 +131,7 @@ public class DownloadDataActivity extends AppCompatActivity {
                     final DownloadTask localDownloadTask = new DownloadTask(context, "skills.local", true);
                     localDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
                 }
-                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
+                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
             }
         }
     }
