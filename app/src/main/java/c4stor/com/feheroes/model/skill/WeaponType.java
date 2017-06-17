@@ -9,7 +9,8 @@ public enum WeaponType implements InheritanceRestriction {
     RTOME, BTOME, GTOME,
     RBREATH, BBREATH, GBREATH,
     BOW, DAGGER, STAFF,
-    NON_INHERITABLE, NO_RESTRICTIONS {
+    //The last two values are only used for inheritance
+    NOT_INHERITABLE, NO_RESTRICTIONS {
         @Override
         public boolean isCompatibleWith(InheritanceRestriction inheritanceRestrictionType) {
             return true;

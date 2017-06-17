@@ -42,6 +42,8 @@ import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.skill.Skill;
 
+import static c4stor.com.feheroes.model.skill.Skill.*;
+
 /**
  * Created by Nicolas on 19/02/2017.
  */
@@ -327,30 +329,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         textView.setText("");
         return textView;
-    }
-
-    private boolean isPassiveC(int i) {
-        return i >= 50000;
-    }
-
-    private boolean isPassiveB(int i) {
-        return i >= 40000 && i < 50000;
-    }
-
-    private boolean isPassiveA(int i) {
-        return i >= 30000 && i < 40000;
-    }
-
-    private boolean isSpecial(int i) {
-        return i >= 20000 && i < 30000;
-    }
-
-    private boolean isAssist(int i) {
-        return i >= 10000 && i < 20000;
-    }
-
-    private boolean isWeapon(int i) {
-        return 0 < i && i < 10000;
     }
 
     protected void adAdBanner() {
