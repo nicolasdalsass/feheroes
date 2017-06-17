@@ -12,6 +12,7 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -21,6 +22,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import c4stor.com.feheroes.R;
@@ -43,8 +45,9 @@ public class HeroPageActivity extends ToolbaredActivity {
     private TextView def;
     private TextView res;
     private TextView bst;
-    protected boolean skillsOn = true;
-    private LinearLayout skills;
+    protected boolean skillOn = true;
+    private LinearLayout equippedSkills;
+    private boolean skillManagementOn;
 
 
     @Override
@@ -92,9 +95,18 @@ public class HeroPageActivity extends ToolbaredActivity {
         def = (TextView) findViewById(R.id.hero40LineDef);
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
-        skills = (LinearLayout) findViewById(R.id.heroSkills);
-
+        equippedSkills = (LinearLayout) findViewById(R.id.equippedSkills);
+        initViewHolder();
         onResume();
+    }
+
+    @NonNull
+    private void initViewHolder() {
+        ViewHolder viewHolder = new ViewHolder();
+        viewHolder.skillLine = (LinearLayout) findViewById(R.id.skillLine);
+        viewHolder.skillName = (TextView) findViewById(R.id.skillname);
+        viewHolder.seekBar = (SeekBar) findViewById(R.id.skillslider);
+        viewHolder.skillState = (TextView) findViewById(R.id.skillstate);
     }
 
     @Override
@@ -102,11 +114,11 @@ public class HeroPageActivity extends ToolbaredActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbarmenu, menu);
         MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
-        if (!skillsOn) {
-            nakedView.setTitle(R.string.no_skills);
+        if (!skillOn) {
+            nakedView.setTitle(R.string.skills_on);
             nakedView.getIcon().setAlpha(130);
         } else {
-            nakedView.setTitle(R.string.skills_on);
+            nakedView.setTitle(R.string.no_skills);
             nakedView.getIcon().setAlpha(255);
         }
         return true;
@@ -136,7 +148,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     //this whole chunk of code is redundant with CollectionActivity's
     private void calculateHeroStats() {
-        int[] mods = calculateMods(heroRoll.hero, 40, !skillsOn);
+        int[] mods = calculateMods(heroRoll.hero, 40, !skillOn);
         makePopupStat(hp, heroRoll, heroRoll.hero.HP, mods[0], getResources().getString(R.string.hp));
         makePopupStat(atk, heroRoll, heroRoll.hero.atk, mods[1], getResources().getString(R.string.atk));
         makePopupStat(spd, heroRoll, heroRoll.hero.speed, mods[2], getResources().getString(R.string.spd));
@@ -145,9 +157,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         int totalMods = mods[0] + mods[1] + mods[2] + mods[3] + mods[4];
         String bstText = heroRoll.getBST(getBaseContext()) < 0 ? "?" : heroRoll.getBST(getBaseContext()) - totalMods + "";
-        bst.setText(
-                getResources().getString(R.string.bst) + " " +
-                        bstText);
+        bst.setText(getResources().getString(R.string.bst) + " " + bstText);
         bst.setTextColor(getResources().getColor(R.color.colorPrimary));
     }
 
@@ -173,11 +183,11 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     private void showSkills() {
-        if (skillsOn && heroRoll.hero.skills40 != null) {
-            updateSkillView(skills, heroRoll.hero.skills40);;
-            skills.setVisibility(View.VISIBLE);
+        if (skillOn && heroRoll.hero.skills40 != null) {
+            updateSkillView(equippedSkills, heroRoll.hero.skills40);;
+            equippedSkills.setVisibility(View.VISIBLE);
         } else {
-            skills.setVisibility(View.GONE);
+            equippedSkills.setVisibility(View.GONE);
         }
     }
 
@@ -185,8 +195,15 @@ public class HeroPageActivity extends ToolbaredActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toggleNakedView:
-                skillsOn = !skillsOn;
+                //TODO change showSkills into ShowSkillManagement (change onCreateOptionsMenu too)
+                //open overlay
+                //modify sliders
+                //check if skill slot already has something and unequip/change slider if yes
+                //close overlay
+                //calculate and show new skills and stats
+                skillOn = !skillOn;
                 showSkills();
+                calculateHeroStats();
                 invalidateOptionsMenu();
                 return true;
             default:
@@ -233,5 +250,12 @@ public class HeroPageActivity extends ToolbaredActivity {
         canvas.drawBitmap(bitmap, 0, 0, paintImage);
 
         return Bitmap.createScaledBitmap(output, finalWidth, finalWidth, true);
+    }
+
+    static class ViewHolder {
+        LinearLayout skillLine;
+        TextView skillName;
+        SeekBar seekBar;
+        TextView skillState;
     }
 }
