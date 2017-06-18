@@ -166,6 +166,11 @@
     <string name="charlottebridal">Charlotte - Bridal</string>
     <string name="lynbridal">Lyn - Bridal</string>
     <string name="cordeliabridal">Cordelia - Bridal</string>
+<<<<<<< 820a25489996024e1af767c4860d82b882e2dcd3
+=======
+    <string name="comment">Comment</string>
+    <string name="empty_collection">You don\'t have anyone in your collection.\nAdd some using the + button in the IV finder.</string>
+>>>>>>> fix double IVChecker start on fr devices
     <string name="athena">Athena</string>
     <string name="luke">Luke</string>
     <string name="katarina">Katarina</string>

@@ -31,7 +31,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306-inheritance.json");
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306.json");
 
     }
 
@@ -39,15 +39,17 @@ public class DownloadDataActivity extends AppCompatActivity {
 
         private Context context;
         File dataFile;
-        boolean goToFinder;
+        boolean goToIVFinder;
+        Intent ivCheckIntent;
 
 
-        public DownloadTask(Context context, String outputFilePath, boolean goToFinder) {
+        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder) {
             this.context = context;
 
             File directory = getBaseContext().getFilesDir();
             dataFile = new File(directory, outputFilePath);
-            this.goToFinder = goToFinder;
+            this.goToIVFinder = goToIVFinder;
+            ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
         }
 
 
@@ -113,7 +115,7 @@ public class DownloadDataActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            if (goToFinder) {
+            if (goToIVFinder) {
                 if ("web".equals(result)) {
                     Toast t = Toast.makeText(context, "Hero data synchronized from web", Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
@@ -123,15 +125,15 @@ public class DownloadDataActivity extends AppCompatActivity {
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                 }
-                Intent intent = new Intent(getBaseContext(), IVCheckActivity.class);
-                startActivity(intent);
+                ivCheckIntent.putExtra("started", true);
+                startActivity(ivCheckIntent);
             } else {
                 final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);
-                if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
-                    final DownloadTask localDownloadTask = new DownloadTask(context, "skills.local", true);
+                if (Locale.getDefault().getDisplayLanguage().startsWith("fr") && !ivCheckIntent.getBooleanExtra("started", true)) {
+                    final DownloadTask localDownloadTask = new DownloadTask(context, "skills.local", false);
                     localDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
                 }
-                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
+                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
             }
         }
     }
