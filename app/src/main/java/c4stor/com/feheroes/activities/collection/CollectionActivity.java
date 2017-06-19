@@ -99,7 +99,7 @@ public class CollectionActivity extends ToolbaredActivity {
         super.onResume();
         singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
         try {
-            singleton.initHeroes();
+            singleton.initHeroes(getBaseContext());
         } catch (IOException e) {
 
         }

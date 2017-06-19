@@ -30,7 +30,6 @@ public final class ModelSingleton {
     public Map<String, Hero> threeStarsMap = null;
     public Map<Integer, Skill> skillsMap = null;
     public HeroCollection collection = new HeroCollection();
-    public Context context;
 
     private static Gson gson = new Gson();
 
@@ -50,43 +49,40 @@ public final class ModelSingleton {
     }
 
     public void init(Context context) throws IOException {
-        this.context = context;
-        initHeroData();
-        initSkillData();
+        initHeroes(context);
+        initSkillData(context);
     }
 
-    public void initSkillData() throws IOException {
+    public void initSkillData(Context context) throws IOException {
         if (skillsMap == null)
-            initSkills();
+            initSkills(context);
     }
 
-    public void initHeroData() throws IOException {
-        if (threeStarsMap == null)
-            initHeroes();
-    }
-
-    public void initHeroes() throws IOException {
-        threeStarsMap=new TreeMap<>();
-        fourStarsMap=new TreeMap<>();
-        fiveStarsMap=new TreeMap<>();
-        File dataFile = new File(context.getFilesDir(), "hero.data");
-        if (dataFile.exists()) {
-            try {
-                initHeroesFromInputStream(new FileInputStream(dataFile));
-            } catch (Exception e) {
-                initHeroesFromCombo();
+    public void initHeroes(Context context) throws IOException {
+        if (threeStarsMap == null) {
+            threeStarsMap=new TreeMap<>();
+            fourStarsMap=new TreeMap<>();
+            fiveStarsMap=new TreeMap<>();
+            File dataFile = new File(context.getFilesDir(), "hero.data");
+            if (dataFile.exists()) {
+                try {
+                    initHeroesFromInputStream(new FileInputStream(dataFile), context);
+                } catch (Exception e) {
+                    initHeroesFromCombo(context);
+                }
+            } else {
+                initHeroesFromCombo(context);
             }
-        } else {
-            initHeroesFromCombo();
         }
+
     }
 
-    private void initHeroesFromCombo() throws IOException {
+    private void initHeroesFromCombo(Context context) throws IOException {
         InputStream inputStream = context.getResources().openRawResource(R.raw.combojson);
-        initHeroesFromInputStream(inputStream);
+        initHeroesFromInputStream(inputStream, context);
     }
 
-    private void initHeroesFromInputStream(InputStream inputStream) throws IOException {
+    private void initHeroesFromInputStream(InputStream inputStream, Context context) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
@@ -126,48 +122,48 @@ public final class ModelSingleton {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    private void initSkills() throws IOException {
+    private void initSkills(Context context) throws IOException {
         if(skillsMap==null) {
             skillsMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "skills.data");
-            File localFile = new File(context.getFilesDir(), "skills.local");
+            File localeFile = new File(context.getFilesDir(), "skills.locale");
             if (dataFile.exists()) {
                 try {
-                    if (localFile.exists()) {
-                        initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localFile));
+                    if (localeFile.exists()) {
+                        initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localeFile));
                     } else {
                         initSkillsFromInputStream(new FileInputStream(dataFile));
                     }
                 } catch (Exception e) {
-                    initSkillsLocally();
+                    initSkillsLocally(context);
                 }
             } else {
-                initSkillsLocally();
+                initSkillsLocally(context);
             }
         }
     }
 
-    private void initSkillsLocally() throws IOException {
+    private void initSkillsLocally(Context context) throws IOException {
         InputStream inputStream = context.getResources().openRawResource(R.raw.skillsjson);
         initSkillsFromInputStream(inputStream);
     }
 
-    private void initSkillsFromInputStream(InputStream mainIS, InputStream localIS) throws IOException {
+    private void initSkillsFromInputStream(InputStream mainIS, InputStream localeIS) throws IOException {
         BufferedReader mainReader = new BufferedReader(new InputStreamReader(mainIS));
-        BufferedReader localReader = new BufferedReader(new InputStreamReader(localIS));
+        BufferedReader localReader = new BufferedReader(new InputStreamReader(localeIS));
         //HEAVILY relies on both files having matching lines
         String mainLine = mainReader.readLine();
-        String localLine = localReader.readLine();
-        while (mainLine != null && localLine != null) {
-            if (mainLine.length() > 0 && localLine.length() > 0) {
+        String localeLine = localReader.readLine();
+        while (mainLine != null && localeLine != null) {
+            if (mainLine.length() > 0 && localeLine.length() > 0) {
                 Skill skill = gson.fromJson(mainLine, Skill.class);
-                Skill localSkill = gson.fromJson(localLine, Skill.class);
-                if (skill.id == localSkill.id)
-                    skill.name = localSkill.name;
+                Skill localeSkill = gson.fromJson(localeLine, Skill.class);
+                if (skill.id == localeSkill.id)
+                    skill.name = localeSkill.name;
                 skillsMap.put(skill.id, skill);
             }
             mainLine = mainReader.readLine();
-            localLine = localReader.readLine();
+            localeLine = localReader.readLine();
         }
     }
 

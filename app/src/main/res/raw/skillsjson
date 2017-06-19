@@ -178,8 +178,9 @@
 {"id":184,"name":"Lightning Breath","mods":[0,7,0,0,0]}
 {"id":185,"name":"Lightning Breath+","mods":[0,11,0,0,0]}
 {"id":186,"name":"Raudrowl+","mods":[0,10,0,0,0]}
-{"id":187,"name":"Firesweep L+","mods":[0,10,0,0,0]}
-
+{"id":187,"name":"Firesweep L+","mods":[0,15,0,0,0]}
+{"id":188,"name":"Raudrowl","mods":[0,6,0,0,0]}
+{"id":189,"name":"Firesweep L","mods":[0,11,0,0,0]}
 
 {"id":10000,"name":"Ardent Sacrifice","mods":[0,0,0,0,0]}
 {"id":10001,"name":"Dance","mods":[0,0,0,0,0]}
@@ -254,7 +255,6 @@
 {"id":20046,"name":"Still-Water Balm","mods":[0,0,0,0,0]}
 {"id":20047,"name":"Swift-Winds Balm","mods":[0,0,0,0,0]}
 {"id":20048,"name":"Vengeance","mods":[0,0,0,0,0]}
-{"id":20049,"name":"Heavenly Light","mods":[0,0,0,0,0]}
 
 {"id":30001,"name":"Armored Blow 1","mods":[0,0,0,0,0]}
 {"id":30002,"name":"Armored Blow 2","mods":[0,0,0,0,0]}

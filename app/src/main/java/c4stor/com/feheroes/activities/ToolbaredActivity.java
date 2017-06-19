@@ -90,7 +90,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         setContentView(getLayoutResource());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
-            //initHeroData();
             singleton.init(this);
         } catch (IOException e) {
         }
