@@ -1,5 +1,6 @@
 package c4stor.com.feheroes.activities.heropage;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,23 +13,35 @@ import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Parcelable;
+import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
+import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.skill.SkillState;
 
 /**
  * Created by eclogia on 04/06/17.
@@ -47,7 +60,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     private TextView bst;
     protected boolean skillOn = true;
     private LinearLayout equippedSkills;
-    private boolean skillManagementOn;
 
 
     @Override
@@ -96,17 +108,31 @@ public class HeroPageActivity extends ToolbaredActivity {
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
         equippedSkills = (LinearLayout) findViewById(R.id.equippedSkills);
-        initViewHolder();
+
+        initHeroRollSkills();
+
         onResume();
     }
 
-    @NonNull
-    private void initViewHolder() {
-        ViewHolder viewHolder = new ViewHolder();
-        viewHolder.skillLine = (LinearLayout) findViewById(R.id.skillLine);
-        viewHolder.skillName = (TextView) findViewById(R.id.skillname);
-        viewHolder.seekBar = (SeekBar) findViewById(R.id.skillslider);
-        viewHolder.skillState = (TextView) findViewById(R.id.skillstate);
+    private void initHeroRollSkills() {
+        //TODO find a way to initialize that heroroll skill list with more than lvl40 values
+        //gson doesn't create an Arraylist, must create default constructor doing it
+        for (int i : heroRoll.hero.skills40) {
+            heroRoll.skills.add(singleton.skillsMap.get(i));
+        }
+    }
+
+    private void initSkillList() {
+        ListView v = (ListView) findViewById(R.id.fullSkillList);
+        Parcelable state = v.onSaveInstanceState();
+        if (heroRoll.skills.size() > 0) {
+           SkillManagerAdapter adapter = new SkillManagerAdapter(getBaseContext(),
+                   R.layout.hero_skill_list_line, heroRoll.skills);
+            v.setAdapter(adapter);
+            adapter.notifyDataSetChanged();
+            v.onRestoreInstanceState(state);
+        } else
+            v.setVisibility(View.INVISIBLE);
     }
 
     @Override
@@ -124,6 +150,81 @@ public class HeroPageActivity extends ToolbaredActivity {
         return true;
     }
 
+
+    public class SkillManagerAdapter extends ArrayAdapter<Skill> {
+
+        private final List<Skill> skillList;
+
+        public SkillManagerAdapter(@NonNull Context context, @LayoutRes int resource, List<Skill> skillList) {
+            super(context, resource);
+            this.skillList = skillList;
+
+        }
+
+        @NonNull
+        @Override
+        public View getView(final int position, View convertView, ViewGroup parent) {
+            View v = convertView;
+            final ViewHolder holder; // to reference the child views for later actions
+
+            if (v == null) {
+                LayoutInflater vi =
+                        (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                v = vi.inflate(R.layout.hero_skill_list_line, null);
+                // cache view fields into the holder
+                holder = initViewHolder(v, singleton.skillsMap.get(0));
+                // associate the holder with the view for later lookup
+                v.setTag(holder);
+            } else {
+                // view already exists, get the holder instance from the view
+                holder = (ViewHolder) v.getTag();
+            }
+            //add stuff here
+
+            return v;
+        }
+
+        private ViewHolder initViewHolder(View v, Skill s) {
+            final ViewHolder holder = new ViewHolder();
+            holder.skill = s;
+            holder.skillLayout = (LinearLayout) v.findViewById(R.id.skillLine);
+            holder.skillName = (TextView) v.findViewById(R.id.skillname);
+            holder.seekBar = (SeekBar) v.findViewById(R.id.skillslider);
+            holder.skillStateText = (TextView) v.findViewById(R.id.skillstate);
+
+            holder.skillName.setText(holder.skill.name);
+            holder.seekBar.setMax(SkillState.values().length -1);
+            holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (progress >= 0 && progress < SkillState.values().length) {
+                        holder.skillStateText.setText(SkillState.getTextFromIndex(progress));
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+            return holder;
+        }
+    }
+
+    static class ViewHolder {
+        Skill skill;
+        LinearLayout skillLayout;
+        TextView skillName;
+        SeekBar seekBar;
+        TextView skillStateText;
+    }
+
+
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_hero;
@@ -132,10 +233,17 @@ public class HeroPageActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        try {
+            singleton.initSkillData(getBaseContext());
+        } catch (IOException e) {
+
+        }
         drawHeroPortrait();
         showComment();
         calculateHeroStats();
         showSkills();
+
+        //initSkillList();
 
         adAdBanner();
         //disableAdBanner();
@@ -196,10 +304,14 @@ public class HeroPageActivity extends ToolbaredActivity {
                 //check if skill slot already has something and unequip/change slider if yes
                 //close overlay
                 //calculate and show new skills and stats
+                if (skillOn) {
+                    setContentView(R.layout.hero_skill_list_line);
+                } else {
+                    showSkills();
+                    calculateHeroStats();
+                    invalidateOptionsMenu();
+                }
                 skillOn = !skillOn;
-                showSkills();
-                calculateHeroStats();
-                invalidateOptionsMenu();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -245,12 +357,5 @@ public class HeroPageActivity extends ToolbaredActivity {
         canvas.drawBitmap(bitmap, 0, 0, paintImage);
 
         return Bitmap.createScaledBitmap(output, finalWidth, finalWidth, true);
-    }
-
-    static class ViewHolder {
-        LinearLayout skillLine;
-        TextView skillName;
-        SeekBar seekBar;
-        TextView skillState;
     }
 }

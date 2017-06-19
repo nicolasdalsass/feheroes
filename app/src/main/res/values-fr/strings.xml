@@ -168,4 +168,8 @@
     <string name="comment">Commentaire</string>
     <string name="empty_collection">Vous n\'avez personne dans votre collection.<br/>Ajoutez en en utilisant le boutton + de l\'IV finder.</string>
     <string name="skill_management">Management des aptitudes</string>
+    <string name="skill_equipped">Équippé</string>
+    <string name="skill_learned">Appris</string>
+    <string name="skill_learnable">Apprenable</string>
+    <string name="skill_to_inherit">À hériter</string>
 </resources>

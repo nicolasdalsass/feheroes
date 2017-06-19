@@ -177,4 +177,8 @@
     <string name="roderick">Roderick</string>
     <string name="maskedmarth">Marth (Masked)</string>
     <string name="skill_management">Skill management</string>
+    <string name="skill_equipped">Equipped</string>
+    <string name="skill_learned">Learned</string>
+    <string name="skill_learnable">Learnable</string>
+    <string name="skill_to_inherit">To inherit</string>
 </resources>
