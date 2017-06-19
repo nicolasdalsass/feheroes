@@ -111,63 +111,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         }
     }
 
-    protected void initSkills() throws IOException {
-        if(skillsMap==null) {
-            skillsMap = new HashMap<>();
-            File dataFile = new File(getBaseContext().getFilesDir(), "skills.data");
-            File localFile = new File(getBaseContext().getFilesDir(), "skills.local");
-            if (dataFile.exists()) {
-                try {
-                    if (localFile.exists()) {
-                        initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localFile));
-                    } else {
-                        initSkillsFromInputStream(new FileInputStream(dataFile));
-                    }
-                } catch (Exception e) {
-                    initSkillsLocally();
-                }
-            } else {
-                initSkillsLocally();
-            }
-        }
-    }
-
-    protected void initSkillsLocally() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.skillsjson);
-        initSkillsFromInputStream(inputStream);
-    }
-
-    protected void initSkillsFromInputStream(InputStream mainIS, InputStream localIS) throws IOException {
-        BufferedReader mainReader = new BufferedReader(new InputStreamReader(mainIS));
-        BufferedReader localReader = new BufferedReader(new InputStreamReader(localIS));
-        //HEAVILY relies on both files having matching lines
-        String mainLine = mainReader.readLine();
-        String localLine = localReader.readLine();
-        while (mainLine != null && localLine != null) {
-            if (mainLine.length() > 0 && localLine.length() > 0) {
-                Skill skill = gson.fromJson(mainLine, Skill.class);
-                Skill localSkill = gson.fromJson(localLine, Skill.class);
-                if (skill.id == localSkill.id)
-                    skill.name = localSkill.name;
-                skillsMap.put(skill.id, skill);
-            }
-            mainLine = mainReader.readLine();
-            localLine = localReader.readLine();
-        }
-    }
-
-    protected void initSkillsFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            if (line.length() > 0) {
-                Skill skill = gson.fromJson(line, Skill.class);
-                skillsMap.put(skill.id, skill);
-            }
-            line = reader.readLine();
-        }
-    }
-
     protected void initHeroData() throws IOException {
         if(threeStarsMap==null) {
             threeStarsMap=new TreeMap<>();
@@ -226,7 +169,8 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
             initHeroData();
-            initSkills();
+            //initSkills();
+            singleton.init(this);
         } catch (IOException e) {
         }
     }
@@ -326,22 +270,22 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
             if (isWeapon(i)) {
-                makeSkillView(wpnTV, WEAPON_TYPE, skillsMap.get(i).name);
+                makeSkillView(wpnTV, WEAPON_TYPE, singleton.skillsMap.get(i).name);
                 wpnTV.setVisibility(View.VISIBLE);
             } else if (isAssist(i)) {
-                makeSkillView(assistTV, ASSIST_TYPE, skillsMap.get(i).name);
+                makeSkillView(assistTV, ASSIST_TYPE, singleton.skillsMap.get(i).name);
                 assistTV.setVisibility(View.VISIBLE);
             } else if (isSpecial(i)) {
-                makeSkillView(spTV, SPECIAL_TYPE, skillsMap.get(i).name);
+                makeSkillView(spTV, SPECIAL_TYPE, singleton.skillsMap.get(i).name);
                 spTV.setVisibility(View.VISIBLE);
             } else if (isPassiveA(i)) {
-                makeSkillView(aTV, PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(aTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
                 aTV.setVisibility(View.VISIBLE);
             } else if (isPassiveB(i)) {
-                makeSkillView(bTV, PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(bTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
                 bTV.setVisibility(View.VISIBLE);
             } else if (isPassiveC(i)) {
-                makeSkillView(cTV, PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(cTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
                 cTV.setVisibility(View.VISIBLE);
             }
         }
