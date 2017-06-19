@@ -105,13 +105,13 @@ public class IVCheckActivity extends ToolbaredActivity {
             resetSpinners = false;
             switch (position) {
                 case 0:
-                    refMap = fiveStarsMap;
+                    refMap = singleton.fiveStarsMap;
                     break;
                 case 1:
-                    refMap = fourStarsMap;
+                    refMap = singleton.fourStarsMap;
                     break;
                 case 2:
-                    refMap = threeStarsMap;
+                    refMap = singleton.threeStarsMap;
                     break;
             }
             String selectedHero = "";
@@ -153,9 +153,9 @@ public class IVCheckActivity extends ToolbaredActivity {
                 R.array.stars_array, R.layout.spinneritem_nopadding);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        if (refMap == threeStarsMap) {
+        if (refMap == singleton.threeStarsMap) {
             spinner.setSelection(2);
-        } else if (refMap == fourStarsMap) {
+        } else if (refMap == singleton.fourStarsMap) {
             spinner.setSelection(1);
         } else {
             spinner.setSelection(0);

@@ -41,7 +41,6 @@ import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
-import c4stor.com.feheroes.model.skill.Skill;
 
 import static c4stor.com.feheroes.model.skill.Skill.*;
 
@@ -53,15 +52,9 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    protected static Map<String, Hero> fiveStarsMap = null;
-    protected static Map<String, Hero> fourStarsMap = null;
-    protected static Map<String, Hero> threeStarsMap = null;
-
-
     protected HeroCollection collection = new HeroCollection();
 
     protected ModelSingleton singleton = ModelSingleton.getInstance();
-    protected Gson gson = new Gson();
 
     public static final int WEAPON_TYPE = 0;
     public static final int ASSIST_TYPE = 1;
@@ -102,72 +95,13 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    protected void cleanStat(int[] stat) {
-        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
-            stat[4] = -1;
-            stat[5] = -1;
-            stat[3] = -1;
-        }
-    }
-
-    protected void initHeroData() throws IOException {
-        if(threeStarsMap==null) {
-            threeStarsMap=new TreeMap<>();
-            fourStarsMap=new TreeMap<>();
-            fiveStarsMap=new TreeMap<>();
-            File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
-            if (dataFile.exists()) {
-                try {
-                    initHeroesFromInputStream(new FileInputStream(dataFile));
-                } catch (Exception e) {
-                    initHeroesFromCombo();
-                }
-            } else {
-                initHeroesFromCombo();
-            }
-        }
-    }
-
-    protected void initHeroesFromCombo() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
-        initHeroesFromInputStream(inputStream);
-    }
-
-    protected void initHeroesFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
-            int level = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
-            jH.name = jH.name.substring(0, jH.name.length() - 1);
-            cleanStat(jH.atk);
-            cleanStat(jH.HP);
-            cleanStat(jH.def);
-            cleanStat(jH.res);
-            cleanStat(jH.speed);
-            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            switch (level) {
-                case 3:
-                    threeStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 4:
-                    fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 5:
-                    fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-            }
-            line = reader.readLine();
-        }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
-            initHeroData();
+            //initHeroData();
             singleton.init(this);
         } catch (IOException e) {
         }
@@ -186,7 +120,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

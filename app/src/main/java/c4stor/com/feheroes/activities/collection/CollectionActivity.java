@@ -479,17 +479,17 @@ public class CollectionActivity extends ToolbaredActivity {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     if (position == 0 && hero.stars != 5) {
-                        hero.hero = fiveStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(getContext()));
                         hero.stars = 5;
                         collection.save(getContext());
                         initListView();
                     } else if (position == 1 && hero.stars != 4) {
-                        hero.hero = fourStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(getContext()));
                         hero.stars = 4;
                         collection.save(getContext());
                         initListView();
                     } else if (position == 2 && hero.stars != 3) {
-                        hero.hero = threeStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(getContext()));
                         hero.stars = 3;
                         collection.save(getContext());
                         initListView();
@@ -505,9 +505,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
         private void selectHeroRarity(ViewHolder holder, HeroRoll hero) {
             ArrayAdapter<CharSequence> adapter;
-            if (threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+            if (singleton.threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array, R.layout.spinneritem_nopadding);
-            } else if (fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+            } else if (singleton.fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_4_5, R.layout.spinneritem_nopadding);
             } else {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_5, R.layout.spinneritem_nopadding);
@@ -596,11 +596,11 @@ public class CollectionActivity extends ToolbaredActivity {
 
     private void refreshHero(HeroRoll hero) {
         if (hero.stars == 5) {
-            hero.hero = fiveStarsMap.get(hero.getDisplayName(this));
+            hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(this));
         } else if (hero.stars == 4) {
-            hero.hero = fourStarsMap.get(hero.getDisplayName(this));
+            hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(this));
         } else if (hero.stars == 3) {
-            hero.hero = threeStarsMap.get(hero.getDisplayName(this));
+            hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(this));
         }
     }
 

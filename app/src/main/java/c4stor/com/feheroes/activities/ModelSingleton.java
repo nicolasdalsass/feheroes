@@ -52,12 +52,16 @@ public final class ModelSingleton {
     public void init(Context context) throws IOException {
         this.context = context;
         initHeroData();
+        initSkillData();
+    }
+
+    public void initSkillData() throws IOException {
         if (skillsMap == null)
             initSkills();
     }
 
     public void initHeroData() throws IOException {
-        if (fiveStarsMap == null)
+        if (threeStarsMap == null)
             initHeroes();
     }
 
