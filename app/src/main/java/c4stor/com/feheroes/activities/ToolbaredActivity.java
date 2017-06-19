@@ -56,7 +56,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected static Map<String, Hero> fiveStarsMap = null;
     protected static Map<String, Hero> fourStarsMap = null;
     protected static Map<String, Hero> threeStarsMap = null;
-    protected static Map<Integer, Skill> skillsMap = null;
 
 
     protected HeroCollection collection = new HeroCollection();
@@ -169,7 +168,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
             initHeroData();
-            //initSkills();
             singleton.init(this);
         } catch (IOException e) {
         }
@@ -316,7 +314,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         int[] result = new int[]{0, 0, 0, 0, 0};
         if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
             for (int skill : hero.skills1) {
-                int[] mods = skillsMap.get(skill).mods;
+                int[] mods = singleton.skillsMap.get(skill).mods;
                 result[0] += mods[0];
                 result[1] += mods[1];
                 result[2] += mods[2];
@@ -326,7 +324,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         } else {
             if (hero.skills40 != null && nakedHeroes) {
                 for (int skill : hero.skills40) {
-                    int[] mods = skillsMap.get(skill).mods;
+                    int[] mods = singleton.skillsMap.get(skill).mods;
                     result[0] += mods[0];
                     result[1] += mods[1];
                     result[2] += mods[2];
