@@ -57,8 +57,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         Intent intent = getIntent();
         int heroPosition = intent.getIntExtra("position", 1);
-        collection = HeroCollection.loadFromStorage(getBaseContext());
-        this.heroRoll = collection.get(heroPosition);
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
+        this.heroRoll = singleton.collection.get(heroPosition);
 
         StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
         sb.append(" ");
@@ -80,7 +80,7 @@ public class HeroPageActivity extends ToolbaredActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 heroRoll.comment = s.toString();
-                collection.save(getBaseContext());
+                singleton.collection.save(getBaseContext());
             }
 
             @Override

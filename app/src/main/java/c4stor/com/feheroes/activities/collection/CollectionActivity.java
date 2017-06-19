@@ -62,7 +62,7 @@ public class CollectionActivity extends ToolbaredActivity {
     }
 
     @Override
-    protected boolean isCollection() {
+    protected boolean isHeroCollection() {
         return true;
     }
 
@@ -97,7 +97,7 @@ public class CollectionActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        collection = HeroCollection.loadFromStorage(getBaseContext());
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
         try {
             singleton.initHeroes();
         } catch (IOException e) {
@@ -111,7 +111,7 @@ public class CollectionActivity extends ToolbaredActivity {
 
     private void initTextView() {
         TextView noCollectionText = (TextView) findViewById(R.id.nocollectiontext);
-        if (collection.size() > 0)
+        if (singleton.collection.size() > 0)
             noCollectionText.setVisibility(View.GONE);
         else {
             noCollectionText.setText(R.string.empty_collection);
@@ -121,7 +121,7 @@ public class CollectionActivity extends ToolbaredActivity {
     private void initListView() {
         ListView v = (ListView) findViewById(R.id.collectionlist);
         Parcelable state = v.onSaveInstanceState();
-        if (collection.size() > 0) {
+        if (singleton.collection.size() > 0) {
 
             v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -141,12 +141,12 @@ public class CollectionActivity extends ToolbaredActivity {
                 public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                     ViewHolder vh = (ViewHolder) view.getTag();
                     Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", collection.indexOf(vh.hero));
+                    intent.putExtra("position", singleton.collection.indexOf(vh.hero));
                     startActivity(intent);
                     return true;
                 }
             });
-            HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, collection, sorting);
+            HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, singleton.collection, sorting);
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             v.onRestoreInstanceState(state);
@@ -226,8 +226,8 @@ public class CollectionActivity extends ToolbaredActivity {
     private void undoHeroSupression() {
         if (supressedItems.size() > 0) {
             SuppressedItem suppressedItem = supressedItems.get(supressedItems.size() - 1);
-            collection.add(suppressedItem.position, suppressedItem.heroRoll);
-            collection.save(getBaseContext());
+            singleton.collection.add(suppressedItem.position, suppressedItem.heroRoll);
+            singleton.collection.save(getBaseContext());
             supressedItems.remove(supressedItems.size() - 1);
             invalidateOptionsMenu();
         }
@@ -361,9 +361,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
         private void makeView() {
             if (comparator == null) {
-                view = collection;
+                view = singleton.collection;
             } else {
-                view = new ArrayList<>(CollectionActivity.this.collection);
+                view = new ArrayList<>(CollectionActivity.this.singleton.collection);
                 Collections.sort(view, comparator);
             }
         }
@@ -460,13 +460,13 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = CollectionActivity.this.collection.indexOf(hero);
-                    CollectionActivity.this.collection.remove(hero);
+                    int position = CollectionActivity.this.singleton.collection.indexOf(hero);
+                    CollectionActivity.this.singleton.collection.remove(hero);
                     SuppressedItem s = new SuppressedItem();
                     s.position = position;
                     s.heroRoll = hero;
                     supressedItems.add(s);
-                    CollectionActivity.this.collection.save(getBaseContext());
+                    CollectionActivity.this.singleton.collection.save(getBaseContext());
                     invalidateOptionsMenu();
                     makeView();
                     HeroCollectionAdapter.this.notifyDataSetChanged();

@@ -23,17 +23,8 @@ import android.widget.Toast;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
@@ -51,8 +42,6 @@ import static c4stor.com.feheroes.model.skill.Skill.*;
 public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
-
-    protected HeroCollection collection = new HeroCollection();
 
     protected ModelSingleton singleton = ModelSingleton.getInstance();
 
@@ -87,7 +76,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return false;
     }
 
-    protected boolean isCollection() {
+    protected boolean isHeroCollection() {
         return false;
     }
 
@@ -108,7 +97,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     }
 
     private void startCollectionActivity() {
-        if (!isCollection()) {
+        if (!isHeroCollection()) {
             Intent intent = new Intent(getBaseContext(), CollectionActivity.class);
             startActivity(intent);
         }
