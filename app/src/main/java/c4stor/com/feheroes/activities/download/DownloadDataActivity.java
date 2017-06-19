@@ -22,6 +22,8 @@ import java.util.Locale;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 
+import static java.lang.Thread.sleep;
+
 public class DownloadDataActivity extends AppCompatActivity {
 
 
@@ -30,7 +32,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
 
-        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false);
+        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false, true);
         downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306.json");
 
     }
@@ -40,16 +42,16 @@ public class DownloadDataActivity extends AppCompatActivity {
         private Context context;
         File dataFile;
         boolean goToIVFinder;
-        Intent ivCheckIntent;
+        boolean downloadAnotherFile;
 
 
-        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder) {
+        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder, boolean downloadAnotherFile) {
             this.context = context;
 
             File directory = getBaseContext().getFilesDir();
             dataFile = new File(directory, outputFilePath);
             this.goToIVFinder = goToIVFinder;
-            ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
+            this.downloadAnotherFile = downloadAnotherFile;
         }
 
 
@@ -125,15 +127,21 @@ public class DownloadDataActivity extends AppCompatActivity {
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                 }
-                ivCheckIntent.putExtra("started", true);
-                startActivity(ivCheckIntent);
-            } else {
-                final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);
-                if (Locale.getDefault().getDisplayLanguage().startsWith("fr") && !ivCheckIntent.getBooleanExtra("started", true)) {
-                    final DownloadTask localDownloadTask = new DownloadTask(context, "skills.local", false);
-                    localDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+                if (downloadAnotherFile && Locale.getDefault().getDisplayLanguage().startsWith("fr")){
+                    final DownloadTask localeDownloadTask = new DownloadTask(context, "skills.locale", true, false);
+                    localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+                } else {
+                    Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
+                    startActivity(ivCheckIntent);
                 }
-                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
+            } else {
+                boolean dlOtherFile = false;
+                if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
+                    dlOtherFile = true;
+                }
+                final DownloadTask skillDownloadTask = new DownloadTask(context, "skills.data", true, dlOtherFile);
+                skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
+
             }
         }
     }
