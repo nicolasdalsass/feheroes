@@ -125,11 +125,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     @Override
-    protected boolean isHeroPage(){
-        return true;
-    }
-
-    @Override
     protected int getLayoutResource() {
         return R.layout.activity_hero;
     }
@@ -184,7 +179,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showSkills() {
         if (skillOn && heroRoll.hero.skills40 != null) {
-            updateSkillView(equippedSkills, heroRoll.hero.skills40);;
+            updateSkillView(equippedSkills, heroRoll.hero.skills40);
             equippedSkills.setVisibility(View.VISIBLE);
         } else {
             equippedSkills.setVisibility(View.GONE);

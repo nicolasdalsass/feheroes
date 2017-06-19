@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -52,20 +53,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    protected abstract int getLayoutResource();
-
-    protected boolean isIVFinder() {
-        return false;
-    }
-
-    protected boolean isHeroPage() {
-        return false;
-    }
-
-    protected boolean isCollection() {
-        return false;
-    }
-
     protected static Map<String, Hero> fiveStarsMap = null;
     protected static Map<String, Hero> fourStarsMap = null;
     protected static Map<String, Hero> threeStarsMap = null;
@@ -74,11 +61,47 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     protected HeroCollection collection = new HeroCollection();
 
+    protected ModelSingleton singleton = ModelSingleton.getInstance();
+    protected Gson gson = new Gson();
+
+    public static final int WEAPON_TYPE = 0;
+    public static final int ASSIST_TYPE = 1;
+    public static final int SPECIAL_TYPE = 2;
+    public static final int PASSIVE_TYPE = 3;
+
+    protected void makeSkillView(TextView tv, int skillType, String text) {
+        Drawable d = null;
+        switch(skillType){
+            case WEAPON_TYPE:
+                d = getResources().getDrawable(R.drawable.weapons);
+                break;
+            case ASSIST_TYPE:
+                d = getResources().getDrawable(R.drawable.assists);
+                break;
+            case SPECIAL_TYPE:
+                d = getResources().getDrawable(R.drawable.specials);
+                break;
+            case PASSIVE_TYPE:
+                d = getResources().getDrawable(R.drawable.passives);
+                break;
+        }
+        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        tv.setText(text);
+    }
+
+    protected abstract int getLayoutResource();
+
+    protected boolean isIVFinder() {
+        return false;
+    }
+
+    protected boolean isCollection() {
+        return false;
+    }
+
     protected String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
-
-    protected Gson gson = new Gson();
 
     protected void cleanStat(int[] stat) {
         if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
@@ -303,22 +326,22 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
             if (isWeapon(i)) {
-                SkillTextView.makeSkillView(this, wpnTV, SkillTextView.WEAPON_TYPE, skillsMap.get(i).name);
+                makeSkillView(wpnTV, WEAPON_TYPE, skillsMap.get(i).name);
                 wpnTV.setVisibility(View.VISIBLE);
             } else if (isAssist(i)) {
-                SkillTextView.makeSkillView(this, assistTV, SkillTextView.ASSIST_TYPE, skillsMap.get(i).name);
+                makeSkillView(assistTV, ASSIST_TYPE, skillsMap.get(i).name);
                 assistTV.setVisibility(View.VISIBLE);
             } else if (isSpecial(i)) {
-                SkillTextView.makeSkillView(this, spTV, SkillTextView.SPECIAL_TYPE, skillsMap.get(i).name);
+                makeSkillView(spTV, SPECIAL_TYPE, skillsMap.get(i).name);
                 spTV.setVisibility(View.VISIBLE);
             } else if (isPassiveA(i)) {
-                SkillTextView.makeSkillView(this, aTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(aTV, PASSIVE_TYPE, skillsMap.get(i).name);
                 aTV.setVisibility(View.VISIBLE);
             } else if (isPassiveB(i)) {
-                SkillTextView.makeSkillView(this, bTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(bTV, PASSIVE_TYPE, skillsMap.get(i).name);
                 bTV.setVisibility(View.VISIBLE);
             } else if (isPassiveC(i)) {
-                SkillTextView.makeSkillView(this, cTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
+                makeSkillView(cTV, PASSIVE_TYPE, skillsMap.get(i).name);
                 cTV.setVisibility(View.VISIBLE);
             }
         }
