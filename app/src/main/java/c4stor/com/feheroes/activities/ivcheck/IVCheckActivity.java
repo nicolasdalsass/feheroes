@@ -92,7 +92,7 @@ public class IVCheckActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        collection = HeroCollection.loadFromStorage(getBaseContext());
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
 
 
         final Spinner spinnerHeroes = (Spinner) findViewById(R.id.spinner_heroes);
@@ -238,8 +238,8 @@ public class IVCheckActivity extends ToolbaredActivity {
                     banes.add(trMght.attribute);
                 int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
                 HeroRoll hr = new HeroRoll(h, stars, boons, banes);
-                collection.add(hr);
-                collection.save(getBaseContext());
+                singleton.collection.add(hr);
+                singleton.collection.save(getBaseContext());
                 Toast.makeText(getBaseContext(), localizedName + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();
             }
         });
