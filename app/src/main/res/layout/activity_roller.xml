@@ -72,8 +72,8 @@
 
             <Button
                 android:id="@+id/addToCollectionBtn"
-                android:layout_width="@dimen/buttonplusradius"
-                android:layout_height="@dimen/buttonplusradius"
+                android:layout_width="@dimen/addbuttonradius"
+                android:layout_height="@dimen/addbuttonradius"
                 android:layout_below="@id/herotable"
                 android:layout_centerHorizontal="true"
                 android:background="@drawable/roundbutton"
