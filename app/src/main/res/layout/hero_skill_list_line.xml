@@ -7,15 +7,18 @@
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:id="@+id/skillname"
-        android:layout_weight="35" />
+        android:layout_weight="35"
+        android:textSize="16sp" />
     <SeekBar
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:id="@+id/skillslider"
-        android:layout_weight="30"/>
+        android:layout_weight="30"
+        android:textSize="16sp"/>
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="0dp"
         android:id="@+id/skillstate"
-        android:layout_weight="35" />
+        android:layout_weight="35"
+        android:textSize="16sp" />
 </LinearLayout>
