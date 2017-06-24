@@ -124,9 +124,12 @@ public class CollectionActivity extends ToolbaredActivity {
                     if (vh.extraData.getVisibility() != View.GONE) {
                         vh.extraData.setVisibility(View.GONE);
                         statVisibility.remove(vh.hero);
+                        vh.comment.setVisibility(View.GONE);
                     } else {
                         vh.extraData.setVisibility(View.VISIBLE);
                         statVisibility.put(vh.hero, View.VISIBLE);
+                        if (vh.hero.comment != null && vh.hero.comment.length() > 0)
+                            vh.comment.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -196,12 +199,6 @@ public class CollectionActivity extends ToolbaredActivity {
                 undoHeroSupression();
                 initListView();
                 return true;
-            /*
-            case R.id.toggleNakedView:
-                skillsOn = !skillsOn;
-                invalidateOptionsMenu();
-                initListView();
-            */
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -412,6 +409,8 @@ public class CollectionActivity extends ToolbaredActivity {
             showBoonsOrBanes(holder.banes, hero.banes, '-');
             calculateHeroStats(holder, hero);
 
+            showComment(holder, hero);
+
             setDeleteButtonListener(holder, hero);
             setHeroPageButtonListener(holder);
 
@@ -547,6 +546,10 @@ public class CollectionActivity extends ToolbaredActivity {
         }
     }
 
+    private void showComment(ViewHolder holder, HeroRoll hero) {
+        holder.comment.setText(hero.comment);
+    }
+
     @NonNull
     private ViewHolder initViewHolder(View v) {
         ViewHolder holder;
@@ -566,7 +569,7 @@ public class CollectionActivity extends ToolbaredActivity {
         holder.lvl40Def = (TextView) v.findViewById(R.id.hero40LineDef);
         holder.lvl40Res = (TextView) v.findViewById(R.id.hero40LineRes);
         holder.lvl40BST = (TextView) v.findViewById(R.id.hero40LineBST);
-        holder.skills = (LinearLayout) v.findViewById(R.id.collection_skill);
+        holder.comment = (TextView) v.findViewById(R.id.collection_comment);
         return holder;
     }
 
@@ -607,8 +610,8 @@ public class CollectionActivity extends ToolbaredActivity {
         TextView lvl40Def;
         TextView lvl40Res;
         TextView lvl40BST;
-        LinearLayout skills;
         Button detailsButton;
+        TextView comment;
     }
 
     static class SuppressedItem {
