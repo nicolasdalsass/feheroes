@@ -3,7 +3,6 @@
 
     <item android:state_pressed="false">
         <shape android:shape="rectangle">
-            <corners android:radius="100dp" />
             <solid android:color="@color/background" />
             <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
             <size android:width="@dimen/buttonremoveradius" android:height="@dimen/buttonremoveradius" />
