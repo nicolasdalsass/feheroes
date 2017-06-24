@@ -20,11 +20,11 @@ public enum SkillState {
         this.stateStringId = stateStringId;
     }
 
-    public static int getTextFromIndex(int i) {
+    public static SkillState getStateFromIndex(int i) {
         for (SkillState state : SkillState.values()) {
             if (i == state.stateNumber)
-                return state.stateStringId;
+                return state;
         }
-        return -1;
+        return TO_INHERIT;
     }
 }

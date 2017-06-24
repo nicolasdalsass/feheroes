@@ -13,6 +13,10 @@ public class Skill {
     public InheritanceRestriction inheritance;
     public SkillState skillState;
 
+    public Skill() {
+        skillState = SkillState.EQUIPPED;
+    }
+
     public static boolean isPassiveC(int i) {
         return i >= 50000 && i < 60000;
     }
