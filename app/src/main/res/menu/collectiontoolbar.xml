@@ -50,13 +50,6 @@
         app:showAsAction="always" />
 
     <item
-        android:id="@+id/toggleNakedView"
-        android:icon="@drawable/skill_icon"
-        android:title="@string/no_skills"
-        app:showAsAction="always" />
-
-
-    <item
         android:id="@+id/copycollectiontoclipboard"
         android:title="@string/export_collection"
         app:showAsAction="never" />

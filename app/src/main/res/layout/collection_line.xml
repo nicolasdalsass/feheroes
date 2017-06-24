@@ -69,6 +69,7 @@
                 android:background="@drawable/roundbutton"
                 android:text="+"
                 android:layout_gravity="center_vertical"
+                android:gravity="center"
                 android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -105,6 +106,7 @@
                 android:layout_height="@dimen/buttonremoveradius"
                 android:layout_gravity="center_vertical|end"
                 android:background="@drawable/removebutton"
+                android:gravity="center"
                 android:text="x"
                 android:textColor="@color/low_red"
                 android:textSize="12sp" />
