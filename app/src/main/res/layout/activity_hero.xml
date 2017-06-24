@@ -21,7 +21,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/my_toolbar"
-        android:id="@+id/heroDescriptionLayout">
+        android:id="@+id/heroDescriptionLayout"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
         <ImageView
             android:id="@+id/heroPortrait"
             android:layout_marginTop="10dp"

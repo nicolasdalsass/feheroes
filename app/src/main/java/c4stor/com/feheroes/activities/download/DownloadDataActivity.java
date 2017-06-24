@@ -33,7 +33,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false, true);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306.json");
+        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1906.json");
 
     }
 

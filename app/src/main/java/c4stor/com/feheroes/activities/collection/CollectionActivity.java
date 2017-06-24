@@ -76,6 +76,12 @@ public class CollectionActivity extends ToolbaredActivity {
         onResume();
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.toggleNakedView).setVisible(false);
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -86,11 +92,6 @@ public class CollectionActivity extends ToolbaredActivity {
             menu.findItem(R.id.undo).getIcon().setAlpha(130);
         else
             menu.findItem(R.id.undo).getIcon().setAlpha(255);
-        if (skillsOn) {
-            menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(255);
-        } else {
-            menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(130);
-        }
         return true;
     }
 
@@ -134,16 +135,6 @@ public class CollectionActivity extends ToolbaredActivity {
                         vh.extraData.setVisibility(View.VISIBLE);
                         statVisibility.put(vh.hero, View.VISIBLE);
                     }
-                }
-            });
-            v.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    ViewHolder vh = (ViewHolder) view.getTag();
-                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", singleton.collection.indexOf(vh.hero));
-                    startActivity(intent);
-                    return true;
                 }
             });
             HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, singleton.collection, sorting);
@@ -212,10 +203,12 @@ public class CollectionActivity extends ToolbaredActivity {
                 undoHeroSupression();
                 initListView();
                 return true;
+            /*
             case R.id.toggleNakedView:
                 skillsOn = !skillsOn;
                 invalidateOptionsMenu();
                 initListView();
+            */
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -422,14 +415,12 @@ public class CollectionActivity extends ToolbaredActivity {
             selectHeroRarity(holder, hero);
             setRarityItemListener(holder, hero);
 
-            showSkills(holder, hero);
-
             showBoonsOrBanes(holder.boons, hero.boons, '+');
             showBoonsOrBanes(holder.banes, hero.banes, '-');
             calculateHeroStats(holder, hero);
 
             setDeleteButtonListener(holder, hero);
-
+            setHeroPageButtonListener(holder);
 
             if (statVisibility.containsKey(hero)) {
                 //noinspection WrongConstant
@@ -454,6 +445,17 @@ public class CollectionActivity extends ToolbaredActivity {
                     getResources().getString(R.string.bst) + " " +
                             bstText);
             holder.lvl40BST.setTextColor(getResources().getColor(R.color.colorPrimary));
+        }
+
+        private void setHeroPageButtonListener(final ViewHolder holder) {
+            holder.detailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
+                    intent.putExtra("position", singleton.collection.indexOf(holder.hero));
+                    startActivity(intent);
+                }
+            });
         }
 
         private void setDeleteButtonListener(ViewHolder holder, final HeroRoll hero) {
@@ -562,6 +564,7 @@ public class CollectionActivity extends ToolbaredActivity {
         holder.rarity = (Spinner) v.findViewById(R.id.collnamerarity);
         holder.boons = (TextView) v.findViewById(R.id.boons);
         holder.banes = (TextView) v.findViewById(R.id.banes);
+        holder.detailsButton = (Button) v.findViewById(R.id.heropageBtn);
         holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
         holder.extraData = (LinearLayout) v.findViewById(R.id.hero40StatLine);
         holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
@@ -585,15 +588,6 @@ public class CollectionActivity extends ToolbaredActivity {
         textView.setText(sb);
     }
 
-    private void showSkills(ViewHolder holder, HeroRoll hero) {
-        if (skillsOn && hero.hero.skills40 != null) {
-            updateSkillView(holder.skills, hero.hero.skills40);
-            holder.skills.setVisibility(View.VISIBLE);
-        } else {
-            holder.skills.setVisibility(View.GONE);
-        }
-    }
-
     private void refreshHero(HeroRoll hero) {
         if (hero.stars == 5) {
             hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(this));
@@ -603,8 +597,6 @@ public class CollectionActivity extends ToolbaredActivity {
             hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(this));
         }
     }
-
-
 
     static class ViewHolder {
         HeroRoll hero;
@@ -623,6 +615,7 @@ public class CollectionActivity extends ToolbaredActivity {
         TextView lvl40Res;
         TextView lvl40BST;
         LinearLayout skills;
+        Button detailsButton;
     }
 
     static class SuppressedItem {
