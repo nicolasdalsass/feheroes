@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/gotofinder"
+        android:icon="@drawable/search"
+        android:title="@string/app_name"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/gotocollection"
         android:icon="@drawable/collection"
         android:title="@string/collection"
@@ -11,7 +17,7 @@
         android:id="@+id/toggleNakedView"
         android:title="@string/no_skills"
         android:icon="@drawable/skill_icon"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item android:id="@+id/copycollectiontoclipboard"
         android:title="@string/export_collection"

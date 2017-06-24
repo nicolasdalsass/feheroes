@@ -77,13 +77,6 @@ public class CollectionActivity extends ToolbaredActivity {
     }
 
     @Override
-    public boolean onPrepareOptionsMenu (Menu menu) {
-        super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.toggleNakedView).setVisible(false);
-        return true;
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.collectiontoolbar, menu);
