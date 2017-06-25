@@ -119,6 +119,31 @@ public class HeroPageActivity extends ToolbaredActivity {
         onResume();
     }
 
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_hero;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            singleton.initSkillData(getBaseContext());
+        } catch (IOException e) {
+
+        }
+        drawHeroPortrait();
+        //setMovementIcon(movementIcon, heroRoll.hero.movementType);
+        //setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);
+        showComment();
+        calculateHeroStats();
+        showEquippedSkills();
+
+        adAdBanner();
+        //disableAdBanner();
+    }
+
     private void initHeroRollSkills() {
         //TODO find a way to initialize that heroroll skill list with more than lvl40 values
         //gson doesn't create an Arraylist, must create default constructor doing it
@@ -295,31 +320,6 @@ public class HeroPageActivity extends ToolbaredActivity {
         TextView skillStateText;
     }
 
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_hero;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        try {
-            singleton.initSkillData(getBaseContext());
-        } catch (IOException e) {
-
-        }
-        drawHeroPortrait();
-        //setMovementIcon(movementIcon, heroRoll.hero.movementType);
-        //setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);
-        showComment();
-        calculateHeroStats();
-        showEquippedSkills();
-
-        adAdBanner();
-        //disableAdBanner();
-    }
-
     //this whole chunk of code is redundant with CollectionActivity's
     private void calculateHeroStats() {
         int[] mods = calculateMods(heroRoll.hero, 40, !skillOn);
@@ -390,7 +390,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private void showComment() {
         if (heroRoll.comment == null) {
             comment.setHint(R.string.comment);
-            //comment.setHint(heroRoll.hero.toString());//TODO old-school debug
+            //comment.setHint(heroRoll.hero.movementType == null ? "null": "not null");//TODO old-school debug
         } else {
             comment.setText(heroRoll.comment);
         }
