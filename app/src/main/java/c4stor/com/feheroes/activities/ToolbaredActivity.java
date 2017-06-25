@@ -32,6 +32,8 @@ import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
+import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.skill.SkillType;
 
 import static c4stor.com.feheroes.model.skill.Skill.*;
 
@@ -45,30 +47,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     protected ModelSingleton singleton = ModelSingleton.getInstance();
 
-    public static final int WEAPON_TYPE = 0;
-    public static final int ASSIST_TYPE = 1;
-    public static final int SPECIAL_TYPE = 2;
-    public static final int PASSIVE_TYPE = 3;
-
-    protected void makeSkillView(TextView tv, int skillType, String text) {
-        Drawable d = null;
-        switch(skillType){
-            case WEAPON_TYPE:
-                d = getResources().getDrawable(R.drawable.weapons);
-                break;
-            case ASSIST_TYPE:
-                d = getResources().getDrawable(R.drawable.assists);
-                break;
-            case SPECIAL_TYPE:
-                d = getResources().getDrawable(R.drawable.specials);
-                break;
-            case PASSIVE_TYPE:
-                d = getResources().getDrawable(R.drawable.passives);
-                break;
-        }
-        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
-        tv.setText(text);
-    }
 
     protected abstract int getLayoutResource();
 
@@ -188,26 +166,47 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         TextView bTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_b);
         TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
+            Skill s = singleton.skillsMap.get(i);
             if (isWeapon(i)) {
-                makeSkillView(wpnTV, WEAPON_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(wpnTV, s.skillType, s.name);
                 wpnTV.setVisibility(View.VISIBLE);
             } else if (isAssist(i)) {
-                makeSkillView(assistTV, ASSIST_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(assistTV, s.skillType, s.name);
                 assistTV.setVisibility(View.VISIBLE);
             } else if (isSpecial(i)) {
-                makeSkillView(spTV, SPECIAL_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(spTV, s.skillType, s.name);
                 spTV.setVisibility(View.VISIBLE);
             } else if (isPassiveA(i)) {
-                makeSkillView(aTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(aTV, s.skillType, s.name);
                 aTV.setVisibility(View.VISIBLE);
             } else if (isPassiveB(i)) {
-                makeSkillView(bTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(bTV, s.skillType, s.name);
                 bTV.setVisibility(View.VISIBLE);
             } else if (isPassiveC(i)) {
-                makeSkillView(cTV, PASSIVE_TYPE, singleton.skillsMap.get(i).name);
+                makeSkillView(cTV, s.skillType, s.name);
                 cTV.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    protected void makeSkillView(TextView tv, SkillType skillType, String text) {
+        Drawable d;
+        switch(skillType){
+            case WEAPON:
+                d = getResources().getDrawable(R.drawable.weapons);
+                break;
+            case ASSIST:
+                d = getResources().getDrawable(R.drawable.assists);
+                break;
+            case SPECIAL:
+                d = getResources().getDrawable(R.drawable.specials);
+                break;
+            default:
+                d = getResources().getDrawable(R.drawable.passives);
+                break;
+        }
+        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        tv.setText(text);
     }
 
     private TextView findAndResetSkillTextView(LinearLayout layout, int id) {

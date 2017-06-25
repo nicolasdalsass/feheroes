@@ -39,8 +39,10 @@ import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
+import c4stor.com.feheroes.model.hero.MovementType;
 import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.SkillState;
+import c4stor.com.feheroes.model.skill.WeaponType;
 
 /**
  * Created by eclogia on 04/06/17.
@@ -50,6 +52,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private HeroRoll heroRoll;
     private ImageView heroPortrait;
+    private ImageView movementIcon;
+    private ImageView weaponIcon;
     private EditText comment;
     private TextView hp;
     private TextView atk;
@@ -81,6 +85,9 @@ public class HeroPageActivity extends ToolbaredActivity {
         setSupportActionBar(myToolbar);
 
         heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
+        movementIcon = (ImageView) this.findViewById(R.id.movementIcon);
+        weaponIcon = (ImageView) this.findViewById(R.id.weaponIcon);
+
         comment = (EditText) findViewById(R.id.heroComment);
         comment.addTextChangedListener(new TextWatcher() {
             @Override
@@ -120,6 +127,68 @@ public class HeroPageActivity extends ToolbaredActivity {
                 heroRoll.skills.add(singleton.skillsMap.get(i));
             }
         }
+    }
+
+    private void setMovementIcon(ImageView view, MovementType movementType) {
+        Drawable d;
+        switch(movementType){
+            case CAVALRY:
+                d = getResources().getDrawable(R.drawable.move_cavalry);
+                break;
+            case FLIER:
+                d = getResources().getDrawable(R.drawable.move_flier);
+                break;
+            case ARMOR:
+                d = getResources().getDrawable(R.drawable.move_armor);
+                break;
+            default:
+                d = getResources().getDrawable(R.drawable.move_infantry);
+                break;
+        }
+        view.setImageDrawable(d);
+    }
+
+    private void setWeaponIcon(ImageView view, WeaponType weaponType) {
+        Drawable d;
+        switch(weaponType){
+            case SWORD:
+                d = getResources().getDrawable(R.drawable.red_sword);
+                break;
+            case RTOME:
+                d = getResources().getDrawable(R.drawable.red_tome);
+                break;
+            case RBREATH:
+                d = getResources().getDrawable(R.drawable.red_breath);
+                break;
+            case LANCE:
+                d = getResources().getDrawable(R.drawable.blue_lance);
+                break;
+            case BTOME:
+                d = getResources().getDrawable(R.drawable.blue_tome);
+                break;
+            case BBREATH:
+                d = getResources().getDrawable(R.drawable.blue_breath);
+                break;
+            case AXE:
+                d = getResources().getDrawable(R.drawable.green_axe);
+                break;
+            case GTOME:
+                d = getResources().getDrawable(R.drawable.green_tome);
+                break;
+            case GBREATH:
+                d = getResources().getDrawable(R.drawable.green_breath);
+                break;
+            case DAGGER:
+                d = getResources().getDrawable(R.drawable.colorless_dagger);
+                break;
+            case BOW:
+                d = getResources().getDrawable(R.drawable.colorless_bow);
+                break;
+            default:
+                d = getResources().getDrawable(R.drawable.colorless_staff);
+                break;
+        }
+        view.setImageDrawable(d);
     }
 
     private void showSkillList() {
@@ -241,11 +310,11 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         }
         drawHeroPortrait();
+        //setMovementIcon(movementIcon, heroRoll.hero.movementType);
+        //setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);
         showComment();
         calculateHeroStats();
         showEquippedSkills();
-
-        //showSkillList();
 
         adAdBanner();
         //disableAdBanner();
@@ -301,7 +370,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         switch (item.getItemId()) {
             case R.id.toggleNakedView:
                 skillOn = !skillOn;
-                //TODO change showEquippedSkills into ShowSkillManagement (change onCreateOptionsMenu too)
+                //TODO check if there is an equipped skill on the same slot
                 //open overlay
                 //modify sliders
                 //check if skill slot already has something and unequip/change slider if yes
@@ -321,6 +390,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private void showComment() {
         if (heroRoll.comment == null) {
             comment.setHint(R.string.comment);
+            //comment.setHint(heroRoll.hero.toString());//TODO old-school debug
         } else {
             comment.setText(heroRoll.comment);
         }
@@ -331,12 +401,12 @@ public class HeroPageActivity extends ToolbaredActivity {
         Bitmap b = BitmapFactory.decodeResource(this.getResources(), drawableId);
 
         int circleRadius = Math.min(100, Math.min(b.getHeight(), b.getWidth()));
-        Bitmap c = getRoundedCroppedBitmap(b, circleRadius, circleRadius);
+        Bitmap c = getRoundedCroppedBitmap(b, circleRadius);
         Drawable drawable = new BitmapDrawable(this.getResources(), c);
         heroPortrait.setImageDrawable(drawable);
     }
 
-    private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth, int finalWeight) {
+    private Bitmap getRoundedCroppedBitmap(Bitmap bitmap, int finalWidth) {
         int widthLight = bitmap.getWidth();
         int heightLight = bitmap.getHeight();
 

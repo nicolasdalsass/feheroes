@@ -15,40 +15,59 @@
         android:elevation="4dp"
         android:theme="@style/Toolbar"
         app:popupTheme="@style/PopupMenu"
-        android:layout_alignParentTop="true"/>
+        android:layout_alignParentTop="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"/>
 
-    <LinearLayout
+    <ImageView
+        android:id="@+id/heroPortrait"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_below="@id/my_toolbar"
+        android:layout_width="100dp"
+        android:layout_height="100dp"/>
+
+    <ImageView
+        android:id="@+id/weaponIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/heroPortrait"
+        android:layout_below="@id/my_toolbar"
+        android:paddingBottom="6dp"
+        android:paddingTop="50dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"/>
+
+
+    <ImageView
+        android:id="@+id/movementIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/heroPortrait"
+        android:layout_below="@id/weaponIcon"
+        android:paddingBottom="6dp"
+        android:paddingTop="6dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"/>
+
+    <EditText
+        android:id="@+id/heroComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:lines="5"
         android:layout_below="@id/my_toolbar"
-        android:id="@+id/heroDescriptionLayout"
-        android:focusable="true"
-        android:focusableInTouchMode="true">
-        <ImageView
-            android:id="@+id/heroPortrait"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="20dp"
-            android:layout_marginBottom="10dp"
-            android:layout_width="100dp"
-            android:layout_height="100dp"/>
-
-        <EditText
-            android:id="@+id/heroComment"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="5"
-            android:layout_weight="80"
-            android:hint="@string/comment" />
-
-    </LinearLayout>
-
+        android:layout_toRightOf="@id/movementIcon"
+        android:layout_alignParentRight="true"
+        android:paddingRight="10dp"
+        android:hint="@string/comment" />
 
     <LinearLayout
         android:id="@+id/hero40StatLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/heroDescriptionLayout"
+        android:layout_below="@id/heroComment"
         android:orientation="horizontal"
         android:paddingBottom="6dp"
         android:paddingTop="6dp"
