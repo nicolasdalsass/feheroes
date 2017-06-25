@@ -3,6 +3,7 @@ package c4stor.com.feheroes.activities;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,6 +16,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.model.InheritanceRestriction;
+import c4stor.com.feheroes.model.InheritanceRestrictionDeserializer;
 import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -31,7 +34,7 @@ public final class ModelSingleton {
     public Map<Integer, Skill> skillsMap = null;
     public HeroCollection collection = new HeroCollection();
 
-    private static Gson gson = new Gson();
+    private Gson gson = new GsonBuilder().registerTypeAdapter(InheritanceRestriction.class, new InheritanceRestrictionDeserializer()).create();
 
     private static volatile ModelSingleton instance;
 
