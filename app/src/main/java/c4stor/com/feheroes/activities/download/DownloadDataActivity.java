@@ -33,7 +33,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false, true);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1906.json");
+        downloadTask.execute("https://laicar.github.io/heroesjson/v1306-inheritance.json");
 
     }
 
@@ -129,7 +129,7 @@ public class DownloadDataActivity extends AppCompatActivity {
                 }
                 if (downloadAnotherFile && Locale.getDefault().getDisplayLanguage().startsWith("fr")){
                     final DownloadTask localeDownloadTask = new DownloadTask(context, "skills.locale", true, false);
-                    localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+                    localeDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-fr.json");
                 } else {
                     Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
                     startActivity(ivCheckIntent);
@@ -140,7 +140,7 @@ public class DownloadDataActivity extends AppCompatActivity {
                     dlOtherFile = true;
                 }
                 final DownloadTask skillDownloadTask = new DownloadTask(context, "skills.data", true, dlOtherFile);
-                skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills.json");
+                skillDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-inheritance.json");
 
             }
         }

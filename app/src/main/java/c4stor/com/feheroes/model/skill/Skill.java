@@ -12,13 +12,29 @@ public class Skill {
     public int[] mods;
     public InheritanceRestriction inheritance;
     public SkillState skillState;
+    public SkillType skillType;
 
     public Skill() {
-        skillState = SkillState.EQUIPPED;
+        skillState = SkillState.LEARNABLE;
+    }
+
+    public void initSkillType(){
+        if (isWeapon(id))
+            skillType = SkillType.WEAPON;
+        else if (isAssist(id))
+            skillType = SkillType.ASSIST;
+        else if (isSpecial(id))
+            skillType = SkillType.SPECIAL;
+        else if (isPassiveA(id))
+            skillType = SkillType.PASSIVE_A;
+        else if (isPassiveB(id))
+            skillType = SkillType.PASSIVE_B;
+        else
+            skillType = SkillType.PASSIVE_C;
     }
 
     public static boolean isPassiveC(int i) {
-        return i >= 50000 && i < 60000;
+        return i >= 50000;
     }
 
     public static boolean isPassiveB(int i) {
@@ -45,5 +61,9 @@ public class Skill {
         //you could probably do a difference check on the ids instead
         return (isWeapon(i) && isWeapon(j)) || (isAssist(i) && isAssist(j)) || (isSpecial(i) && isSpecial(j))
                 || (isPassiveA(i) && isPassiveA(j)) || (isPassiveB(i) && isPassiveB(j)) || (isPassiveC(i) && isPassiveC(j));
+    }
+
+    public boolean isSameSkillType(Skill otherSkill) {
+        return this.skillType == otherSkill.skillType;
     }
 }
