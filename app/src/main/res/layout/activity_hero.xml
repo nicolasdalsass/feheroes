@@ -38,7 +38,10 @@
         android:paddingBottom="6dp"
         android:paddingTop="12dp"
         android:paddingRight="6dp"
-        android:maxWidth="48dp"/>
+        android:maxWidth="48dp"
+        android:maxHeight="48dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"/>
 
 
     <ImageView
@@ -49,7 +52,10 @@
         android:layout_below="@id/weaponIcon"
         android:paddingBottom="6dp"
         android:paddingRight="6dp"
-        android:maxWidth="48dp"/>
+        android:maxWidth="48dp"
+        android:maxHeight="48dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"/>
 
     <EditText
         android:id="@+id/heroComment"

@@ -37,6 +37,8 @@ import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
+import c4stor.com.feheroes.model.InheritanceRestriction;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.hero.MovementType;
@@ -74,6 +76,8 @@ public class HeroPageActivity extends ToolbaredActivity {
         int heroPosition = intent.getIntExtra("position", 1);
         singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
         this.heroRoll = singleton.collection.get(heroPosition);
+
+        updateHeroAttributes(heroPosition);
 
         StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
         sb.append(" ");
@@ -116,7 +120,18 @@ public class HeroPageActivity extends ToolbaredActivity {
         equippedSkills = (LinearLayout) findViewById(R.id.equippedSkills);
 
         initHeroRollSkills();
+        try {
+            singleton.initHeroes(getBaseContext());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         onResume();
+    }
+
+    private void updateHeroAttributes(int heroPosition) {
+        if (singleton.collection.get(heroPosition).hero.movementType == null) {
+            heroRoll.hero = singleton.fiveStarsMap.get(heroRoll.hero.name);
+        }
     }
 
 
@@ -134,8 +149,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         }
         drawHeroPortrait();
-        //setMovementIcon(movementIcon, heroRoll.hero.movementType);
-        //setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);
+        setMovementIcon(movementIcon, heroRoll.hero.movementType);
+        setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);
         showComment();
         calculateHeroStats();
         showEquippedSkills();
@@ -235,10 +250,11 @@ public class HeroPageActivity extends ToolbaredActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbarmenu, menu);
         MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
-        nakedView.setTitle(R.string.skill_management);
         if (!skillOn) {
+            nakedView.setTitle(R.string.skills_on);
             nakedView.getIcon().setAlpha(130);
         } else {
+            nakedView.setTitle(R.string.skill_management);
             nakedView.getIcon().setAlpha(255);
         }
         return true;
@@ -390,7 +406,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     private void showComment() {
         if (heroRoll.comment == null) {
             comment.setHint(R.string.comment);
-            //comment.setHint(heroRoll.hero.movementType == null ? "null": "not null");//TODO old-school debug
         } else {
             comment.setText(heroRoll.comment);
         }
