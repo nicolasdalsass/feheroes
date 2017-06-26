@@ -29,7 +29,7 @@ import java.io.IOException;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
-import c4stor.com.feheroes.model.hero.StarredHero;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -229,7 +229,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         mPublisherAdView.setVisibility(View.GONE);
     }
 
-    protected int[] calculateMods(StarredHero hero, int lvl, boolean nakedHeroes) {
+    protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
 
         int[] result = new int[]{0, 0, 0, 0, 0};
         if (lvl == 1 && hero.skills1 != null && nakedHeroes) {

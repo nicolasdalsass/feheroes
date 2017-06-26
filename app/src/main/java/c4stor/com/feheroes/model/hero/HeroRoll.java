@@ -15,8 +15,7 @@ import c4stor.com.feheroes.model.skill.Skill;
 
 public class HeroRoll implements Serializable {
 
-    public StarredHero hero;
-    public int stars;
+    public Hero hero;
     public List<String> boons;
     public List<String> banes;
     public String comment;
@@ -27,8 +26,11 @@ public class HeroRoll implements Serializable {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    private HeroRoll (){
+    public HeroRoll (){
         skills = new ArrayList<>(4);
+    }
+
+    public void initGrowths() {
         growthPoints = new int[5];
         growthPoints[0] = hero.hpGrowth;
         growthPoints[1] = hero.atkGrowth;
@@ -37,18 +39,12 @@ public class HeroRoll implements Serializable {
         growthPoints[4] = hero.resGrowth;
     }
 
-    public HeroRoll(StarredHero hero, int stars, List<String> boons, List<String> banes) {
+    public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
         this.hero = hero;
         this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;
         skills = new ArrayList<>();
-        growthPoints = new int[5];
-        growthPoints[0] = hero.hpGrowth;
-        growthPoints[1] = hero.atkGrowth;
-        growthPoints[2] = hero.spdGrowth;
-        growthPoints[3] = hero.defGrowth;
-        growthPoints[4] = hero.resGrowth;
     }
 
     public void applyBoonBaneOnGrowth() {

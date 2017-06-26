@@ -172,4 +172,6 @@
     <string name="skill_learned">Appris</string>
     <string name="skill_learnable">Apprenable</string>
     <string name="skill_to_inherit">À hériter</string>
+    <string name="legion">Légion</string>
+    <string name="clarisse">Clarisse</string>
 </resources>
