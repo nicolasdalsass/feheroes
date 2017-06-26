@@ -34,7 +34,7 @@ public final class ModelSingleton {
     public Map<Integer, Skill> skillsMap = null;
     public HeroCollection collection = new HeroCollection();
 
-    private Gson gson = new GsonBuilder().registerTypeAdapter(InheritanceRestriction.class, new InheritanceRestrictionDeserializer()).create();
+    public Gson gson = new GsonBuilder().registerTypeAdapter(InheritanceRestriction.class, new InheritanceRestrictionDeserializer()).create();
 
     private static volatile ModelSingleton instance;
 
@@ -78,7 +78,7 @@ public final class ModelSingleton {
     }
 
     public void initHeroes(Context context) throws IOException {
-        if (threeStarsMap == null) {
+        if (threeStarsMap == null || threeStarsMap.get("Selena").movementType == null) {
             threeStarsMap=new TreeMap<>();
             fourStarsMap=new TreeMap<>();
             fiveStarsMap=new TreeMap<>();
