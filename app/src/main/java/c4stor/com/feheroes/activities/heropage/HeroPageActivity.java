@@ -37,8 +37,7 @@ import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.InheritanceRestriction;
-import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.StarredHero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.hero.MovementType;
@@ -119,7 +118,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private void setToolbar(Toolbar myToolbar) {
         StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
         sb.append(" ");
-        for (int i = 0; i < heroRoll.stars; i++) {
+        for (int i = 0; i < heroRoll.hero.rarity; i++) {
             sb.append("★");
         }
         myToolbar.setTitle(sb.toString());
@@ -153,7 +152,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void updateHeroAttributes(int heroPosition) {
         if (singleton.collection.get(heroPosition).hero.movementType == null) {
-            Hero mapHero = singleton.fiveStarsMap.get(heroRoll.hero.name);
+            StarredHero mapHero = singleton.fiveStarsMap.get(heroRoll.hero.name);
             heroRoll.hero.movementType = mapHero.movementType;
             heroRoll.hero.weaponType = mapHero.weaponType;
         }

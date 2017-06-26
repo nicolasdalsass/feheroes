@@ -32,9 +32,16 @@ public class DownloadDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
 
-        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false, true);
-        downloadTask.execute("https://laicar.github.io/heroesjson/v1306-inheritance.json");
-
+        final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
+        heroDownloadTask.execute("https://laicar.github.io/heroesjson/v1306-inheritance.json");
+        final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
+        baseHeroDownloadTask.execute("https://laicar.github.io/heroesjson/heroes.json");
+        if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
+            final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
+            localeDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-fr.json");
+        }
+        final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", true);
+        skillDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-inheritance.json");
     }
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
@@ -42,16 +49,14 @@ public class DownloadDataActivity extends AppCompatActivity {
         private Context context;
         File dataFile;
         boolean goToIVFinder;
-        boolean downloadAnotherFile;
 
 
-        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder, boolean downloadAnotherFile) {
+        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder) {
             this.context = context;
 
             File directory = getBaseContext().getFilesDir();
             dataFile = new File(directory, outputFilePath);
             this.goToIVFinder = goToIVFinder;
-            this.downloadAnotherFile = downloadAnotherFile;
         }
 
 
@@ -113,8 +118,6 @@ public class DownloadDataActivity extends AppCompatActivity {
             }
         }
 
-
-
         @Override
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
@@ -127,21 +130,8 @@ public class DownloadDataActivity extends AppCompatActivity {
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                 }
-                if (downloadAnotherFile && Locale.getDefault().getDisplayLanguage().startsWith("fr")){
-                    final DownloadTask localeDownloadTask = new DownloadTask(context, "skills.locale", true, false);
-                    localeDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-fr.json");
-                } else {
-                    Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
-                    startActivity(ivCheckIntent);
-                }
-            } else {
-                boolean dlOtherFile = false;
-                if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
-                    dlOtherFile = true;
-                }
-                final DownloadTask skillDownloadTask = new DownloadTask(context, "skills.data", true, dlOtherFile);
-                skillDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-inheritance.json");
-
+                Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
+                startActivity(ivCheckIntent);
             }
         }
     }
