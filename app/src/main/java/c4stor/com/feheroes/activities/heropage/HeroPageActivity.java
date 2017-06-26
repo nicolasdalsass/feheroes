@@ -79,14 +79,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         updateHeroAttributes(heroPosition);
 
-        StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
-        sb.append(" ");
-        for (int i = 0; i < heroRoll.stars; i++) {
-            sb.append("★");
-        }
-        myToolbar.setTitle(sb.toString());
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
+        setToolbar(myToolbar);
 
         heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
         movementIcon = (ImageView) this.findViewById(R.id.movementIcon);
@@ -120,20 +113,19 @@ public class HeroPageActivity extends ToolbaredActivity {
         equippedSkills = (LinearLayout) findViewById(R.id.equippedSkills);
 
         initHeroRollSkills();
-        try {
-            singleton.initHeroes(getBaseContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         onResume();
     }
 
-    private void updateHeroAttributes(int heroPosition) {
-        if (singleton.collection.get(heroPosition).hero.movementType == null) {
-            heroRoll.hero = singleton.fiveStarsMap.get(heroRoll.hero.name);
+    private void setToolbar(Toolbar myToolbar) {
+        StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
+        sb.append(" ");
+        for (int i = 0; i < heroRoll.stars; i++) {
+            sb.append("★");
         }
+        myToolbar.setTitle(sb.toString());
+        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
+        setSupportActionBar(myToolbar);
     }
-
 
     @Override
     protected int getLayoutResource() {
@@ -157,6 +149,14 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         adAdBanner();
         //disableAdBanner();
+    }
+
+    private void updateHeroAttributes(int heroPosition) {
+        if (singleton.collection.get(heroPosition).hero.movementType == null) {
+            Hero mapHero = singleton.fiveStarsMap.get(heroRoll.hero.name);
+            heroRoll.hero.movementType = mapHero.movementType;
+            heroRoll.hero.weaponType = mapHero.weaponType;
+        }
     }
 
     private void initHeroRollSkills() {

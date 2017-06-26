@@ -17,7 +17,7 @@ import c4stor.com.feheroes.model.skill.WeaponType;
 public class InheritanceRestrictionDeserializer implements JsonDeserializer<InheritanceRestriction> {
     @Override
     public InheritanceRestriction deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-        String jsonRestriction = json.getAsString().toUpperCase();
+        String jsonRestriction = json.getAsString();
         for (MovementType restriction : MovementType.values()) {
             if (restriction.name().equals(jsonRestriction))
                 return restriction;
