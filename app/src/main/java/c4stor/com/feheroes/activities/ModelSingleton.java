@@ -19,6 +19,7 @@ import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.InheritanceRestriction;
 import c4stor.com.feheroes.model.InheritanceRestrictionDeserializer;
 import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.StarredHero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.skill.Skill;
 
@@ -28,9 +29,10 @@ import c4stor.com.feheroes.model.skill.Skill;
 
 public final class ModelSingleton {
 
-    public Map<String, Hero> fiveStarsMap = null;
-    public Map<String, Hero> fourStarsMap = null;
-    public Map<String, Hero> threeStarsMap = null;
+    public Map<String, StarredHero> fiveStarsMap = null;
+    public Map<String, StarredHero> fourStarsMap = null;
+    public Map<String, StarredHero> threeStarsMap = null;
+    public Map<String, Hero> heroMap = null;
     public Map<Integer, Skill> skillsMap = null;
     public HeroCollection collection = new HeroCollection();
 
@@ -57,7 +59,7 @@ public final class ModelSingleton {
     }
 
     public void initSkillData(Context context) throws IOException {
-        if(skillsMap==null) {
+        if(/*skillsMap==null*/ true) {
             skillsMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "skills.data");
             File localeFile = new File(context.getFilesDir(), "skills.locale");
@@ -78,6 +80,13 @@ public final class ModelSingleton {
     }
 
     public void initHeroes(Context context) throws IOException {
+        if (heroMap == null) {
+            heroMap = new HashMap<>();
+            File dataFile = new File(context.getFilesDir(), "hero.basics");
+            if (dataFile.exists()) {
+                initHeroesBasics(new FileInputStream(dataFile), context);
+            }
+        }
         if (threeStarsMap == null || threeStarsMap.get("Selena").movementType == null) {
             threeStarsMap=new TreeMap<>();
             fourStarsMap=new TreeMap<>();
@@ -96,6 +105,18 @@ public final class ModelSingleton {
 
     }
 
+    private void initHeroesBasics(FileInputStream inputStream, Context context) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        String line = reader.readLine();
+        while (line != null) {
+            Hero h = gson.fromJson(line, Hero.class);
+            System.err.println(h.name);
+            int nameIdentifier = context.getResources().getIdentifier(h.name.toLowerCase(), "string", context.getPackageName());
+            heroMap.put(capitalize(context.getResources().getString(nameIdentifier)), h);
+            line = reader.readLine();
+        }
+    }
+
     private void initHeroesFromCombo(Context context) throws IOException {
         InputStream inputStream = context.getResources().openRawResource(R.raw.combojson);
         initHeroesFromInputStream(inputStream, context);
@@ -105,7 +126,7 @@ public final class ModelSingleton {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
+            StarredHero jH = gson.fromJson(line, StarredHero.class);
             int rarity = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
             jH.name = jH.name.substring(0, jH.name.length() - 1);
             cleanStat(jH.atk);
@@ -113,6 +134,7 @@ public final class ModelSingleton {
             cleanStat(jH.def);
             cleanStat(jH.res);
             cleanStat(jH.speed);
+            jH.rarity = rarity;
             int nameIdentifier = context.getResources().getIdentifier(jH.name.toLowerCase(), "string", context.getPackageName());
             switch (rarity) {
                 case 3:

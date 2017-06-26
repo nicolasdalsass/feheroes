@@ -23,14 +23,14 @@ import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.StarredHero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class IVCheckActivity extends ToolbaredActivity {
 
 
-    protected Map<String, Hero> refMap = new TreeMap<>();
+    protected Map<String, StarredHero> refMap = new TreeMap<>();
     private int[] selectedSpinners = new int[]{1, 1, 1, 1, 1};
     private int[] neutralSpinners = new int[]{1, 1, 1, 1, 1};
     private boolean resetSpinners = false;
@@ -85,7 +85,7 @@ public class IVCheckActivity extends ToolbaredActivity {
             case R.id.toggleNakedView:
                 nakedHeroes = !nakedHeroes;
                 invalidateOptionsMenu();
-                Hero hero = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
+                StarredHero hero = (StarredHero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
                 populateTableWithHero(hero);
                 return true;
             default:
@@ -123,9 +123,9 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
             String selectedHero = "";
             if (spinnerHeroes.getSelectedItem() != null) {
-                selectedHero = ((Hero) spinnerHeroes.getSelectedItem()).name;
+                selectedHero = ((StarredHero) spinnerHeroes.getSelectedItem()).name;
             }
-            Hero[] refStarValues = refMap.values().toArray(new Hero[]{});
+            StarredHero[] refStarValues = refMap.values().toArray(new StarredHero[]{});
             int newPositionc = getNewPosition(selectedHero, refStarValues);
             ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
             threeStarsAdapter.notifyDataSetChanged();
@@ -145,7 +145,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         //disableAdBanner();
     }
 
-    private int getNewPosition(String selectedValue, Hero[] values) {
+    private int getNewPosition(String selectedValue, StarredHero[] values) {
         for (int i = 0; i < values.length; i++) {
             if (values[i].name.equalsIgnoreCase(selectedValue)) {
                 return i;
@@ -175,7 +175,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-            Hero selectedHero = (Hero) parent.getItemAtPosition(position);
+            StarredHero selectedHero = (StarredHero) parent.getItemAtPosition(position);
             if (resetSpinners)
                 selectedSpinners = neutralSpinners.clone();
             resetSpinners = true;
@@ -189,7 +189,7 @@ public class IVCheckActivity extends ToolbaredActivity {
 
     }
 
-    private void populateTableWithHero(final Hero hero) {
+    private void populateTableWithHero(final StarredHero hero) {
         TableLayout tv = (TableLayout) findViewById(R.id.herotable);
         tv.removeAllViewsInLayout();
 
@@ -217,7 +217,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         addHeroButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Hero h = (Hero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
+                StarredHero h = (StarredHero) ((Spinner) findViewById(R.id.spinner_heroes)).getSelectedItem();
                 int nameIdentifier = getBaseContext().getResources().getIdentifier(hero.name.toLowerCase(), "string", getBaseContext().getPackageName());
                 String localizedName = capitalize(getBaseContext().getString(nameIdentifier));
 
@@ -254,7 +254,7 @@ public class IVCheckActivity extends ToolbaredActivity {
     }
 
     @NonNull
-    private TableRow createSkillsRow(Hero hero) {
+    private TableRow createSkillsRow(StarredHero hero) {
         TableRow skillsRow = (TableRow) View.inflate(this, R.layout.skillsrow, null);
         TextView skillsLabel = (TextView) skillsRow.findViewById(R.id.skillsLabel);
         LinearLayout skills1 = (LinearLayout) skillsRow.findViewById(R.id.skills1);

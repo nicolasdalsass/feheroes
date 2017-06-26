@@ -21,19 +21,19 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.StarredHero;
 import c4stor.com.feheroes.R;
 
 /**
  * Created by Nicolas on 14/02/2017.
  */
 
-public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
+public class SpinnerHeroesAdapter extends ArrayAdapter<StarredHero> {
 
     private int height;
     private int width;
 
-    public SpinnerHeroesAdapter(Context context, Hero[] values) {
+    public SpinnerHeroesAdapter(Context context, StarredHero[] values) {
         super(context, android.R.layout.simple_spinner_item, values);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -66,7 +66,7 @@ public class SpinnerHeroesAdapter extends ArrayAdapter<Hero> {
         }
 
 
-        Hero hero = getItem(position);
+        StarredHero hero = getItem(position);
         int nameIdentifier = getContext().getResources().getIdentifier(hero.name.toLowerCase(), "string", getContext().getPackageName());
         holder.heroName.setText(capitalize(getContext().getString(nameIdentifier)));
         holder.heroName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
