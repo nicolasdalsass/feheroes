@@ -178,4 +178,6 @@
     <string name="skill_learned">Learned</string>
     <string name="skill_learnable">Learnable</string>
     <string name="skill_to_inherit">To inherit</string>
+    <string name="legion">Legion</string>
+    <string name="clarisse">Clarisse</string>
 </resources>

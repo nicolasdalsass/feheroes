@@ -37,8 +37,9 @@ import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.hero.StarredHero;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.hero.MovementType;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -152,7 +153,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void updateHeroAttributes(int heroPosition) {
         if (singleton.collection.get(heroPosition).hero.movementType == null) {
-            StarredHero mapHero = singleton.fiveStarsMap.get(heroRoll.hero.name);
+            HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
             heroRoll.hero.movementType = mapHero.movementType;
             heroRoll.hero.weaponType = mapHero.weaponType;
         }
