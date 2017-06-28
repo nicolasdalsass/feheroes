@@ -44,6 +44,7 @@ import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
 import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class CollectionActivity extends ToolbaredActivity {
@@ -92,6 +93,7 @@ public class CollectionActivity extends ToolbaredActivity {
     protected void onResume() {
         super.onResume();
         singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
+        updateHeroAttributes();
         try {
             singleton.initHeroes(getBaseContext());
         } catch (IOException e) {
@@ -101,6 +103,28 @@ public class CollectionActivity extends ToolbaredActivity {
         initTextView();
         adAdBanner();
 //        disableAdBanner();
+    }
+
+
+
+    //this method is there to update old HeroCollections
+    private void updateHeroAttributes() {
+        for (HeroRoll heroRoll : singleton.collection) {
+            if (heroRoll.hero.movementType == null) {
+                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
+                heroRoll.hero.movementType = mapHero.movementType;
+                heroRoll.hero.weaponType = mapHero.weaponType;
+            }
+            if (heroRoll.hero.atkGrowth == 0) {
+                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
+                heroRoll.hero.hpGrowth = mapHero.hpGrowth;
+                heroRoll.hero.atkGrowth = mapHero.atkGrowth;
+                heroRoll.hero.spdGrowth = mapHero.spdGrowth;
+                heroRoll.hero.defGrowth = mapHero.defGrowth;
+                heroRoll.hero.resGrowth = mapHero.resGrowth;
+                heroRoll.hero.availability = mapHero.availability;
+            }
+        }
     }
 
     private void initTextView() {
