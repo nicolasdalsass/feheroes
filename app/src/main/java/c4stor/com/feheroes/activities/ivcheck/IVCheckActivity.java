@@ -127,9 +127,9 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
             Hero[] refStarValues = refMap.values().toArray(new Hero[]{});
             int newPositionc = getNewPosition(selectedHero, refStarValues);
-            ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
-            threeStarsAdapter.notifyDataSetChanged();
-            spinnerHeroes.setAdapter(threeStarsAdapter);
+            ArrayAdapter starredHeroAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
+            starredHeroAdapter.notifyDataSetChanged();
+            spinnerHeroes.setAdapter(starredHeroAdapter);
             spinnerHeroes.setSelection(newPositionc);
         }
 
@@ -139,7 +139,7 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
         });
 
-        populateSpinner();
+        populateStarSpinner();
 
         adAdBanner();
         //disableAdBanner();
@@ -154,7 +154,7 @@ public class IVCheckActivity extends ToolbaredActivity {
         return 0;
     }
 
-    private void populateSpinner() {
+    private void populateStarSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner_stars);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.stars_array, R.layout.spinneritem_nopadding);
