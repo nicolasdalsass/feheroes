@@ -33,7 +33,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
-        heroDownloadTask.execute("https://laicar.github.io/heroesjson/v1306-inheritance.json");
+        heroDownloadTask.execute("https://laicar.github.io/heroesjson/v170628");
         final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
         baseHeroDownloadTask.execute("https://laicar.github.io/heroesjson/heroes.json");
         if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
