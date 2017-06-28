@@ -95,7 +95,7 @@ public class CollectionActivity extends ToolbaredActivity {
         try {
             singleton.initHeroes(getBaseContext());
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         initListView();
         initTextView();

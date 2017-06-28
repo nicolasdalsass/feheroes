@@ -80,14 +80,20 @@ public final class ModelSingleton {
     }
 
     public void initHeroes(Context context) throws IOException {
-        if (heroMap == null) {
+        if (heroMap == null || heroMap.get("Selena").availability.length == 0) {
             heroMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "hero.basics");
             if (dataFile.exists()) {
+                try {
                 initHeroesBasics(new FileInputStream(dataFile), context);
+                } catch (Exception e) {
+                    initHeroesBasicsLocally(context);
+                }
+            } else {
+                initHeroesBasicsLocally(context);
             }
         }
-        if (threeStarsMap == null || threeStarsMap.get("Selena").movementType == null) {//test for updating old files
+        if (threeStarsMap == null || threeStarsMap.get("Selena").availability.length == 0) {//test for updating old files
             threeStarsMap=new TreeMap<>();
             fourStarsMap=new TreeMap<>();
             fiveStarsMap=new TreeMap<>();
@@ -105,7 +111,12 @@ public final class ModelSingleton {
 
     }
 
-    private void initHeroesBasics(FileInputStream inputStream, Context context) throws IOException {
+    public void initHeroesBasicsLocally(Context context) throws IOException {
+        InputStream inputStream = context.getResources().openRawResource(R.raw.heroesjson);
+        initHeroesBasics(inputStream, context);
+    }
+
+    private void initHeroesBasics(InputStream inputStream, Context context) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
@@ -137,8 +148,15 @@ public final class ModelSingleton {
             jH.rarity = rarity;
             int nameIdentifier = context.getResources().getIdentifier(jH.name.toLowerCase(), "string", context.getPackageName());
             String capitalizedName = capitalize(context.getResources().getString(nameIdentifier));
-            jH.movementType = heroMap.get(capitalizedName).movementType;
-            jH.weaponType = heroMap.get(capitalizedName).weaponType;
+            HeroInfo heroInfo = heroMap.get(capitalizedName);
+            jH.movementType = heroInfo.movementType;
+            jH.weaponType = heroInfo.weaponType;
+            jH.hpGrowth = heroInfo.hpGrowth;
+            jH.atkGrowth = heroInfo.atkGrowth;
+            jH.spdGrowth = heroInfo.spdGrowth;
+            jH.defGrowth = heroInfo.defGrowth;
+            jH.resGrowth = heroInfo.resGrowth;
+            jH.availability = heroInfo.availability;
             switch (rarity) {
                 case 3:
                     threeStarsMap.put(capitalizedName, jH);
