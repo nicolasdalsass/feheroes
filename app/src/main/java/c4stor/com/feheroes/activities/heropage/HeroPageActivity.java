@@ -377,10 +377,7 @@ public class HeroPageActivity extends ToolbaredActivity {
             case R.id.toggleNakedView:
                 skillOn = !skillOn;
                 //TODO implement inheritance on skill sliders
-                //open overlay
-                //modify sliders
                 //check if skill slot already has something and unequip/change slider if yes
-                //close overlay
                 //calculate and show new skills and stats
                 invalidateOptionsMenu();
                 showSkillList();
