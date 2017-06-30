@@ -70,6 +70,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         try {
             singleton.init(this);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -167,31 +168,25 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
             Skill s = singleton.skillsMap.get(i);
-            if (isWeapon(i)) {
-                makeSkillView(wpnTV, s.skillType, s.name);
-                wpnTV.setVisibility(View.VISIBLE);
-            } else if (isAssist(i)) {
-                makeSkillView(assistTV, s.skillType, s.name);
-                assistTV.setVisibility(View.VISIBLE);
-            } else if (isSpecial(i)) {
-                makeSkillView(spTV, s.skillType, s.name);
-                spTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveA(i)) {
-                makeSkillView(aTV, s.skillType, s.name);
-                aTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveB(i)) {
-                makeSkillView(bTV, s.skillType, s.name);
-                bTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveC(i)) {
-                makeSkillView(cTV, s.skillType, s.name);
-                cTV.setVisibility(View.VISIBLE);
+            if (s.skillType == SkillType.WEAPON) {
+                makeSkillView(wpnTV, s);
+            } else if (s.skillType == SkillType.ASSIST) {
+                makeSkillView(assistTV, s);
+            } else if (s.skillType == SkillType.SPECIAL) {
+                makeSkillView(spTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_A) {
+                makeSkillView(aTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_B) {
+                makeSkillView(bTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_C) {
+                makeSkillView(cTV, s);
             }
         }
     }
 
-    protected void makeSkillView(TextView tv, SkillType skillType, String text) {
+    protected void makeSkillView(TextView tv, Skill skill) {
         Drawable d;
-        switch(skillType){
+        switch(skill.skillType){
             case WEAPON:
                 d = getResources().getDrawable(R.drawable.weapons);
                 break;
@@ -206,7 +201,8 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 break;
         }
         tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
-        tv.setText(text);
+        tv.setText(skill.name);
+        tv.setVisibility(View.VISIBLE);
     }
 
     private TextView findAndResetSkillTextView(LinearLayout layout, int id) {

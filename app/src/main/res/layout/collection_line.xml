@@ -177,6 +177,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="20dp"
+        android:paddingRight="20dp"
         android:paddingBottom="6dp"
         android:textSize="16sp"
         android:visibility="gone"/>

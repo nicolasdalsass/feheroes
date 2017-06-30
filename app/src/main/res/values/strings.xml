@@ -145,10 +145,10 @@
     <string name="no_skills">Skills Off</string>
     <string name="skills_on">Skills On</string>
     <string name="skills">Skills</string>
-    <string name="camillaeaster">Camilla - Easter Festival</string>
-    <string name="chromeaster">Chrom - Easter Festival</string>
-    <string name="xandereaster">Xander - Easter Festival</string>
-    <string name="lucinaeaster">Lucina - Easter Festival</string>
+    <string name="camillaeaster">Camilla - Easter</string>
+    <string name="chromeaster">Chrom - Easter</string>
+    <string name="xandereaster">Xander - Easter</string>
+    <string name="lucinaeaster">Lucina - Easter</string>
     <string name="alm">alm</string>
     <string name="clair">clair</string>
     <string name="faye">faye</string>
@@ -180,4 +180,8 @@
     <string name="skill_to_inherit">To inherit</string>
     <string name="legion">Legion</string>
     <string name="clarisse">Clarisse</string>
+    <string name="fredericksummer">Frederick - Summer</string>
+    <string name="gaiussummer">Gaius - Summer</string>
+    <string name="robinfsummer">Robin (f) - Summer</string>
+    <string name="tikisummer">Tiki - Summer</string>
 </resources>
