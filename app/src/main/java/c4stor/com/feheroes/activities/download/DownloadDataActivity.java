@@ -33,15 +33,15 @@ public class DownloadDataActivity extends AppCompatActivity {
         setContentView(R.layout.activity_download_data);
 
         final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
-        heroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v170628");
+        heroDownloadTask.execute("https://laicar.github.io/heroesjson/v170630");
         final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
-        baseHeroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes.json");
+        baseHeroDownloadTask.execute("https://laicar.github.io/heroesjson/heroes.json");
         if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
-            localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+            localeDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-fr.json");
         }
         final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", true);
-        skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
+        skillDownloadTask.execute("https://laicar.github.io/heroesjson/allskills-inheritance.json");
     }
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {

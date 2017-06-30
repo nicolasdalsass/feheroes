@@ -121,9 +121,7 @@ public final class ModelSingleton {
         String line = reader.readLine();
         while (line != null) {
             HeroInfo h = gson.fromJson(line, HeroInfo.class);
-            int nameIdentifier = context.getResources().getIdentifier(h.name.toLowerCase(), "string", context.getPackageName());
-            String capitalizedName = capitalize(context.getResources().getString(nameIdentifier));
-            heroMap.put(capitalizedName, h);
+            heroMap.put(h.name, h);
             line = reader.readLine();
         }
     }
@@ -147,8 +145,7 @@ public final class ModelSingleton {
             cleanStat(jH.speed);
             jH.rarity = rarity;
             int nameIdentifier = context.getResources().getIdentifier(jH.name.toLowerCase(), "string", context.getPackageName());
-            String capitalizedName = capitalize(context.getResources().getString(nameIdentifier));
-            HeroInfo heroInfo = heroMap.get(capitalizedName);
+            HeroInfo heroInfo = heroMap.get(jH.name);
             jH.movementType = heroInfo.movementType;
             jH.weaponType = heroInfo.weaponType;
             jH.hpGrowth = heroInfo.hpGrowth;
@@ -157,15 +154,17 @@ public final class ModelSingleton {
             jH.defGrowth = heroInfo.defGrowth;
             jH.resGrowth = heroInfo.resGrowth;
             jH.availability = heroInfo.availability;
+            String heroName = capitalize(context.getResources().getString(nameIdentifier));
+            System.out.println(jH.name + " " + heroName);
             switch (rarity) {
                 case 3:
-                    threeStarsMap.put(capitalizedName, jH);
+                    threeStarsMap.put(heroName, jH);
                     break;
                 case 4:
-                    fourStarsMap.put(capitalizedName, jH);
+                    fourStarsMap.put(heroName, jH);
                     break;
                 case 5:
-                    fiveStarsMap.put(capitalizedName, jH);
+                    fiveStarsMap.put(heroName, jH);
                     break;
             }
             line = reader.readLine();

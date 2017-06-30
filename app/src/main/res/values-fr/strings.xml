@@ -174,4 +174,8 @@
     <string name="skill_to_inherit">À hériter</string>
     <string name="legion">Légion</string>
     <string name="clarisse">Clarisse</string>
+    <string name="fredericksummer">Frederick - Été</string>
+    <string name="gaiussummer">Gaius - Été</string>
+    <string name="robinfsummer">Daraen (f) - Été</string>
+    <string name="tikisummer">Tiki - Été</string>
 </resources>

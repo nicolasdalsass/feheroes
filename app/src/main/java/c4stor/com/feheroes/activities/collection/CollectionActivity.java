@@ -116,6 +116,8 @@ public class CollectionActivity extends ToolbaredActivity {
                 heroRoll.hero.weaponType = mapHero.weaponType;
             }
             if (heroRoll.hero.atkGrowth == 0) {
+                System.out.println(heroRoll.hero.name + " " + heroRoll.hero.weaponType + " " + singleton.heroMap.containsKey(heroRoll.hero.name));
+
                 HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
                 heroRoll.hero.hpGrowth = mapHero.hpGrowth;
                 heroRoll.hero.atkGrowth = mapHero.atkGrowth;
