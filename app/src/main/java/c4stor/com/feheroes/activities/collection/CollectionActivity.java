@@ -182,6 +182,7 @@ public class CollectionActivity extends ToolbaredActivity {
         switch (item.getItemId()) {
             case R.id.sortByName:
                 sortByName();
+                defaultVisibility = View.GONE;
                 initListView();
                 return true;
             case R.id.sortByStars:
