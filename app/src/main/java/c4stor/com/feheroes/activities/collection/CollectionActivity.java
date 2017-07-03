@@ -43,6 +43,7 @@ import java.util.Map;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
@@ -116,8 +117,6 @@ public class CollectionActivity extends ToolbaredActivity {
                 heroRoll.hero.weaponType = mapHero.weaponType;
             }
             if (heroRoll.hero.atkGrowth == 0) {
-                System.out.println(heroRoll.hero.name + " " + heroRoll.hero.weaponType + " " + singleton.heroMap.containsKey(heroRoll.hero.name));
-
                 HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
                 heroRoll.hero.hpGrowth = mapHero.hpGrowth;
                 heroRoll.hero.atkGrowth = mapHero.atkGrowth;
@@ -126,6 +125,7 @@ public class CollectionActivity extends ToolbaredActivity {
                 heroRoll.hero.resGrowth = mapHero.resGrowth;
                 heroRoll.hero.availability = mapHero.availability;
             }
+            singleton.collection.save(getBaseContext());
         }
     }
 
