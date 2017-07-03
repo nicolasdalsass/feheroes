@@ -15,6 +15,7 @@ import c4stor.com.feheroes.model.skill.Skill;
 
 public class HeroRoll implements Serializable {
 
+    public int stars;
     public Hero hero;
     public List<String> boons;
     public List<String> banes;
@@ -39,8 +40,13 @@ public class HeroRoll implements Serializable {
         growthPoints[4] = hero.resGrowth;
     }
 
+    public void initRarity() {
+        hero.rarity = stars;
+    }
+
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
         this.hero = hero;
+        this.stars = stars;
         this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;

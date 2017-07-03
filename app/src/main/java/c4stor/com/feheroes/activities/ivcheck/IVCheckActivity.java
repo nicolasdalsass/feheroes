@@ -246,6 +246,7 @@ public class IVCheckActivity extends ToolbaredActivity {
                 int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
                 HeroRoll hr = new HeroRoll(h, stars, boons, banes);
                 hr.initGrowths();
+                hr.initRarity();
                 singleton.collection.add(hr);
                 singleton.collection.save(getBaseContext());
                 Toast.makeText(getBaseContext(), localizedName + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();

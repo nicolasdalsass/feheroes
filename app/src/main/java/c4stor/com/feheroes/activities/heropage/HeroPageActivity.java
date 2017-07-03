@@ -146,7 +146,8 @@ public class HeroPageActivity extends ToolbaredActivity {
         //disableAdBanner();
     }
 
-    private void initHeroRollSkills() {//TODO init with whole chains when implementing inheritance
+    private void initHeroRollSkills() {
+        //TODO init with whole chains when implementing inheritance
         if (heroRoll.skills.isEmpty()) {
             for (int i : heroRoll.hero.skills40) {
                 heroRoll.skills.add(singleton.skillsMap.get(i));
