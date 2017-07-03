@@ -67,7 +67,7 @@
                 android:layout_width="@dimen/collectionbuttonradius"
                 android:layout_height="@dimen/collectionbuttonradius"
                 android:background="@drawable/heropagebutton"
-                android:text="!"
+                android:text="+"
                 android:layout_gravity="center_vertical"
                 android:gravity="center"
                 android:textColor="@color/high_green"
