@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -22,17 +23,8 @@ import android.widget.Toast;
 import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
 import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.google.gson.Gson;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
@@ -41,6 +33,9 @@ import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.skill.SkillType;
+
+import static c4stor.com.feheroes.model.skill.Skill.*;
 
 /**
  * Created by Nicolas on 19/02/2017.
@@ -50,124 +45,21 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
+    protected ModelSingleton singleton = ModelSingleton.getInstance();
+
+
     protected abstract int getLayoutResource();
 
     protected boolean isIVFinder() {
         return false;
     }
 
-    protected boolean isHeroPage() {
+    protected boolean isHeroCollection() {
         return false;
     }
-
-    protected boolean isCollection() {
-        return false;
-    }
-
-    protected static Map<String, Hero> fiveStarsMap = null;
-    protected static Map<String, Hero> fourStarsMap = null;
-    protected static Map<String, Hero> threeStarsMap = null;
-    protected static Map<Integer, Skill> skillsMap = null;
-
-
-    protected HeroCollection collection = new HeroCollection();
 
     protected String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
-    }
-
-    protected Gson gson = new Gson();
-
-    protected void cleanStat(int[] stat) {
-        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
-            stat[4] = -1;
-            stat[5] = -1;
-            stat[3] = -1;
-        }
-    }
-
-    protected void initSkills() throws IOException {
-        if(skillsMap==null) {
-            skillsMap = new HashMap<>();
-            File dataFile = new File(getBaseContext().getFilesDir(), "skills.data");
-            if (dataFile.exists()) {
-                try {
-                    initSkillsFromInputStream(new FileInputStream(dataFile));
-                } catch (Exception e) {
-                    initSkillsLocally();
-                }
-            } else {
-                initSkillsLocally();
-            }
-        }
-    }
-
-    protected void initSkillsLocally() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.skillsjson);
-        initSkillsFromInputStream(inputStream);
-    }
-
-    protected void initSkillsFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            if (line.length() > 0) {
-                Skill skill = gson.fromJson(line, Skill.class);
-                skillsMap.put(skill.id, skill);
-            }
-            line = reader.readLine();
-        }
-    }
-
-    protected void initHeroData() throws IOException {
-        if(threeStarsMap==null) {
-            threeStarsMap=new TreeMap<>();
-            fourStarsMap=new TreeMap<>();
-            fiveStarsMap=new TreeMap<>();
-            File dataFile = new File(getBaseContext().getFilesDir(), "hero.data");
-            if (dataFile.exists()) {
-                try {
-                    initHeroesFromInputStream(new FileInputStream(dataFile));
-                } catch (Exception e) {
-                    initHeroesFromCombo();
-                }
-            } else {
-                initHeroesFromCombo();
-            }
-        }
-    }
-
-    protected void initHeroesFromCombo() throws IOException {
-        InputStream inputStream = getBaseContext().getResources().openRawResource(R.raw.combojson);
-        initHeroesFromInputStream(inputStream);
-    }
-
-    protected void initHeroesFromInputStream(InputStream inputStream) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-        String line = reader.readLine();
-        while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
-            int level = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
-            jH.name = jH.name.substring(0, jH.name.length() - 1);
-            cleanStat(jH.atk);
-            cleanStat(jH.HP);
-            cleanStat(jH.def);
-            cleanStat(jH.res);
-            cleanStat(jH.speed);
-            int nameIdentifier = this.getResources().getIdentifier(jH.name.toLowerCase(), "string", getPackageName());
-            switch (level) {
-                case 3:
-                    threeStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 4:
-                    fourStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-                case 5:
-                    fiveStarsMap.put(capitalize(getResources().getString(nameIdentifier)), jH);
-                    break;
-            }
-            line = reader.readLine();
-        }
     }
 
     @Override
@@ -176,14 +68,14 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         setContentView(getLayoutResource());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
-            initHeroData();
-            initSkills();
+            singleton.init(this);
         } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
     private void startCollectionActivity() {
-        if (!isCollection()) {
+        if (!isHeroCollection()) {
             Intent intent = new Intent(getBaseContext(), CollectionActivity.class);
             startActivity(intent);
         }
@@ -195,7 +87,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -276,26 +167,42 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         TextView bTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_b);
         TextView cTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_c);
         for (int i : skills) {
-            if (isWeapon(i)) {
-                SkillTextView.makeSkillView(this, wpnTV, SkillTextView.WEAPON_TYPE, skillsMap.get(i).name);
-                wpnTV.setVisibility(View.VISIBLE);
-            } else if (isAssist(i)) {
-                SkillTextView.makeSkillView(this, assistTV, SkillTextView.ASSIST_TYPE, skillsMap.get(i).name);
-                assistTV.setVisibility(View.VISIBLE);
-            } else if (isSpecial(i)) {
-                SkillTextView.makeSkillView(this, spTV, SkillTextView.SPECIAL_TYPE, skillsMap.get(i).name);
-                spTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveA(i)) {
-                SkillTextView.makeSkillView(this, aTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
-                aTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveB(i)) {
-                SkillTextView.makeSkillView(this, bTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
-                bTV.setVisibility(View.VISIBLE);
-            } else if (isPassiveC(i)) {
-                SkillTextView.makeSkillView(this, cTV, SkillTextView.PASSIVE_TYPE, skillsMap.get(i).name);
-                cTV.setVisibility(View.VISIBLE);
+            Skill s = singleton.skillsMap.get(i);
+            if (s.skillType == SkillType.WEAPON) {
+                makeSkillView(wpnTV, s);
+            } else if (s.skillType == SkillType.ASSIST) {
+                makeSkillView(assistTV, s);
+            } else if (s.skillType == SkillType.SPECIAL) {
+                makeSkillView(spTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_A) {
+                makeSkillView(aTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_B) {
+                makeSkillView(bTV, s);
+            } else if (s.skillType == SkillType.PASSIVE_C) {
+                makeSkillView(cTV, s);
             }
         }
+    }
+
+    protected void makeSkillView(TextView tv, Skill skill) {
+        Drawable d;
+        switch(skill.skillType){
+            case WEAPON:
+                d = getResources().getDrawable(R.drawable.weapons);
+                break;
+            case ASSIST:
+                d = getResources().getDrawable(R.drawable.assists);
+                break;
+            case SPECIAL:
+                d = getResources().getDrawable(R.drawable.specials);
+                break;
+            default:
+                d = getResources().getDrawable(R.drawable.passives);
+                break;
+        }
+        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        tv.setText(skill.name);
+        tv.setVisibility(View.VISIBLE);
     }
 
     private TextView findAndResetSkillTextView(LinearLayout layout, int id) {
@@ -303,30 +210,6 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         textView.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null);
         textView.setText("");
         return textView;
-    }
-
-    private boolean isPassiveC(int i) {
-        return i >= 50000;
-    }
-
-    private boolean isPassiveB(int i) {
-        return i >= 40000 && i < 50000;
-    }
-
-    private boolean isPassiveA(int i) {
-        return i >= 30000 && i < 40000;
-    }
-
-    private boolean isSpecial(int i) {
-        return i >= 20000 && i < 30000;
-    }
-
-    private boolean isAssist(int i) {
-        return i >= 10000 && i < 20000;
-    }
-
-    private boolean isWeapon(int i) {
-        return 0 < i && i < 10000;
     }
 
     protected void adAdBanner() {
@@ -347,7 +230,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         int[] result = new int[]{0, 0, 0, 0, 0};
         if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
             for (int skill : hero.skills1) {
-                int[] mods = skillsMap.get(skill).mods;
+                int[] mods = singleton.skillsMap.get(skill).mods;
                 result[0] += mods[0];
                 result[1] += mods[1];
                 result[2] += mods[2];
@@ -357,7 +240,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         } else {
             if (hero.skills40 != null && nakedHeroes) {
                 for (int skill : hero.skills40) {
-                    int[] mods = skillsMap.get(skill).mods;
+                    int[] mods = singleton.skillsMap.get(skill).mods;
                     result[0] += mods[0];
                     result[1] += mods[1];
                     result[2] += mods[2];

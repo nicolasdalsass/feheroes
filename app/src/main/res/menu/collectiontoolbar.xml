@@ -8,6 +8,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/toggleNakedView"
+        android:title="@string/no_skills"
+        android:icon="@drawable/skill_icon"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/sort"
         android:icon="@drawable/sorticon"
         android:title="Sort"
@@ -48,13 +54,6 @@
         android:icon="@drawable/undo"
         android:title="Undo"
         app:showAsAction="always" />
-
-    <item
-        android:id="@+id/toggleNakedView"
-        android:icon="@drawable/skill_icon"
-        android:title="@string/no_skills"
-        app:showAsAction="always" />
-
 
     <item
         android:id="@+id/copycollectiontoclipboard"

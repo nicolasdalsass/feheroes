@@ -44,6 +44,7 @@ import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
 import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class CollectionActivity extends ToolbaredActivity {
@@ -62,46 +63,46 @@ public class CollectionActivity extends ToolbaredActivity {
     }
 
     @Override
-    protected boolean isCollection() {
+    protected boolean isHeroCollection() {
         return true;
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.mycollection);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolBar.setTitle(R.string.mycollection);
+        toolBar.setTitleTextColor(getResources().getColor(R.color.icons));
+        setSupportActionBar(toolBar);
         onResume();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.collectiontoolbar, menu);
-        menu.findItem(R.id.undo).setEnabled(supressedItems.size() > 0);
-        if (!menu.findItem(R.id.undo).isEnabled())
-            menu.findItem(R.id.undo).getIcon().setAlpha(130);
-        else
-            menu.findItem(R.id.undo).getIcon().setAlpha(255);
         if (skillsOn) {
             menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(255);
         } else {
             menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(130);
         }
+        menu.findItem(R.id.undo).setEnabled(supressedItems.size() > 0);
+        if (!menu.findItem(R.id.undo).isEnabled())
+            menu.findItem(R.id.undo).getIcon().setAlpha(130);
+        else
+            menu.findItem(R.id.undo).getIcon().setAlpha(255);
         return true;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        collection = HeroCollection.loadFromStorage(getBaseContext());
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
+        updateHeroAttributes();
         try {
-            initHeroData();
+            singleton.initHeroes(getBaseContext());
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         initListView();
         initTextView();
@@ -109,9 +110,31 @@ public class CollectionActivity extends ToolbaredActivity {
 //        disableAdBanner();
     }
 
+
+    //this method is there to update old HeroCollections
+    private void updateHeroAttributes() {
+        for (HeroRoll heroRoll : singleton.collection) {
+            if (heroRoll.hero.movementType == null) {
+                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
+                heroRoll.hero.movementType = mapHero.movementType;
+                heroRoll.hero.weaponType = mapHero.weaponType;
+            }
+            if (heroRoll.hero.atkGrowth == 0) {
+                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
+                heroRoll.hero.hpGrowth = mapHero.hpGrowth;
+                heroRoll.hero.atkGrowth = mapHero.atkGrowth;
+                heroRoll.hero.spdGrowth = mapHero.spdGrowth;
+                heroRoll.hero.defGrowth = mapHero.defGrowth;
+                heroRoll.hero.resGrowth = mapHero.resGrowth;
+                heroRoll.hero.availability = mapHero.availability;
+            }
+            singleton.collection.save(getBaseContext());
+        }
+    }
+
     private void initTextView() {
         TextView noCollectionText = (TextView) findViewById(R.id.nocollectiontext);
-        if (collection.size() > 0)
+        if (singleton.collection.size() > 0)
             noCollectionText.setVisibility(View.GONE);
         else {
             noCollectionText.setText(R.string.empty_collection);
@@ -121,7 +144,7 @@ public class CollectionActivity extends ToolbaredActivity {
     private void initListView() {
         ListView v = (ListView) findViewById(R.id.collectionlist);
         Parcelable state = v.onSaveInstanceState();
-        if (collection.size() > 0) {
+        if (singleton.collection.size() > 0) {
 
             v.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -130,23 +153,16 @@ public class CollectionActivity extends ToolbaredActivity {
                     if (vh.extraData.getVisibility() != View.GONE) {
                         vh.extraData.setVisibility(View.GONE);
                         statVisibility.remove(vh.hero);
+                        vh.comment.setVisibility(View.GONE);
                     } else {
                         vh.extraData.setVisibility(View.VISIBLE);
                         statVisibility.put(vh.hero, View.VISIBLE);
+                        if (vh.hero.comment != null && vh.hero.comment.length() > 0)
+                            vh.comment.setVisibility(View.VISIBLE);
                     }
                 }
             });
-            v.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                    ViewHolder vh = (ViewHolder) view.getTag();
-                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", collection.indexOf(vh.hero));
-                    startActivity(intent);
-                    return true;
-                }
-            });
-            HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, collection, sorting);
+            HeroCollectionAdapter adapter = new HeroCollectionAdapter(this, singleton.collection, sorting);
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             v.onRestoreInstanceState(state);
@@ -208,14 +224,14 @@ public class CollectionActivity extends ToolbaredActivity {
                 sorting = null;
                 initListView();
                 return true;
-            case R.id.undo:
-                undoHeroSupression();
-                initListView();
-                return true;
             case R.id.toggleNakedView:
                 skillsOn = !skillsOn;
                 invalidateOptionsMenu();
                 initListView();
+            case R.id.undo:
+                undoHeroSupression();
+                initListView();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -226,8 +242,8 @@ public class CollectionActivity extends ToolbaredActivity {
     private void undoHeroSupression() {
         if (supressedItems.size() > 0) {
             SuppressedItem suppressedItem = supressedItems.get(supressedItems.size() - 1);
-            collection.add(suppressedItem.position, suppressedItem.heroRoll);
-            collection.save(getBaseContext());
+            singleton.collection.add(suppressedItem.position, suppressedItem.heroRoll);
+            singleton.collection.save(getBaseContext());
             supressedItems.remove(supressedItems.size() - 1);
             invalidateOptionsMenu();
         }
@@ -323,8 +339,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                if (o1.stars != o2.stars)
-                    return o2.stars - o1.stars;
+                if (o1.hero.rarity != o2.hero.rarity)
+                    return o2.hero.rarity - o1.hero.rarity;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -361,9 +377,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
         private void makeView() {
             if (comparator == null) {
-                view = collection;
+                view = singleton.collection;
             } else {
-                view = new ArrayList<>(CollectionActivity.this.collection);
+                view = new ArrayList<>(CollectionActivity.this.singleton.collection);
                 Collections.sort(view, comparator);
             }
         }
@@ -409,7 +425,7 @@ public class CollectionActivity extends ToolbaredActivity {
                 holder = (ViewHolder) v.getTag();
             }
 
-            if(position%2==1){
+            if (position % 2 == 1) {
                 holder.globalLayout.setBackgroundColor(getResources().getColor(R.color.background_light));
             }
 
@@ -422,14 +438,14 @@ public class CollectionActivity extends ToolbaredActivity {
             selectHeroRarity(holder, hero);
             setRarityItemListener(holder, hero);
 
-            showSkills(holder, hero);
-
-            showHeroBoons(holder, hero);
-            showHeroBanes(holder, hero);
+            showBoonsOrBanes(holder.boons, hero.boons, '+');
+            showBoonsOrBanes(holder.banes, hero.banes, '-');
             calculateHeroStats(holder, hero);
 
-            setDeleteButtonListener(holder, hero);
+            showComment(holder, hero);
 
+            setDeleteButtonListener(holder, hero);
+            setHeroPageButtonListener(holder);
 
             if (statVisibility.containsKey(hero)) {
                 //noinspection WrongConstant
@@ -456,17 +472,28 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.lvl40BST.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
 
+        private void setHeroPageButtonListener(final ViewHolder holder) {
+            holder.detailsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
+                    intent.putExtra("position", singleton.collection.indexOf(holder.hero));
+                    startActivity(intent);
+                }
+            });
+        }
+
         private void setDeleteButtonListener(ViewHolder holder, final HeroRoll hero) {
             holder.deleteButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int position = CollectionActivity.this.collection.indexOf(hero);
-                    CollectionActivity.this.collection.remove(hero);
+                    int position = CollectionActivity.this.singleton.collection.indexOf(hero);
+                    CollectionActivity.this.singleton.collection.remove(hero);
                     SuppressedItem s = new SuppressedItem();
                     s.position = position;
                     s.heroRoll = hero;
                     supressedItems.add(s);
-                    CollectionActivity.this.collection.save(getBaseContext());
+                    CollectionActivity.this.singleton.collection.save(getBaseContext());
                     invalidateOptionsMenu();
                     makeView();
                     HeroCollectionAdapter.this.notifyDataSetChanged();
@@ -478,19 +505,19 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.rarity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0 && hero.stars != 5) {
-                        hero.hero = fiveStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.stars = 5;
+                    if (position == 0 && hero.hero.rarity != 5) {
+                        hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero.rarity = 5;
                         collection.save(getContext());
                         initListView();
-                    } else if (position == 1 && hero.stars != 4) {
-                        hero.hero = fourStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.stars = 4;
+                    } else if (position == 1 && hero.hero.rarity != 4) {
+                        hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero.rarity = 4;
                         collection.save(getContext());
                         initListView();
-                    } else if (position == 2 && hero.stars != 3) {
-                        hero.hero = threeStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.stars = 3;
+                    } else if (position == 2 && hero.hero.rarity != 3) {
+                        hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(getContext()));
+                        hero.hero.rarity = 3;
                         collection.save(getContext());
                         initListView();
                     }
@@ -505,9 +532,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
         private void selectHeroRarity(ViewHolder holder, HeroRoll hero) {
             ArrayAdapter<CharSequence> adapter;
-            if (threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+            if (singleton.threeStarsMap.containsKey(hero.getDisplayName(getContext()))) {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array, R.layout.spinneritem_nopadding);
-            } else if (fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
+            } else if (singleton.fourStarsMap.containsKey(hero.getDisplayName(getContext()))) {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_4_5, R.layout.spinneritem_nopadding);
             } else {
                 adapter = ArrayAdapter.createFromResource(getContext(), R.array.stars_array_5, R.layout.spinneritem_nopadding);
@@ -515,9 +542,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             holder.rarity.setAdapter(adapter);
-            if (hero.stars == 3) {
+            if (hero.hero.rarity == 3) {
                 holder.rarity.setSelection(2);
-            } else if (hero.stars == 4) {
+            } else if (hero.hero.rarity == 4) {
                 holder.rarity.setSelection(1);
             } else {
                 holder.rarity.setSelection(0);
@@ -552,16 +579,21 @@ public class CollectionActivity extends ToolbaredActivity {
         }
     }
 
+    private void showComment(ViewHolder holder, HeroRoll hero) {
+        holder.comment.setText(hero.comment);
+    }
+
     @NonNull
     private ViewHolder initViewHolder(View v) {
         ViewHolder holder;
         holder = new ViewHolder();
-        holder.globalLayout= (LinearLayout) v.findViewById(R.id.collection_line_layout);
+        holder.globalLayout = (LinearLayout) v.findViewById(R.id.collection_line_layout);
         holder.collImage = (ImageView) v.findViewById(R.id.collimage);
         holder.collName = (TextView) v.findViewById(R.id.collname);
         holder.rarity = (Spinner) v.findViewById(R.id.collnamerarity);
         holder.boons = (TextView) v.findViewById(R.id.boons);
         holder.banes = (TextView) v.findViewById(R.id.banes);
+        holder.detailsButton = (Button) v.findViewById(R.id.heropageBtn);
         holder.deleteButton = (Button) v.findViewById(R.id.deleteBtn);
         holder.extraData = (LinearLayout) v.findViewById(R.id.hero40StatLine);
         holder.lvl40HP = (TextView) v.findViewById(R.id.hero40LineHP);
@@ -570,48 +602,30 @@ public class CollectionActivity extends ToolbaredActivity {
         holder.lvl40Def = (TextView) v.findViewById(R.id.hero40LineDef);
         holder.lvl40Res = (TextView) v.findViewById(R.id.hero40LineRes);
         holder.lvl40BST = (TextView) v.findViewById(R.id.hero40LineBST);
-        holder.skills = (LinearLayout) v.findViewById(R.id.collection_skill);
+        holder.comment = (TextView) v.findViewById(R.id.collection_comment);
         return holder;
     }
 
-    private void showHeroBanes(ViewHolder holder, HeroRoll hero) {
-        StringBuilder banes = new StringBuilder();
-
-        for (String s : hero.banes) {
-            banes.append("-").append(s).append("\n");
+    private void showBoonsOrBanes(TextView textView, List<String> list, char plusMinus) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < list.size() - 1; i++) {
+            sb.append(plusMinus).append(list.get(i)).append("\n");
         }
-        holder.banes.setText(banes);
-    }
-
-    private void showHeroBoons(ViewHolder holder, HeroRoll hero) {
-        StringBuilder boons = new StringBuilder();
-
-        for (String s : hero.boons) {
-            boons.append("+").append(s).append("\n");
+        if (list.size() > 0) {
+            sb.append(plusMinus).append(list.get(list.size() - 1));
         }
-        holder.boons.setText(boons);
-    }
-
-    private void showSkills(ViewHolder holder, HeroRoll hero) {
-        if (skillsOn && hero.hero.skills40 != null) {
-            updateSkillView(holder.skills, hero.hero.skills40);
-            holder.skills.setVisibility(View.VISIBLE);
-        } else {
-            holder.skills.setVisibility(View.GONE);
-        }
+        textView.setText(sb);
     }
 
     private void refreshHero(HeroRoll hero) {
-        if (hero.stars == 5) {
-            hero.hero = fiveStarsMap.get(hero.getDisplayName(this));
-        } else if (hero.stars == 4) {
-            hero.hero = fourStarsMap.get(hero.getDisplayName(this));
-        } else if (hero.stars == 3) {
-            hero.hero = threeStarsMap.get(hero.getDisplayName(this));
+        if (hero.hero.rarity == 5) {
+            hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(this));
+        } else if (hero.hero.rarity == 4) {
+            hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(this));
+        } else if (hero.hero.rarity == 3) {
+            hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(this));
         }
     }
-
-
 
     static class ViewHolder {
         HeroRoll hero;
@@ -629,7 +643,8 @@ public class CollectionActivity extends ToolbaredActivity {
         TextView lvl40Def;
         TextView lvl40Res;
         TextView lvl40BST;
-        LinearLayout skills;
+        Button detailsButton;
+        TextView comment;
     }
 
     static class SuppressedItem {

@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/gotofinder"
+        android:icon="@drawable/search"
+        android:title="@string/app_name"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/gotocollection"
+        android:icon="@drawable/collection"
+        android:title="@string/collection"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/contact"
+        android:title="@string/contactme"
+        app:showAsAction="never" />
+
+</menu>

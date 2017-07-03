@@ -167,4 +167,17 @@
     <string name="luke">Luke</string>
     <string name="roderick">Roderick</string>
     <string name="maskedmarth">Marth (masqué)</string>
+    <string name="comment">Commentaire</string>
+    <string name="empty_collection">Vous n\'avez personne dans votre collection.<br/>Ajoutez en en utilisant le boutton + de l\'IV finder.</string>
+    <string name="skill_management">Management des aptitudes</string>
+    <string name="skill_equipped">Équippé</string>
+    <string name="skill_learned">Appris</string>
+    <string name="skill_learnable">Apprenable</string>
+    <string name="skill_to_inherit">À hériter</string>
+    <string name="legion">Légion</string>
+    <string name="clarisse">Clarisse</string>
+    <string name="fredericksummer">Frederick - Été</string>
+    <string name="gaiussummer">Gaius - Été</string>
+    <string name="robinfsummer">Daraen (f) - Été</string>
+    <string name="tikisummer">Tiki - Été</string>
 </resources>

@@ -3,6 +3,7 @@ package c4stor.com.feheroes.model.hero;
 import android.content.Context;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
@@ -15,13 +16,16 @@ import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import c4stor.com.feheroes.model.InheritanceRestriction;
+import c4stor.com.feheroes.model.InheritanceRestrictionDeserializer;
+
 /**
  * Created by Nicolas on 15/02/2017.
  */
 
 public class HeroCollection extends ArrayList<HeroRoll> implements Serializable {
 
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder().registerTypeAdapter(InheritanceRestriction.class, new InheritanceRestrictionDeserializer()).create();
 
     public HeroCollection() {
         super();

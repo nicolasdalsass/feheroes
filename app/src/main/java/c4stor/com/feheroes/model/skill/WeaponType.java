@@ -1,20 +1,24 @@
 package c4stor.com.feheroes.model.skill;
 
-import static c4stor.com.feheroes.model.skill.WeaponColor.BLUE;
-import static c4stor.com.feheroes.model.skill.WeaponColor.COLORLESS;
-import static c4stor.com.feheroes.model.skill.WeaponColor.GREEN;
-import static c4stor.com.feheroes.model.skill.WeaponColor.RED;
+import c4stor.com.feheroes.model.InheritanceRestriction;
 
 
-public enum WeaponType {
-    SWORD(RED), LANCE(BLUE), AXE(GREEN),
-    RTOME(RED), BTOME(BLUE), GTOME(GREEN),
-    RBREATH(RED), BBREATH(BLUE), GBREATH(GREEN),
-    BOW(COLORLESS), DAGGER(COLORLESS), STAFF(COLORLESS);
 
-    public WeaponColor color;
+public enum WeaponType implements InheritanceRestriction {
+    SWORD, LANCE, AXE,
+    RTOME, BTOME, GTOME,
+    RBREATH, BBREATH, GBREATH,
+    BOW, DAGGER, STAFF,
+    //The last two values are only used for inheritance
+    NOT_INHERITABLE, NO_RESTRICTIONS {
+        @Override
+        public boolean isCompatibleWith(InheritanceRestriction inheritanceRestrictionType) {
+            return true;
+        }
+    };
 
-    WeaponType(WeaponColor color) {
-        this.color = color;
+    @Override
+    public boolean isCompatibleWith(InheritanceRestriction inheritanceRestrictionType) {
+        return inheritanceRestrictionType == this;
     }
 }
