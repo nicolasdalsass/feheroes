@@ -43,7 +43,6 @@ import java.util.Map;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
-import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
@@ -71,10 +70,10 @@ public class CollectionActivity extends ToolbaredActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        myToolbar.setTitle(R.string.mycollection);
-        myToolbar.setTitleTextColor(getResources().getColor(R.color.icons));
-        setSupportActionBar(myToolbar);
+        Toolbar toolBar = (Toolbar) findViewById(R.id.my_toolbar);
+        toolBar.setTitle(R.string.mycollection);
+        toolBar.setTitleTextColor(getResources().getColor(R.color.icons));
+        setSupportActionBar(toolBar);
         onResume();
     }
 
@@ -82,6 +81,11 @@ public class CollectionActivity extends ToolbaredActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.collectiontoolbar, menu);
+        if (skillsOn) {
+            menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(255);
+        } else {
+            menu.findItem(R.id.toggleNakedView).getIcon().setAlpha(130);
+        }
         menu.findItem(R.id.undo).setEnabled(supressedItems.size() > 0);
         if (!menu.findItem(R.id.undo).isEnabled())
             menu.findItem(R.id.undo).getIcon().setAlpha(130);
@@ -105,7 +109,6 @@ public class CollectionActivity extends ToolbaredActivity {
         adAdBanner();
 //        disableAdBanner();
     }
-
 
 
     //this method is there to update old HeroCollections
@@ -179,7 +182,6 @@ public class CollectionActivity extends ToolbaredActivity {
         switch (item.getItemId()) {
             case R.id.sortByName:
                 sortByName();
-                defaultVisibility = View.GONE;
                 initListView();
                 return true;
             case R.id.sortByStars:
@@ -221,6 +223,10 @@ public class CollectionActivity extends ToolbaredActivity {
                 sorting = null;
                 initListView();
                 return true;
+            case R.id.toggleNakedView:
+                skillsOn = !skillsOn;
+                invalidateOptionsMenu();
+                initListView();
             case R.id.undo:
                 undoHeroSupression();
                 initListView();
@@ -418,7 +424,7 @@ public class CollectionActivity extends ToolbaredActivity {
                 holder = (ViewHolder) v.getTag();
             }
 
-            if(position%2==1){
+            if (position % 2 == 1) {
                 holder.globalLayout.setBackgroundColor(getResources().getColor(R.color.background_light));
             }
 
@@ -580,7 +586,7 @@ public class CollectionActivity extends ToolbaredActivity {
     private ViewHolder initViewHolder(View v) {
         ViewHolder holder;
         holder = new ViewHolder();
-        holder.globalLayout= (LinearLayout) v.findViewById(R.id.collection_line_layout);
+        holder.globalLayout = (LinearLayout) v.findViewById(R.id.collection_line_layout);
         holder.collImage = (ImageView) v.findViewById(R.id.collimage);
         holder.collName = (TextView) v.findViewById(R.id.collname);
         holder.rarity = (Spinner) v.findViewById(R.id.collnamerarity);
@@ -601,7 +607,7 @@ public class CollectionActivity extends ToolbaredActivity {
 
     private void showBoonsOrBanes(TextView textView, List<String> list, char plusMinus) {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < list.size() -1; i++) {
+        for (int i = 0; i < list.size() - 1; i++) {
             sb.append(plusMinus).append(list.get(i)).append("\n");
         }
         if (list.size() > 0) {

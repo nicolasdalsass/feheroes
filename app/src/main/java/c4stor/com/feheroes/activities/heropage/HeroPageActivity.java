@@ -239,15 +239,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbarmenu, menu);
-        MenuItem nakedView = menu.findItem(R.id.toggleNakedView);
-        if (!skillOn) {
-            nakedView.setTitle(R.string.skills_on);
-            nakedView.getIcon().setAlpha(130);
-        } else {
-            nakedView.setTitle(R.string.skill_management);
-            nakedView.getIcon().setAlpha(255);
-        }
+        getMenuInflater().inflate(R.menu.heropagetoolbar, menu);
         return true;
     }
 
