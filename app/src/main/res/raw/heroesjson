@@ -1,4 +1,4 @@
-<<<<<<< {"name":"FrederickSummer","availability":[5],"hpGrowth":6,"atkGrowth":7,"spdGrowth":7,"defGrowth":6,"resGrowth":2,"movementType":"INFANTRY","weaponType":"DAGGER"}
+{"name":"FrederickSummer","availability":[5],"hpGrowth":6,"atkGrowth":7,"spdGrowth":7,"defGrowth":6,"resGrowth":2,"movementType":"INFANTRY","weaponType":"DAGGER"}
 {"name":"GaiusSummer","availability":[5],"hpGrowth":4,"atkGrowth":6,"spdGrowth":9,"defGrowth":3,"resGrowth":6,"movementType":"INFANTRY","weaponType":"BOW"}
 {"name":"TikiSummer","availability":[5],"hpGrowth":4,"atkGrowth":9,"spdGrowth":7,"defGrowth":7,"resGrowth":4,"movementType":"INFANTRY","weaponType":"AXE"}
 {"name":"RobinFSummer","availability":[5],"hpGrowth":4,"atkGrowth":7,"spdGrowth":8,"defGrowth":6,"resGrowth":6,"movementType":"INFANTRY","weaponType":"LANCE"}
