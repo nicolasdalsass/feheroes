@@ -37,10 +37,7 @@ import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
-import c4stor.com.feheroes.model.hero.HeroGrowth;
-import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.hero.MovementType;
 import c4stor.com.feheroes.model.skill.Skill;
