@@ -64,7 +64,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     protected boolean skillOn = true;
     private LinearLayout equippedSkills;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -130,11 +129,6 @@ public class HeroPageActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        try {
-            singleton.initSkillData(getBaseContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         drawHeroPortrait();
         setMovementIcon(movementIcon, heroRoll.hero.movementType);
         setWeaponIcon(weaponIcon, heroRoll.hero.weaponType);

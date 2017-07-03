@@ -16,6 +16,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +36,7 @@ public class IVCheckActivity extends ToolbaredActivity {
     private int[] neutralSpinners = new int[]{1, 1, 1, 1, 1};
     private boolean resetSpinners = false;
     private static boolean nakedHeroes = false;
-
+    
     @Override
     protected int getLayoutResource() {
         return R.layout.activity_roller;

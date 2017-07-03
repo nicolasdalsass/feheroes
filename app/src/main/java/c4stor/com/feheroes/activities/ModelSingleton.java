@@ -42,23 +42,26 @@ public final class ModelSingleton {
 
     private ModelSingleton() {}
 
-    public static ModelSingleton getInstance() {
+    public static ModelSingleton getInstance(Context context) throws IOException {
         if (instance == null) {
             synchronized (ModelSingleton.class) {
                 if (instance == null) {
                     instance = new ModelSingleton();
+                    instance.init(context);
+
                 }
             }
         }
         return instance;
     }
 
-    public void init(Context context) throws IOException {
+    private void init(Context context) throws IOException {
         initHeroes(context);
         initSkillData(context);
+        collection = HeroCollection.loadFromStorage(context);
     }
 
-    public void initSkillData(Context context) throws IOException {
+    private void initSkillData(Context context) throws IOException {
         if(skillsMap==null) {
             skillsMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "skills.data");
@@ -79,7 +82,7 @@ public final class ModelSingleton {
         }
     }
 
-    public void initHeroes(Context context) throws IOException {
+    private void initHeroes(Context context) throws IOException {
         if (heroMap == null || heroMap.get("Selena").availability.size() == 0) {
             heroMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "hero.basics");
@@ -111,7 +114,7 @@ public final class ModelSingleton {
 
     }
 
-    public void initHeroesBasicsLocally(Context context) throws IOException {
+    private void initHeroesBasicsLocally(Context context) throws IOException {
         InputStream inputStream = context.getResources().openRawResource(R.raw.heroesjson);
         initHeroesBasics(inputStream);
     }

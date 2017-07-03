@@ -98,13 +98,7 @@ public class CollectionActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
         updateHeroAttributes();
-        try {
-            singleton.initHeroes(getBaseContext());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         initListView();
         initTextView();
         adAdBanner();
@@ -128,8 +122,8 @@ public class CollectionActivity extends ToolbaredActivity {
                 heroRoll.hero.resGrowth = mapHero.resGrowth;
                 heroRoll.hero.availability = mapHero.availability;
             }
-            singleton.collection.save(getBaseContext());
         }
+        singleton.collection.save(getBaseContext());
     }
 
     private void initTextView() {
