@@ -21,6 +21,7 @@ public class HeroInfo implements Serializable {
     public int spdGrowth;
     public int defGrowth;
     public int resGrowth;
+<<<<<<< HEAD
     public List availability;
     public List weaponChain;
     public List assistChain;
@@ -37,6 +38,12 @@ public class HeroInfo implements Serializable {
         aChain = new ArrayList(3);
         bChain = new ArrayList(3);
         cChain = new ArrayList(3);
+=======
+    public int[] availability;
+
+    public HeroInfo() {
+        availability = new int[3];
+>>>>>>> 9e4b69c... Merge remote-tracking branch 'origin/master'
     }
 
     @Override
