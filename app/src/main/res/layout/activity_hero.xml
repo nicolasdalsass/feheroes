@@ -66,6 +66,8 @@
         android:layout_toRightOf="@id/movementIcon"
         android:layout_alignParentRight="true"
         android:paddingRight="10dp"
+        android:layout_margin="5dp"
+        android:gravity="center"
         android:hint="@string/comment" />
 
     <LinearLayout
