@@ -22,13 +22,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center|left"
-            android:layout_weight="25" />
+            android:layout_weight="20" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_weight="50"
+            android:layout_weight="40"
             android:orientation="vertical">
 
             <TextView
@@ -55,7 +55,25 @@
                 android:textColor="@color/colorPrimaryText"
                 android:textSize="18sp" />
 
+
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="15">
+            <Button
+                android:id="@+id/heropageBtn"
+                android:layout_width="@dimen/collectionbuttonradius"
+                android:layout_height="@dimen/collectionbuttonradius"
+                android:background="@drawable/heropagebutton"
+                android:text="+"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textColor="@color/high_green"
+                android:textSize="12sp" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/boons"
@@ -63,7 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="20"
-            android:text="TextView"
+            android:text="Boons"
             android:textColor="@color/high_green"
             android:textSize="18sp" />
 
@@ -73,7 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="20"
-            android:text="TextView"
+            android:text="Banes"
             android:textColor="@color/low_red"
             android:textSize="18sp" />
 
@@ -84,18 +102,19 @@
 
             <Button
                 android:id="@+id/deleteBtn"
-                android:layout_width="@dimen/buttonremoveradius"
-                android:layout_height="@dimen/buttonremoveradius"
+                android:layout_width="@dimen/collectionbuttonradius"
+                android:layout_height="@dimen/collectionbuttonradius"
                 android:layout_gravity="center_vertical|end"
                 android:background="@drawable/removebutton"
+                android:gravity="center"
                 android:text="x"
                 android:textColor="@color/low_red"
-                android:textSize="11sp" />
+                android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/hero40Line"
+        android:id="@+id/hero40StatLine"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -153,83 +172,13 @@
             android:textSize="16sp" />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/collection_skill"
+    <TextView
+        android:id="@+id/collection_comment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:visibility="gone"
-        android:paddingBottom="3dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp">
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_wpn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_assist"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_special"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="2dp">
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_a"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_b"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/vertical_skill_tv_c"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-
-
-        </LinearLayout>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingBottom="6dp"
+        android:textSize="16sp"
+        android:visibility="gone"/>
 </LinearLayout>

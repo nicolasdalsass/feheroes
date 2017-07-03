@@ -22,6 +22,8 @@ import java.util.Locale;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 
+import static java.lang.Thread.sleep;
+
 public class DownloadDataActivity extends AppCompatActivity {
 
 
@@ -30,24 +32,31 @@ public class DownloadDataActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
 
-        final DownloadTask downloadTask = new DownloadTask(this, "hero.data", false);
-        downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v1306");
-
+        final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
+        heroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v170630");
+        final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
+        baseHeroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes.json");
+        if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
+            final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
+            localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+        }
+        final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", true);
+        skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
     }
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
         private Context context;
         File dataFile;
-        boolean goToFinder;
+        boolean goToIVFinder;
 
 
-        public DownloadTask(Context context, String outputFilePath, boolean goToFinder) {
+        public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder) {
             this.context = context;
 
             File directory = getBaseContext().getFilesDir();
             dataFile = new File(directory, outputFilePath);
-            this.goToFinder = goToFinder;
+            this.goToIVFinder = goToIVFinder;
         }
 
 
@@ -109,11 +118,9 @@ public class DownloadDataActivity extends AppCompatActivity {
             }
         }
 
-
-
         @Override
         protected void onPostExecute(String result) {
-            if (goToFinder) {
+            if (goToIVFinder) {
                 if ("web".equals(result)) {
                     Toast t = Toast.makeText(context, "Hero data synchronized from web", Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
@@ -123,16 +130,8 @@ public class DownloadDataActivity extends AppCompatActivity {
                     t.setGravity(Gravity.CENTER, 0, 0);
                     t.show();
                 }
-                Intent intent = new Intent(getBaseContext(), IVCheckActivity.class);
-                startActivity(intent);
-            } else {
-                final DownloadTask downloadTask = new DownloadTask(context, "skills.data", true);
-                String skillsFile = "allskills.json";
-                if(Locale.getDefault().getDisplayLanguage().startsWith("fr"))
-                {
-                    skillsFile = "allskills-fr.json";
-                }
-                downloadTask.execute("https://nicolasdalsass.github.io/heroesjson/"+skillsFile);
+                Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
+                startActivity(ivCheckIntent);
             }
         }
     }

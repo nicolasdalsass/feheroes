@@ -16,9 +16,6 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.ads.doubleclick.PublisherAdRequest;
-import com.google.android.gms.ads.doubleclick.PublisherAdView;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +23,9 @@ import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.activities.collection.HeroTableRow;
-import c4stor.com.feheroes.model.Hero;
-import c4stor.com.feheroes.model.HeroCollection;
-import c4stor.com.feheroes.model.HeroRoll;
+import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class IVCheckActivity extends ToolbaredActivity {
 
@@ -59,6 +55,13 @@ public class IVCheckActivity extends ToolbaredActivity {
         setSupportActionBar(myToolbar);
         onResume();
 
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu (Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        menu.findItem(R.id.gotofinder).setVisible(false);
+        return true;
     }
 
     @Override
@@ -96,7 +99,7 @@ public class IVCheckActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        collection = HeroCollection.loadFromStorage(getBaseContext());
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
 
 
         final Spinner spinnerHeroes = (Spinner) findViewById(R.id.spinner_heroes);
@@ -109,13 +112,13 @@ public class IVCheckActivity extends ToolbaredActivity {
             resetSpinners = false;
             switch (position) {
                 case 0:
-                    refMap = fiveStarsMap;
+                    refMap = singleton.fiveStarsMap;
                     break;
                 case 1:
-                    refMap = fourStarsMap;
+                    refMap = singleton.fourStarsMap;
                     break;
                 case 2:
-                    refMap = threeStarsMap;
+                    refMap = singleton.threeStarsMap;
                     break;
             }
             String selectedHero = "";
@@ -124,9 +127,9 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
             Hero[] refStarValues = refMap.values().toArray(new Hero[]{});
             int newPositionc = getNewPosition(selectedHero, refStarValues);
-            ArrayAdapter threeStarsAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
-            threeStarsAdapter.notifyDataSetChanged();
-            spinnerHeroes.setAdapter(threeStarsAdapter);
+            ArrayAdapter starredHeroAdapter = new SpinnerHeroesAdapter(IVCheckActivity.this, refStarValues);
+            starredHeroAdapter.notifyDataSetChanged();
+            spinnerHeroes.setAdapter(starredHeroAdapter);
             spinnerHeroes.setSelection(newPositionc);
         }
 
@@ -136,7 +139,7 @@ public class IVCheckActivity extends ToolbaredActivity {
             }
         });
 
-        populateSpinner();
+        populateStarSpinner();
 
         adAdBanner();
         //disableAdBanner();
@@ -151,28 +154,15 @@ public class IVCheckActivity extends ToolbaredActivity {
         return 0;
     }
 
-
-    private void adAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        PublisherAdRequest.Builder b = new PublisherAdRequest.Builder();
-        PublisherAdRequest adRequest = b.build();
-        mPublisherAdView.loadAd(adRequest);
-    }
-
-    private void disableAdBanner() {
-        PublisherAdView mPublisherAdView = (PublisherAdView) findViewById(R.id.publisherAdView);
-        mPublisherAdView.setVisibility(View.GONE);
-    }
-
-    private void populateSpinner() {
+    private void populateStarSpinner() {
         Spinner spinner = (Spinner) findViewById(R.id.spinner_stars);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.stars_array, R.layout.spinneritem_nopadding);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        if (refMap == threeStarsMap) {
+        if (refMap == singleton.threeStarsMap) {
             spinner.setSelection(2);
-        } else if (refMap == fourStarsMap) {
+        } else if (refMap == singleton.fourStarsMap) {
             spinner.setSelection(1);
         } else {
             spinner.setSelection(0);
@@ -255,8 +245,9 @@ public class IVCheckActivity extends ToolbaredActivity {
                     banes.add(trMght.attribute);
                 int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
                 HeroRoll hr = new HeroRoll(h, stars, boons, banes);
-                collection.add(hr);
-                collection.save(getBaseContext());
+                hr.initGrowths();
+                singleton.collection.add(hr);
+                singleton.collection.save(getBaseContext());
                 Toast.makeText(getBaseContext(), localizedName + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();
             }
         });

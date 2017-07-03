@@ -51,7 +51,7 @@
 
 
     <com.google.android.gms.ads.doubleclick.PublisherAdView
-        android:id="@+id/publisherAdViewColl"
+        android:id="@+id/publisherAdView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center|bottom"

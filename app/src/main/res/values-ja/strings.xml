@@ -109,7 +109,7 @@
     <string name="julia">ユリア</string>
     <string name="seliph">セリス</string>
     <string name="eirika">エイリーク</string>
-    <string name="addedtocollection">added to collection.</string>
+    <string name="addedtocollection">Added to collection.</string>
     <string name="mycollection">収集</string>
     <string name="attributeheader">項目</string>
     <string name="lvl1">レベル1</string>
@@ -126,7 +126,7 @@
     <string name="reinhardt">ラインハルト</string>
     <string name="sanaki">サナキ</string>
     <string name="by_stars">★</string>
-    <string name="by_add_date">Date</string>
+    <string name="by_add_date">Obtained</string>
     <string name="sort_by_name">名前</string>
     <string name="bst">合計</string>
     <string name="downloading">Downloading latest data</string>
@@ -165,4 +165,17 @@
     <string name="luke">ルーク</string>
     <string name="roderick">ロディ</string>
     <string name="maskedmarth">仮面マルス</string>
+    <string name="comment">コメント</string>
+    <string name="empty_collection">You don\'t have anyone in your collection.<br/>Add some using the + button in the IV finder.</string>
+    <string name="skill_management">Skill management</string>
+    <string name="skill_equipped">Equipped</string>
+    <string name="skill_learned">Learned</string>
+    <string name="skill_learnable">Learnable</string>
+    <string name="skill_to_inherit">To inherit</string>
+    <string name="legion">ローロー</string>
+    <string name="clarisse">クライネ</string>
+    <string name="fredericksummer">Frederick - Summer</string>
+    <string name="gaiussummer">Gaius - Summer</string>
+    <string name="robinfsummer">Robin (f) - Summer</string>
+    <string name="tikisummer">Tiki - Summer</string>
 </resources>

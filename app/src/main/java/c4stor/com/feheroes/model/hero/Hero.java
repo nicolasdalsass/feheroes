@@ -1,4 +1,4 @@
-package c4stor.com.feheroes.model;
+package c4stor.com.feheroes.model.hero;
 
 import java.io.Serializable;
 
@@ -12,9 +12,9 @@ import java.io.Serializable;
 
  */
 
-public class Hero implements Serializable {
+public class Hero extends HeroInfo implements Serializable {
 
-    public String name;
+    public int rarity;
     public int[] HP;
     public int[] atk;
     public int[] def;
@@ -23,8 +23,4 @@ public class Hero implements Serializable {
     public int[] skills1;
     public int[] skills40;
 
-    @Override
-    public String toString(){
-        return name;
-    }
 }
