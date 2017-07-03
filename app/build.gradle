@@ -7,7 +7,7 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 73
+        versionCode 74
         versionName "15.0 - Ylissian Summer"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
