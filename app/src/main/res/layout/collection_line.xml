@@ -180,5 +180,5 @@
         android:paddingRight="20dp"
         android:paddingBottom="6dp"
         android:textSize="16sp"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 </LinearLayout>
