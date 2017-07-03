@@ -45,8 +45,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    protected ModelSingleton singleton = ModelSingleton.getInstance();
-
+    protected static ModelSingleton singleton ;
 
     protected abstract int getLayoutResource();
 
@@ -65,13 +64,13 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         try {
-            singleton.init(this);
+            singleton=ModelSingleton.getInstance(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        setContentView(getLayoutResource());
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
     }
 
     private void startCollectionActivity() {
