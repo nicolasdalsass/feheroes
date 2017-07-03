@@ -155,7 +155,6 @@ public final class ModelSingleton {
             jH.resGrowth = heroInfo.resGrowth;
             jH.availability = heroInfo.availability;
             String heroName = capitalize(context.getResources().getString(nameIdentifier));
-            System.out.println(jH.name + " " + heroName);
             switch (rarity) {
                 case 3:
                     threeStarsMap.put(heroName, jH);
