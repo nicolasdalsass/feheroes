@@ -6,12 +6,6 @@ import java.io.Serializable;
  * Created by Nicolas on 11/02/2017.
  */
 
-/*
-
-{"name":"Roy",""HP"":[19,20,21,41,44,47],"atk":[23,24,25,42,46,49],"def":[5,6,7,22,25,29],"speed":[8,9,10,27,31,34],"res":[3,4,5,25,28,31]}
-
- */
-
 public class Hero extends HeroInfo implements Serializable {
 
     public int rarity;
@@ -22,5 +16,94 @@ public class Hero extends HeroInfo implements Serializable {
     public int[] res;
     public int[] skills1;
     public int[] skills40;
+
+    private final static int[][] growthRates = new int[][]
+            {{7, 8, 8},
+                    {9, 10, 10},
+                    {11, 12, 13},
+                    {13, 14, 15},
+                    {15, 16, 17},
+                    {17, 18, 19},
+                    {19, 20, 22},
+                    {21, 22, 24},
+                    {23, 24, 26},
+                    {25, 26, 28},
+                    {27, 28, 30},
+                    {29, 31, 33}};
+
+    /**
+     * @param rarity      the HeroRoll's rarity (value from 3 to 5)
+     * @param growthPoint the Hero's growth value for a particular stat (value from 1 to 10)
+     * @param baseStat    the hero's neutral level 1 stat
+     * @return the level 40 stat if the hero has a bane in this stat
+     */
+    public static int getLvl40Bane(int rarity, int growthPoint, int baseStat) {
+        if (baseStat > 0)
+            return baseStat - 1 + growthRates[growthPoint - 1][rarity - 3];
+        else
+            return -1;
+    }
+
+    public static int getLvl40Neutral(int rarity, int growthPoint, int baseStat) {
+        if (baseStat > 0)
+            return baseStat + growthRates[growthPoint][rarity - 3];
+        else
+            return -1;
+    }
+
+    public static int getLvl40Boon(int rarity, int growthPoint, int baseStat) {
+        if (baseStat > 0)
+            return baseStat + 1 + growthRates[growthPoint + 1][rarity - 3];
+        else
+            return -1;
+    }
+
+
+    public Hero(SimpleHero simpleHero, HeroInfo heroInfo) {
+        this.rarity = simpleHero.rarity;
+        this.name = simpleHero.name;
+        this.weaponChain = heroInfo.weaponChain;
+        this.HP = new int[]{simpleHero.HP - 1,
+                simpleHero.HP,
+                simpleHero.HP > -1 ? simpleHero.HP + 1 : -1,
+                getLvl40Bane(rarity, heroInfo.hpGrowth, simpleHero.HP),
+                getLvl40Neutral(rarity, heroInfo.hpGrowth, simpleHero.HP),
+                getLvl40Boon(rarity, heroInfo.hpGrowth, simpleHero.HP)};
+        this.atk = new int[]{simpleHero.atk - 1,
+                simpleHero.atk,
+                simpleHero.atk > -1 ? simpleHero.atk + 1 : -1,
+                getLvl40Bane(rarity, heroInfo.atkGrowth, simpleHero.atk),
+                getLvl40Neutral(rarity, heroInfo.atkGrowth, simpleHero.atk),
+                getLvl40Boon(rarity, heroInfo.atkGrowth, simpleHero.atk)};
+        this.speed = new int[]{simpleHero.speed - 1,
+                simpleHero.speed,
+                simpleHero.speed > -1 ? simpleHero.speed + 1 : -1,
+                getLvl40Bane(rarity, heroInfo.spdGrowth, simpleHero.speed),
+                getLvl40Neutral(rarity, heroInfo.spdGrowth, simpleHero.speed),
+                getLvl40Boon(rarity, heroInfo.spdGrowth, simpleHero.speed)};
+        this.def = new int[]{simpleHero.def - 1,
+                simpleHero.def,
+                simpleHero.def > 0 ? simpleHero.def + 1 : -1,
+                getLvl40Bane(rarity, heroInfo.defGrowth, simpleHero.def),
+                getLvl40Neutral(rarity, heroInfo.defGrowth, simpleHero.def),
+                getLvl40Boon(rarity, heroInfo.defGrowth, simpleHero.def)};
+        this.res = new int[]{simpleHero.res - 1,
+                simpleHero.res,
+                simpleHero.res > 0 ? simpleHero.res + 1 : -1,
+                getLvl40Bane(rarity, heroInfo.resGrowth, simpleHero.res),
+                getLvl40Neutral(rarity, heroInfo.resGrowth, simpleHero.res),
+                getLvl40Boon(rarity, heroInfo.resGrowth, simpleHero.res)};
+
+        this.skills1 = simpleHero.skills1;
+        this.skills40 = simpleHero.skills40;
+        this.movementType = heroInfo.movementType;
+        this.weaponType = heroInfo.weaponType;
+        this.aChain = heroInfo.aChain;
+        this.bChain = heroInfo.bChain;
+        this.cChain = heroInfo.cChain;
+        this.assistChain = heroInfo.assistChain;
+        this.specialChain = heroInfo.specialChain;
+    }
+
 
 }

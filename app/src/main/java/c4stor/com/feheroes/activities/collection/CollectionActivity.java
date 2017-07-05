@@ -227,8 +227,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int[] m1 = calculateMods(o1.hero, 40, !skillsOn);
-                int[] m2 = calculateMods(o2.hero, 40, !skillsOn);
+                int[] m1 = calculateMods(o1.hero, 40, skillsOn);
+                int[] m2 = calculateMods(o2.hero, 40, skillsOn);
                 int mod1 = m1[0] + m1[1] + m1[2] + m1[3] + m1[4];
                 int mod2 = m2[0] + m2[1] + m2[2] + m2[3] + m2[4];
                 if (o1.getBST(getBaseContext()) - mod1 != o2.getBST(getBaseContext()) - mod2)
@@ -243,8 +243,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[4];
-                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[4];
+                int mod1 = calculateMods(o1.hero, 40, skillsOn)[4];
+                int mod2 = calculateMods(o2.hero, 40, skillsOn)[4];
                 if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
                     return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) - mod2 + mod1;
                 else
@@ -257,8 +257,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[3];
-                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[3];
+                int mod1 = calculateMods(o1.hero, 40, skillsOn)[3];
+                int mod2 = calculateMods(o2.hero, 40, skillsOn)[3];
                 if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
                     return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) - mod2 + mod1;
                 else
@@ -271,8 +271,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[2];
-                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[2];
+                int mod1 = calculateMods(o1.hero, 40, skillsOn)[2];
+                int mod2 = calculateMods(o2.hero, 40, skillsOn)[2];
                 if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
                     return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) - mod2 + mod1;
                 else
@@ -285,8 +285,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[1];
-                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[1];
+                int mod1 = calculateMods(o1.hero, 40, skillsOn)[1];
+                int mod2 = calculateMods(o2.hero, 40, skillsOn)[1];
                 if (o1.getAtk(getBaseContext()) - mod1 != o2.getAtk(getBaseContext()) - mod2)
                     return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) - mod2 + mod1;
                 else
@@ -299,8 +299,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                int mod1 = calculateMods(o1.hero, 40, !skillsOn)[0];
-                int mod2 = calculateMods(o2.hero, 40, !skillsOn)[0];
+                int mod1 = calculateMods(o1.hero, 40, skillsOn)[0];
+                int mod2 = calculateMods(o2.hero, 40, skillsOn)[0];
                 if (o1.getHP(getBaseContext()) - mod1 != o2.getHP(getBaseContext()) - mod2)
                     return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) - mod2 + mod1;
                 else
@@ -431,7 +431,7 @@ public class CollectionActivity extends ToolbaredActivity {
         }
 
         private void calculateHeroStats(ViewHolder holder, HeroRoll hero) {
-            int[] mods = calculateMods(hero.hero, 40, !skillsOn);
+            int[] mods = calculateMods(hero.hero, 40, skillsOn);
             makePopupStat(holder.lvl40HP, hero, hero.hero.HP, mods[0], getResources().getString(R.string.hp));
             makePopupStat(holder.lvl40Atk, hero, hero.hero.atk, mods[1], getResources().getString(R.string.atk));
             makePopupStat(holder.lvl40Spd, hero, hero.hero.speed, mods[2], getResources().getString(R.string.spd));
@@ -439,7 +439,7 @@ public class CollectionActivity extends ToolbaredActivity {
             makePopupStat(holder.lvl40Res, hero, hero.hero.res, mods[4], getResources().getString(R.string.res));
 
             int totalMods = mods[0] + mods[1] + mods[2] + mods[3] + mods[4];
-            String bstText = hero.getBST(getContext()) < 0 ? "?" : hero.getBST(getContext()) - totalMods + "";
+            String bstText = hero.getBST(getContext()) < 0 ? "?" : hero.getBST(getContext()) + totalMods + "";
             holder.lvl40BST.setText(
                     getResources().getString(R.string.bst) + " " +
                             bstText);
@@ -541,13 +541,13 @@ public class CollectionActivity extends ToolbaredActivity {
         private void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
 
             if (hero.boons != null && hero.boons.contains(statName)) {
-                statTV.setText(statName + " " + makeText(stat[5] - mod));
+                statTV.setText(statName + " " + makeText(stat[5] + mod));
                 statTV.setTextColor(getResources().getColor(R.color.high_green));
             } else if (hero.banes != null && hero.banes.contains(statName)) {
-                statTV.setText(statName + " " + makeText(stat[3] - mod));
+                statTV.setText(statName + " " + makeText(stat[3] + mod));
                 statTV.setTextColor(getResources().getColor(R.color.low_red));
             } else {
-                statTV.setText(statName + " " + makeText(stat[4] - mod));
+                statTV.setText(statName + " " + makeText(stat[4] + mod));
                 statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
             }
         }

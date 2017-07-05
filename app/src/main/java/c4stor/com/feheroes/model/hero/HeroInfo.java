@@ -21,22 +21,20 @@ public class HeroInfo implements Serializable {
     public int spdGrowth;
     public int defGrowth;
     public int resGrowth;
-    public List availability;
-    public List weaponChain;
-    public List assistChain;
-    public List specialChain;
-    public List aChain;
-    public List bChain;
-    public List cChain;
+    public int[] weaponChain;
+    public int[] assistChain;
+    public int[] specialChain;
+    public int[] aChain;
+    public int[] bChain;
+    public int[] cChain;
 
     public HeroInfo() {
-        availability = new ArrayList(3);
-        weaponChain = new ArrayList(4);
-        assistChain = new ArrayList(3);
-        specialChain = new ArrayList(3);
-        aChain = new ArrayList(3);
-        bChain = new ArrayList(3);
-        cChain = new ArrayList(3);
+        weaponChain = new int[4];
+        assistChain = new int[3];
+        specialChain = new int[3];
+        aChain = new int[3];
+        bChain = new int[3];
+        cChain = new int[3];
     }
 
     @Override

@@ -18,9 +18,10 @@ import java.util.TreeMap;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.InheritanceRestriction;
 import c4stor.com.feheroes.model.InheritanceRestrictionDeserializer;
-import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
+import c4stor.com.feheroes.model.hero.HeroInfo;
+import c4stor.com.feheroes.model.hero.SimpleHero;
 import c4stor.com.feheroes.model.skill.Skill;
 
 /**
@@ -29,18 +30,20 @@ import c4stor.com.feheroes.model.skill.Skill;
 
 public final class ModelSingleton {
 
-    public Map<String, Hero> fiveStarsMap = null;
-    public Map<String, Hero> fourStarsMap = null;
-    public Map<String, Hero> threeStarsMap = null;
-    public Map<String, HeroInfo> heroMap = null;
-    public Map<Integer, Skill> skillsMap = null;
+    public Map<String, Hero> fiveStarsMap = new TreeMap<>();
+    public Map<String, Hero> fourStarsMap = new TreeMap<>();
+    public Map<String, Hero> threeStarsMap = new TreeMap<>();
+    public Map<String, HeroInfo> basicsMap = new HashMap<>();
+    public Map<Integer, Skill> skillsMap = new HashMap<>();
     public HeroCollection collection = new HeroCollection();
+
 
     public Gson gson = new GsonBuilder().registerTypeAdapter(InheritanceRestriction.class, new InheritanceRestrictionDeserializer()).create();
 
     private static volatile ModelSingleton instance;
 
-    private ModelSingleton() {}
+    private ModelSingleton() {
+    }
 
     public static ModelSingleton getInstance(Context context) throws IOException {
         if (instance == null) {
@@ -62,56 +65,45 @@ public final class ModelSingleton {
     }
 
     private void initSkillData(Context context) throws IOException {
-        if(skillsMap==null) {
-            skillsMap = new HashMap<>();
-            File dataFile = new File(context.getFilesDir(), "skills.data");
-            File localeFile = new File(context.getFilesDir(), "skills.locale");
-            if (dataFile.exists()) {
-                try {
-                    if (localeFile.exists()) {
-                        initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localeFile));
-                    } else {
-                        initSkillsFromInputStream(new FileInputStream(dataFile));
-                    }
-                } catch (Exception e) {
-                    initSkillsLocally(context);
+        File dataFile = new File(context.getFilesDir(), "skills.data");
+        File localeFile = new File(context.getFilesDir(), "skills.locale");
+        if (dataFile.exists()) {
+            try {
+                if (localeFile.exists()) {
+                    initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localeFile));
+                } else {
+                    initSkillsFromInputStream(new FileInputStream(dataFile));
                 }
-            } else {
+            } catch (Exception e) {
                 initSkillsLocally(context);
             }
+        } else {
+            initSkillsLocally(context);
         }
     }
 
     private void initHeroes(Context context) throws IOException {
-        if (heroMap == null || heroMap.get("Selena").availability.size() == 0) {
-            heroMap = new HashMap<>();
-            File dataFile = new File(context.getFilesDir(), "hero.basics");
-            if (dataFile.exists()) {
-                try {
+        File dataFile = new File(context.getFilesDir(), "hero.basics");
+        if (dataFile.exists()) {
+            try {
                 initHeroesBasics(new FileInputStream(dataFile));
-                } catch (Exception e) {
-                    initHeroesBasicsLocally(context);
-                }
-            } else {
+            } catch (Exception e) {
                 initHeroesBasicsLocally(context);
             }
-        }
-        if (threeStarsMap == null || threeStarsMap.get("Selena").availability.size() == 0) {//test for updating old files
-            threeStarsMap=new TreeMap<>();
-            fourStarsMap=new TreeMap<>();
-            fiveStarsMap=new TreeMap<>();
-            File dataFile = new File(context.getFilesDir(), "hero.data");
-            if (dataFile.exists()) {
-                try {
-                    initHeroesFromInputStream(new FileInputStream(dataFile), context);
-                } catch (Exception e) {
-                    initHeroesFromCombo(context);
-                }
-            } else {
-                initHeroesFromCombo(context);
-            }
+        } else {
+            initHeroesBasicsLocally(context);
         }
 
+        File heroDataFile = new File(context.getFilesDir(), "heroinfo.data");
+        if (heroDataFile.exists()) {
+            try {
+                initHeroesFromInputStream(new FileInputStream(heroDataFile), context);
+            } catch (Exception e) {
+                initHeroesFromCombo(context);
+            }
+        } else {
+            initHeroesFromCombo(context);
+        }
     }
 
     private void initHeroesBasicsLocally(Context context) throws IOException {
@@ -124,7 +116,7 @@ public final class ModelSingleton {
         String line = reader.readLine();
         while (line != null) {
             HeroInfo h = gson.fromJson(line, HeroInfo.class);
-            heroMap.put(h.name, h);
+            basicsMap.put(h.name, h);
             line = reader.readLine();
         }
     }
@@ -138,25 +130,15 @@ public final class ModelSingleton {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
-            Hero jH = gson.fromJson(line, Hero.class);
-            int rarity = Integer.valueOf(jH.name.substring(jH.name.length() - 1));
-            jH.name = jH.name.substring(0, jH.name.length() - 1);
-            cleanStat(jH.atk);
-            cleanStat(jH.HP);
-            cleanStat(jH.def);
-            cleanStat(jH.res);
-            cleanStat(jH.speed);
-            jH.rarity = rarity;
-            int nameIdentifier = context.getResources().getIdentifier(jH.name.toLowerCase(), "string", context.getPackageName());
-            HeroInfo heroInfo = heroMap.get(jH.name);
-            jH.movementType = heroInfo.movementType;
-            jH.weaponType = heroInfo.weaponType;
-            jH.hpGrowth = heroInfo.hpGrowth;
-            jH.atkGrowth = heroInfo.atkGrowth;
-            jH.spdGrowth = heroInfo.spdGrowth;
-            jH.defGrowth = heroInfo.defGrowth;
-            jH.resGrowth = heroInfo.resGrowth;
-            jH.availability = heroInfo.availability;
+            SimpleHero simpleHero = gson.fromJson(line, SimpleHero.class);
+            int rarity = Integer.valueOf(simpleHero.name.substring(simpleHero.name.length() - 1));
+            simpleHero.name = simpleHero.name.substring(0, simpleHero.name.length() - 1);
+            simpleHero.rarity = rarity;
+            int nameIdentifier = context.getResources().getIdentifier(simpleHero.name.toLowerCase(), "string", context.getPackageName());
+            HeroInfo heroInfo = basicsMap.get(simpleHero.name);
+
+            Hero jH = new Hero(simpleHero, heroInfo);
+
             String heroName = capitalize(context.getResources().getString(nameIdentifier));
             switch (rarity) {
                 case 3:
@@ -170,14 +152,6 @@ public final class ModelSingleton {
                     break;
             }
             line = reader.readLine();
-        }
-    }
-
-    private void cleanStat(int[] stat) {
-        if (stat[4] == -1 || stat[5] == -1 || stat[3] == -1) {
-            stat[4] = -1;
-            stat[5] = -1;
-            stat[3] = -1;
         }
     }
 
