@@ -4,7 +4,10 @@ import android.content.Context;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -20,7 +23,8 @@ public class HeroRoll implements Serializable {
     public List<String> boons;
     public List<String> banes;
     public String comment;
-    public List<Skill> skills;
+    public Map<Integer, Skill> skills;
+    public Map<Integer, Skill> equippedSkills;
     public int[] growthPoints;
 
     private String capitalize(final String line) {
@@ -28,7 +32,8 @@ public class HeroRoll implements Serializable {
     }
 
     public HeroRoll (){
-        skills = new ArrayList<>(4);
+        skills = new TreeMap<>();
+        equippedSkills = new HashMap<>(6);
     }
 
     public void initGrowths() {
@@ -40,17 +45,13 @@ public class HeroRoll implements Serializable {
         growthPoints[4] = hero.resGrowth;
     }
 
-    public void initRarity() {
-        hero.rarity = stars;
-    }
-
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
         this.hero = hero;
         this.stars = stars;
-        this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;
-        skills = new ArrayList<>();
+        skills = new TreeMap<>();
+        equippedSkills = new HashMap<>(6);
     }
 
     public void applyBoonBaneOnGrowth() {
@@ -135,7 +136,7 @@ public class HeroRoll implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append(capitalize(hero.name));
         sb.append(",");
-        for (int i = 0; i < hero.rarity; i++) {
+        for (int i = 0; i < stars; i++) {
             sb.append("★");
         }
         sb.append(",");

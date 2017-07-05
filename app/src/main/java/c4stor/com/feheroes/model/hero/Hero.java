@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 public class Hero extends HeroInfo implements Serializable {
 
-    public int rarity;
     public int[] HP;
     public int[] atk;
     public int[] def;

@@ -35,7 +35,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
         heroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v170630");
         final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
-        baseHeroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes.json");
+        baseHeroDownloadTask.execute("https://laicar.github.io/heroesjson/heroes-skillchain.json");
         if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
             localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
@@ -132,6 +132,10 @@ public class DownloadDataActivity extends AppCompatActivity {
                 }
                 Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
                 startActivity(ivCheckIntent);
+            } else {
+                Toast t = Toast.makeText(context, "Downloading update", Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
             }
         }
     }

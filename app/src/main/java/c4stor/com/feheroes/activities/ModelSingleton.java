@@ -83,7 +83,7 @@ public final class ModelSingleton {
     }
 
     private void initHeroes(Context context) throws IOException {
-        if (heroMap == null || heroMap.get("Selena").availability.size() == 0) {
+        if (heroMap == null || heroMap.get("Selena").weaponChain.size() == 0) {
             heroMap = new HashMap<>();
             File dataFile = new File(context.getFilesDir(), "hero.basics");
             if (dataFile.exists()) {
@@ -96,7 +96,7 @@ public final class ModelSingleton {
                 initHeroesBasicsLocally(context);
             }
         }
-        if (threeStarsMap == null || threeStarsMap.get("Selena").availability.size() == 0) {//test for updating old files
+        if (threeStarsMap == null || threeStarsMap.get("Selena").weaponChain.size() == 0) {//test for updating old files
             threeStarsMap=new TreeMap<>();
             fourStarsMap=new TreeMap<>();
             fiveStarsMap=new TreeMap<>();
@@ -124,6 +124,7 @@ public final class ModelSingleton {
         String line = reader.readLine();
         while (line != null) {
             HeroInfo h = gson.fromJson(line, HeroInfo.class);
+            System.out.println(gson.toJson(h));
             heroMap.put(h.name, h);
             line = reader.readLine();
         }
@@ -146,7 +147,6 @@ public final class ModelSingleton {
             cleanStat(jH.def);
             cleanStat(jH.res);
             cleanStat(jH.speed);
-            jH.rarity = rarity;
             int nameIdentifier = context.getResources().getIdentifier(jH.name.toLowerCase(), "string", context.getPackageName());
             HeroInfo heroInfo = heroMap.get(jH.name);
             jH.movementType = heroInfo.movementType;
@@ -156,7 +156,6 @@ public final class ModelSingleton {
             jH.spdGrowth = heroInfo.spdGrowth;
             jH.defGrowth = heroInfo.defGrowth;
             jH.resGrowth = heroInfo.resGrowth;
-            jH.availability = heroInfo.availability;
             String heroName = capitalize(context.getResources().getString(nameIdentifier));
             switch (rarity) {
                 case 3:
