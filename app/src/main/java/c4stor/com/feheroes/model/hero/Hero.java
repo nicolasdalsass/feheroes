@@ -2,12 +2,23 @@ package c4stor.com.feheroes.model.hero;
 
 import java.io.Serializable;
 
+import c4stor.com.feheroes.model.skill.WeaponType;
+
 /**
  * Created by Nicolas on 11/02/2017.
  */
 
-public class Hero extends HeroInfo implements Serializable {
+public class Hero implements Serializable {
 
+    public String name;
+    public WeaponType weaponType;
+    public int[] weaponChain;
+    public int[] assistChain;
+    public int[] specialChain;
+    public int[] aChain;
+    public int[] bChain;
+    public int[] cChain;
+    public MovementType movementType;
     public int rarity;
     public int[] HP;
     public int[] atk;

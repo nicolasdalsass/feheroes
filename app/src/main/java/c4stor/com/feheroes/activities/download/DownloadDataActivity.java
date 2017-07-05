@@ -127,12 +127,13 @@ public class DownloadDataActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
 
+
                 try {
                     singleton = ModelSingleton.getInstance(DownloadDataActivity.this);
                 } catch (IOException e) {
                     DownloadDataActivity.this.finish();
                 }
-
+                updateHeroAttributes();
                 if ("web".equals(result)) {
                     Toast t = Toast.makeText(context, "Hero data synchronized from web", Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
@@ -155,15 +156,6 @@ public class DownloadDataActivity extends AppCompatActivity {
                 HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
                 heroRoll.hero.movementType = mapHero.movementType;
                 heroRoll.hero.weaponType = mapHero.weaponType;
-            }
-            if (heroRoll.hero.atkGrowth == 0) {
-                HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
-                heroRoll.hero.hpGrowth = mapHero.hpGrowth;
-                heroRoll.hero.atkGrowth = mapHero.atkGrowth;
-                heroRoll.hero.spdGrowth = mapHero.spdGrowth;
-                heroRoll.hero.defGrowth = mapHero.defGrowth;
-                heroRoll.hero.resGrowth = mapHero.resGrowth;
-                heroRoll.hero.availability = mapHero.availability;
             }
         }
         singleton.collection.save(getBaseContext());

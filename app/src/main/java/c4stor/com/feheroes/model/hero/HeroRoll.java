@@ -31,15 +31,6 @@ public class HeroRoll implements Serializable {
         skills = new ArrayList<>(4);
     }
 
-    public void initGrowths() {
-        growthPoints = new int[5];
-        growthPoints[0] = hero.hpGrowth;
-        growthPoints[1] = hero.atkGrowth;
-        growthPoints[2] = hero.spdGrowth;
-        growthPoints[3] = hero.defGrowth;
-        growthPoints[4] = hero.resGrowth;
-    }
-
     public void initRarity() {
         hero.rarity = stars;
     }
