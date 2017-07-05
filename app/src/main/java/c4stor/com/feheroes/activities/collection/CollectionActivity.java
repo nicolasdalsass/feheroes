@@ -32,7 +32,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -43,9 +42,7 @@ import java.util.Map;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
-import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
-import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class CollectionActivity extends ToolbaredActivity {
@@ -103,8 +100,6 @@ public class CollectionActivity extends ToolbaredActivity {
         adAdBanner();
 //        disableAdBanner();
     }
-
-
 
     private void initTextView() {
         TextView noCollectionText = (TextView) findViewById(R.id.nocollectiontext);
@@ -313,8 +308,8 @@ public class CollectionActivity extends ToolbaredActivity {
         sorting = new Comparator<HeroRoll>() {
             @Override
             public int compare(HeroRoll o1, HeroRoll o2) {
-                if (o1.hero.rarity != o2.hero.rarity)
-                    return o2.hero.rarity - o1.hero.rarity;
+                if (o1.stars != o2.stars)
+                    return o2.stars - o1.stars;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -479,19 +474,19 @@ public class CollectionActivity extends ToolbaredActivity {
             holder.rarity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if (position == 0 && hero.hero.rarity != 5) {
+                    if (position == 0 && hero.stars != 5) {
                         hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.hero.rarity = 5;
+                        hero.stars = 5;
                         collection.save(getContext());
                         initListView();
-                    } else if (position == 1 && hero.hero.rarity != 4) {
+                    } else if (position == 1 && hero.stars != 4) {
                         hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.hero.rarity = 4;
+                        hero.stars = 4;
                         collection.save(getContext());
                         initListView();
-                    } else if (position == 2 && hero.hero.rarity != 3) {
+                    } else if (position == 2 && hero.stars != 3) {
                         hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(getContext()));
-                        hero.hero.rarity = 3;
+                        hero.stars = 3;
                         collection.save(getContext());
                         initListView();
                     }
@@ -516,9 +511,9 @@ public class CollectionActivity extends ToolbaredActivity {
 
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             holder.rarity.setAdapter(adapter);
-            if (hero.hero.rarity == 3) {
+            if (hero.stars == 3) {
                 holder.rarity.setSelection(2);
-            } else if (hero.hero.rarity == 4) {
+            } else if (hero.stars == 4) {
                 holder.rarity.setSelection(1);
             } else {
                 holder.rarity.setSelection(0);
@@ -592,11 +587,11 @@ public class CollectionActivity extends ToolbaredActivity {
     }
 
     private void refreshHero(HeroRoll hero) {
-        if (hero.hero.rarity == 5) {
+        if (hero.stars == 5) {
             hero.hero = singleton.fiveStarsMap.get(hero.getDisplayName(this));
-        } else if (hero.hero.rarity == 4) {
+        } else if (hero.stars == 4) {
             hero.hero = singleton.fourStarsMap.get(hero.getDisplayName(this));
-        } else if (hero.hero.rarity == 3) {
+        } else if (hero.stars == 3) {
             hero.hero = singleton.threeStarsMap.get(hero.getDisplayName(this));
         }
     }

@@ -126,8 +126,6 @@ public class DownloadDataActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
-
-
                 try {
                     singleton = ModelSingleton.getInstance(DownloadDataActivity.this);
                 } catch (IOException e) {

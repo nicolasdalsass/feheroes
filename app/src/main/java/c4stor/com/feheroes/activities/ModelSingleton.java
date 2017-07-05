@@ -138,7 +138,6 @@ public final class ModelSingleton {
             HeroInfo heroInfo = basicsMap.get(simpleHero.name);
 
             Hero jH = new Hero(simpleHero, heroInfo);
-
             String heroName = capitalize(context.getResources().getString(nameIdentifier));
             switch (rarity) {
                 case 3:
