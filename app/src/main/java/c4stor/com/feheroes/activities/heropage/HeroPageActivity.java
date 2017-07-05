@@ -33,13 +33,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Set;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
@@ -49,8 +47,6 @@ import c4stor.com.feheroes.model.hero.MovementType;
 import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.SkillState;
 import c4stor.com.feheroes.model.skill.WeaponType;
-
-import static c4stor.com.feheroes.model.skill.SkillState.LEARNED;
 
 /**
  * Created by eclogia on 04/06/17.
@@ -216,7 +212,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         Parcelable state = v.onSaveInstanceState();
         if (!skillOn && heroRoll.skills.size() > 0) {
            SkillManagerAdapter adapter = new SkillManagerAdapter(getBaseContext(),
-                   R.layout.hero_skill_list_line, new ArrayList<>(heroRoll.skills.values()));
+                   R.layout.hero_skill_list_line, heroRoll.skills);
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             v.onRestoreInstanceState(state);
@@ -245,13 +241,13 @@ public class HeroPageActivity extends ToolbaredActivity {
          * @return the skill that was previously equipped on that skillslot or null
          */
         public void equipSkill(Skill newSkill) {
-            for(Skill oldSkill : heroRoll.equippedSkills.values()) {
+            for(Skill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
                     oldSkill.skillState = SkillState.LEARNED;
                     seekBarMap.get(oldSkill).setProgress(SkillState.LEARNED.stateNumber);
                     heroRoll.equippedSkills.remove(oldSkill);
                 }
-                heroRoll.equippedSkills.put(newSkill.id, newSkill);
+                heroRoll.equippedSkills.add(newSkill);
                 return;
             }
         }
@@ -371,8 +367,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showEquippedSkills() {
         if (skillOn && !heroRoll.equippedSkills.isEmpty()) {
-            Set<Integer> set = heroRoll.equippedSkills.keySet();
-            int[] arr = integerSetToIntArray(set);
+            int[] arr = integerListToIntArray(heroRoll.equippedSkills);
             updateSkillView(equippedSkills, arr);
             equippedSkills.setVisibility(View.VISIBLE);
         } else {
@@ -380,11 +375,11 @@ public class HeroPageActivity extends ToolbaredActivity {
         }
     }
 
-    private int[] integerSetToIntArray(Set<Integer> set) {
-        int[] arr = new int[set.size()];
+    private int[] integerListToIntArray(List<Skill> list) {
+        int[] arr = new int[list.size()];
         int index = 0;
-        for( Integer i : set ) {
-            arr[index++] = i; //note the auto-unboxing here
+        for( Skill s : list ) {
+            arr[index++] = s.id; //note the auto-unboxing here
         }
         return arr;
     }
@@ -410,8 +405,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showComment() {
         if (heroRoll.comment == null) {
-            //comment.setHint(R.string.comment);
-            comment.setHint(singleton.gson.toJson(heroRoll.hero));
+            comment.setHint(R.string.comment);
+            //comment.setHint(singleton.gson.toJson(heroRoll.hero));
         } else {
             comment.setText(heroRoll.comment);
         }
