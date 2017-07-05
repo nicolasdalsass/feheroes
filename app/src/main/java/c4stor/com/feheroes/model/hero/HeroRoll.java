@@ -59,7 +59,7 @@ public class HeroRoll implements Serializable {
                 growthPoints[0] += 1;
             else if ("atk".equals(boon))
                 growthPoints[1] += 1;
-            else if ("spd".equals(boon))
+            else if ("speed".equals(boon))
                 growthPoints[2] += 1;
             else if ("def".equals(boon))
                 growthPoints[3] += 1;
@@ -71,7 +71,7 @@ public class HeroRoll implements Serializable {
                 growthPoints[0] -= 1;
             else if ("atk".equals(bane))
                 growthPoints[1] -= 1;
-            else if ("spd".equals(bane))
+            else if ("speed".equals(bane))
                 growthPoints[2] -= 1;
             else if ("def".equals(bane))
                 growthPoints[3] -= 1;
