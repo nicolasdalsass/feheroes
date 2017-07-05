@@ -98,33 +98,13 @@ public class CollectionActivity extends ToolbaredActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateHeroAttributes();
         initListView();
         initTextView();
         adAdBanner();
 //        disableAdBanner();
     }
 
-    //this method is there to update old HeroCollections
-    private void updateHeroAttributes() {
-        for (HeroRoll heroRoll : singleton.collection) {
-            if (heroRoll.hero.movementType == null) {
-                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
-                heroRoll.hero.movementType = mapHero.movementType;
-                heroRoll.hero.weaponType = mapHero.weaponType;
-            }
-            if (heroRoll.hero.atkGrowth == 0) {
-                HeroInfo mapHero = singleton.heroMap.get(heroRoll.hero.name);
-                heroRoll.hero.hpGrowth = mapHero.hpGrowth;
-                heroRoll.hero.atkGrowth = mapHero.atkGrowth;
-                heroRoll.hero.spdGrowth = mapHero.spdGrowth;
-                heroRoll.hero.defGrowth = mapHero.defGrowth;
-                heroRoll.hero.resGrowth = mapHero.resGrowth;
-                heroRoll.hero.availability = mapHero.availability;
-            }
-        }
-        singleton.collection.save(getBaseContext());
-    }
+
 
     private void initTextView() {
         TextView noCollectionText = (TextView) findViewById(R.id.nocollectiontext);
