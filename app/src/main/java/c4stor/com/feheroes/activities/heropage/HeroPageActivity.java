@@ -32,8 +32,13 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Set;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
@@ -43,6 +48,8 @@ import c4stor.com.feheroes.model.hero.MovementType;
 import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.SkillState;
 import c4stor.com.feheroes.model.skill.WeaponType;
+
+import static c4stor.com.feheroes.model.skill.SkillState.LEARNED;
 
 /**
  * Created by eclogia on 04/06/17.
@@ -63,6 +70,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private TextView bst;
     protected boolean skillOn = true;
     private LinearLayout equippedSkills;
+    private Map<Skill, SeekBar> seekBarMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +79,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         Intent intent = getIntent();
         int heroPosition = intent.getIntExtra("position", 1);
-        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
+        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());//TODO check if this line is useless
         this.heroRoll = singleton.collection.get(heroPosition);
 
         setToolbar(myToolbar);
@@ -105,15 +113,15 @@ public class HeroPageActivity extends ToolbaredActivity {
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
         equippedSkills = (LinearLayout) findViewById(R.id.equippedSkills);
+        seekBarMap = new HashMap<>();
 
-        initHeroRollSkills();
         onResume();
     }
 
     private void setToolbar(Toolbar myToolbar) {
         StringBuilder sb = new StringBuilder(heroRoll.getDisplayName(this));
         sb.append(" ");
-        for (int i = 0; i < heroRoll.hero.rarity; i++) {
+        for (int i = 0; i < heroRoll.stars; i++) {
             sb.append("★");
         }
         myToolbar.setTitle(sb.toString());
@@ -138,15 +146,6 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         adAdBanner();
         //disableAdBanner();
-    }
-
-    private void initHeroRollSkills() {
-        //TODO init with whole chains when implementing inheritance
-        if (heroRoll.skills.isEmpty()) {
-            for (int i : heroRoll.hero.skills40) {
-                heroRoll.skills.add(singleton.skillsMap.get(i));
-            }
-        }
     }
 
     private void setMovementIcon(ImageView view, MovementType movementType) {
@@ -216,7 +215,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         Parcelable state = v.onSaveInstanceState();
         if (!skillOn && heroRoll.skills.size() > 0) {
            SkillManagerAdapter adapter = new SkillManagerAdapter(getBaseContext(),
-                   R.layout.hero_skill_list_line, heroRoll.skills);
+                   R.layout.hero_skill_list_line, new ArrayList<>(heroRoll.skills.values()));
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             v.onRestoreInstanceState(state);
@@ -233,14 +232,27 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
 
-    public class SkillManagerAdapter extends ArrayAdapter<Skill> {
-
-        private final List<Skill> skillList;
+    public class SkillManagerAdapter extends ArrayAdapter<Skill> implements Observer {
 
         public SkillManagerAdapter(@NonNull Context context, @LayoutRes int resource, List<Skill> skillList) {
             super(context, resource, skillList);
-            this.skillList = skillList;
+        }
 
+        /**
+         *
+         * @param newSkill the skill that was set to equipped
+         * @return the skill that was previously equipped on that skillslot or null
+         */
+        public void equipSkill(Skill newSkill) {
+            for(Skill oldSkill : heroRoll.equippedSkills.values()) {
+                if (oldSkill.skillType == newSkill.skillType) {
+                    oldSkill.skillState = SkillState.LEARNED;
+                    seekBarMap.get(oldSkill).setProgress(SkillState.LEARNED.stateNumber);
+                    heroRoll.equippedSkills.remove(oldSkill);
+                }
+                heroRoll.equippedSkills.put(newSkill.id, newSkill);
+                return;
+            }
         }
 
         @NonNull
@@ -254,7 +266,7 @@ public class HeroPageActivity extends ToolbaredActivity {
                         (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 v = vi.inflate(R.layout.hero_skill_list_line, null);
                 // cache view fields into the holder
-                holder = initViewHolder(v, skillList.get(position));
+                holder = initViewHolder(v, heroRoll.skills.get(position));//TODO prob not works with the new collection implementation
                 // associate the holder with the view for later lookup
                 v.setTag(holder);
             } else {
@@ -265,13 +277,17 @@ public class HeroPageActivity extends ToolbaredActivity {
             holder.skillName.setText(holder.skill.name);
             holder.skillStateText.setText(holder.skill.skillState.stateStringId);
             holder.seekBar.setProgress(holder.skill.skillState.stateNumber);
-            holder.seekBar.setMax(SkillState.values().length -2);//TODO change length when implementing inheritance
+            holder.seekBar.setMax(SkillState.values().length - 1);
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (progress >= 0 && progress < SkillState.values().length) {
-                        holder.skill.skillState = SkillState.getStateFromIndex(progress);
-                        holder.skillStateText.setText(holder.skill.skillState.stateStringId);
+                        SkillState newState = SkillState.getStateFromIndex(progress);
+                        holder.skill.skillState = newState;
+                        holder.skillStateText.setText(newState.stateStringId);
+                        if (newState == SkillState.EQUIPPED) {
+                            equipSkill(holder.skill);
+                        }
                         singleton.collection.save(getBaseContext());
                     }
                 }
@@ -296,7 +312,15 @@ public class HeroPageActivity extends ToolbaredActivity {
             holder.skillName = (TextView) v.findViewById(R.id.skillname);
             holder.seekBar = (SeekBar) v.findViewById(R.id.skillslider);
             holder.skillStateText = (TextView) v.findViewById(R.id.skillstate);
+
+            seekBarMap.put(holder.skill, holder.seekBar);
+
             return holder;
+        }
+
+        @Override
+        public void update(Observable o, Object arg) {
+
         }
     }
 
@@ -345,12 +369,23 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     private void showEquippedSkills() {
-        if (skillOn && heroRoll.hero.skills40 != null) {
-            updateSkillView(equippedSkills, heroRoll.hero.skills40);
+        if (skillOn && !heroRoll.equippedSkills.isEmpty()) {
+            Set<Integer> set = heroRoll.equippedSkills.keySet();
+            int[] arr = integerSetToIntArray(set);
+            updateSkillView(equippedSkills, arr);
             equippedSkills.setVisibility(View.VISIBLE);
         } else {
             equippedSkills.setVisibility(View.GONE);
         }
+    }
+
+    private int[] integerSetToIntArray(Set<Integer> set) {
+        int[] arr = new int[set.size()];
+        int index = 0;
+        for( Integer i : set ) {
+            arr[index++] = i; //note the auto-unboxing here
+        }
+        return arr;
     }
 
     @Override
@@ -374,7 +409,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showComment() {
         if (heroRoll.comment == null) {
-            comment.setHint(R.string.comment);
+            //comment.setHint(R.string.comment);
+            comment.setHint(singleton.gson.toJson(heroRoll.hero));
         } else {
             comment.setText(heroRoll.comment);
         }

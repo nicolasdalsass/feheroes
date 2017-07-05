@@ -149,6 +149,10 @@ public class DownloadDataActivity extends AppCompatActivity {
                 }
                 Intent ivCheckIntent = new Intent(getBaseContext(), IVCheckActivity.class);
                 startActivity(ivCheckIntent);
+            } else {
+                Toast t = Toast.makeText(context, "Downloading update", Toast.LENGTH_SHORT);
+                t.setGravity(Gravity.CENTER, 0, 0);
+                t.show();
             }
         }
     }
