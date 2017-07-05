@@ -4,10 +4,7 @@ import android.content.Context;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -23,8 +20,8 @@ public class HeroRoll implements Serializable {
     public List<String> boons;
     public List<String> banes;
     public String comment;
-    public Map<Integer, Skill> skills;
-    public Map<Integer, Skill> equippedSkills;
+    public List<Skill> skills;
+    public List<Skill> equippedSkills;
     public int[] growthPoints;
 
     private String capitalize(final String line) {
@@ -32,8 +29,8 @@ public class HeroRoll implements Serializable {
     }
 
     public HeroRoll (){
-        skills = new TreeMap<>();
-        equippedSkills = new HashMap<>(6);
+        skills = new ArrayList<>(12);
+        equippedSkills = new ArrayList<>(6);
     }
 
     public void initRarity() {
@@ -45,35 +42,8 @@ public class HeroRoll implements Serializable {
         this.stars = stars;
         this.boons = boons;
         this.banes = banes;
-        skills = new TreeMap<>();
-        equippedSkills = new HashMap<>(6);
-    }
-
-    public void applyBoonBaneOnGrowth() {
-        for (String boon : boons) {
-            if ("HP".equals(boon))
-                growthPoints[0] += 1;
-            else if ("atk".equals(boon))
-                growthPoints[1] += 1;
-            else if ("speed".equals(boon))
-                growthPoints[2] += 1;
-            else if ("def".equals(boon))
-                growthPoints[3] += 1;
-            else if ("res".equals(boon))
-                growthPoints[4] += 1;
-        }
-        for (String bane : banes) {
-            if ("HP".equals(bane))
-                growthPoints[0] -= 1;
-            else if ("atk".equals(bane))
-                growthPoints[1] -= 1;
-            else if ("speed".equals(bane))
-                growthPoints[2] -= 1;
-            else if ("def".equals(bane))
-                growthPoints[3] -= 1;
-            else if ("res".equals(bane))
-                growthPoints[4] -= 1;
-        }
+        skills = new ArrayList<>(12);
+        equippedSkills = new ArrayList<>(6);
     }
 
     public int getStat(Context c, int statId, int[] stat) {
