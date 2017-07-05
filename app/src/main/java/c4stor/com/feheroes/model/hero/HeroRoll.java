@@ -32,7 +32,6 @@ public class HeroRoll implements Serializable {
         skills = new ArrayList<>(12);
         equippedSkills = new ArrayList<>(6);
     }
-
     public void initRarity() {
         hero.rarity = stars;
     }

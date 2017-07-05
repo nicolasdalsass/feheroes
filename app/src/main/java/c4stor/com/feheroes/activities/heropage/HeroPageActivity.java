@@ -48,6 +48,7 @@ import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.SkillState;
 import c4stor.com.feheroes.model.skill.WeaponType;
 
+
 /**
  * Created by eclogia on 04/06/17.
  */
@@ -212,7 +213,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         Parcelable state = v.onSaveInstanceState();
         if (!skillOn && heroRoll.skills.size() > 0) {
            SkillManagerAdapter adapter = new SkillManagerAdapter(getBaseContext(),
-                   R.layout.hero_skill_list_line, heroRoll.skills);
+                   R.layout.hero_skill_list_line, new ArrayList<>(heroRoll.skills));
             v.setAdapter(adapter);
             adapter.notifyDataSetChanged();
             v.onRestoreInstanceState(state);
