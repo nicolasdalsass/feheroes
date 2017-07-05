@@ -198,8 +198,8 @@ public class IVCheckActivity extends ToolbaredActivity {
         tv.addView(createLine());
         tv.addView(createPaddingRow());
 
-        int[] lvl1mods = calculateMods(hero, 1, nakedHeroes);
-        int[] lvl40mods = calculateMods(hero, 40, nakedHeroes);
+        int[] lvl1mods = calculateMods(hero, 1, !nakedHeroes);
+        int[] lvl40mods = calculateMods(hero, 40, !nakedHeroes);
         final HeroTableRow trHP = makeTableRow(getBaseContext().getResources().getString(R.string.hp), selectedSpinners, 0, hero.HP, lvl1mods[0], lvl40mods[0]);
         final HeroTableRow trMght = makeTableRow(getBaseContext().getResources().getString(R.string.atk), selectedSpinners, 1, hero.atk, lvl1mods[1], lvl40mods[1]);
         final HeroTableRow trSpd = makeTableRow(getBaseContext().getResources().getString(R.string.spd), selectedSpinners, 2, hero.speed, lvl1mods[2], lvl40mods[2]);
@@ -246,7 +246,6 @@ public class IVCheckActivity extends ToolbaredActivity {
                     banes.add(trMght.attribute);
                 int stars = 5 - ((Spinner) findViewById(R.id.spinner_stars)).getSelectedItemPosition();
                 HeroRoll hr = new HeroRoll(h, stars, boons, banes);
-                hr.initGrowths();
                 singleton.collection.add(hr);
                 singleton.collection.save(getBaseContext());
                 Toast.makeText(getBaseContext(), localizedName + " " + getBaseContext().getString(R.string.addedtocollection), Toast.LENGTH_SHORT).show();

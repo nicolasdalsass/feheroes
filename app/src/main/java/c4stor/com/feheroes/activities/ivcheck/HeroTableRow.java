@@ -90,8 +90,8 @@ public class HeroTableRow extends TableRow {
 
         @Override
         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            tv.setText(renderLvl40(attributeValues[5 - position] - lvl40mod));
-            parentRow.lvl1Value = attributeValues[2 - position] - lvl1mod;
+            tv.setText(renderLvl40(attributeValues[5 - position] + lvl40mod));
+            parentRow.lvl1Value = attributeValues[2 - position] + lvl1mod;
             int color = 0;
             switch (position) {
                 case 0:

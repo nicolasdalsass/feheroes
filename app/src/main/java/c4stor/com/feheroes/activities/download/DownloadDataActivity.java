@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
@@ -20,29 +21,34 @@ import java.net.URL;
 import java.util.Locale;
 
 import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.ModelSingleton;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
-
-import static java.lang.Thread.sleep;
+import c4stor.com.feheroes.model.hero.Hero;
+import c4stor.com.feheroes.model.hero.HeroInfo;
+import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class DownloadDataActivity extends AppCompatActivity {
 
+
+    private ModelSingleton singleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
-
-        final DownloadTask heroDownloadTask = new DownloadTask(this, "hero.data", false);
-        heroDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/v170630");
-        final DownloadTask baseHeroDownloadTask = new DownloadTask(this, "hero.basics", false);
-        baseHeroDownloadTask.execute("https://laicar.github.io/heroesjson/heroes-skillchain.json");
         if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
             localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
         }
-        final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", true);
+        final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", false);
         skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
+        final DownloadTask growthTask = new DownloadTask(this, "hero.basics", false);
+        growthTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes-skillchain.json");
+        final DownloadTask heroInfoTask = new DownloadTask(this, "heroinfo.data", true);
+        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170630_cleaned.json");
+
     }
+
 
     private class DownloadTask extends AsyncTask<String, Integer, String> {
 
@@ -121,6 +127,13 @@ public class DownloadDataActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
+
+                try {
+                    singleton = ModelSingleton.getInstance(DownloadDataActivity.this);
+                } catch (IOException e) {
+                    DownloadDataActivity.this.finish();
+                }
+
                 if ("web".equals(result)) {
                     Toast t = Toast.makeText(context, "Hero data synchronized from web", Toast.LENGTH_SHORT);
                     t.setGravity(Gravity.CENTER, 0, 0);
@@ -134,5 +147,38 @@ public class DownloadDataActivity extends AppCompatActivity {
                 startActivity(ivCheckIntent);
             }
         }
+    }
+
+    //this method is there to update old HeroCollections
+    private void updateHeroAttributes() {
+        for (HeroRoll heroRoll : singleton.collection) {
+            Hero hero = heroRoll.hero;
+            if (hero.movementType == null) {
+                HeroInfo mapHero = singleton.basicsMap.get(hero.name);
+                hero.movementType = mapHero.movementType;
+                hero.weaponType = mapHero.weaponType;
+            }
+            if (hero.atkGrowth == 0) {
+                HeroInfo mapHero = singleton.basicsMap.get(hero.name);
+                hero.hpGrowth = mapHero.hpGrowth;
+                hero.atkGrowth = mapHero.atkGrowth;
+                hero.spdGrowth = mapHero.spdGrowth;
+                hero.defGrowth = mapHero.defGrowth;
+                hero.resGrowth = mapHero.resGrowth;
+            }
+            if (hero.weaponChain.length == 0) {
+                HeroInfo mapHero = singleton.basicsMap.get(hero.name);
+                hero.weaponChain = mapHero.weaponChain;
+                hero.assistChain = mapHero.assistChain;
+                hero.specialChain = mapHero.specialChain;
+                hero.aChain = mapHero.aChain;
+                hero.bChain = mapHero.bChain;
+                hero.cChain = mapHero.cChain;
+            }
+            if (hero.rarity == 0) {
+                hero.rarity = heroRoll.stars;
+            }
+        }
+        singleton.collection.save(getBaseContext());
     }
 }

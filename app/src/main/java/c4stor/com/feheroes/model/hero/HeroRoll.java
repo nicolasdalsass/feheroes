@@ -4,10 +4,7 @@ import android.content.Context;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.skill.Skill;
@@ -25,7 +22,6 @@ public class HeroRoll implements Serializable {
     public String comment;
     public List<Skill> skills;
     public List<Skill> equippedSkills;
-    public int[] growthPoints;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
@@ -36,20 +32,12 @@ public class HeroRoll implements Serializable {
         equippedSkills = new ArrayList<>(6);
     }
 
-    public void initGrowths() {
-        growthPoints = new int[5];
-        growthPoints[0] = hero.hpGrowth;
-        growthPoints[1] = hero.atkGrowth;
-        growthPoints[2] = hero.spdGrowth;
-        growthPoints[3] = hero.defGrowth;
-        growthPoints[4] = hero.resGrowth;
-    }
-
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
         this.hero = hero;
         this.stars = stars;
         this.boons = boons;
         this.banes = banes;
+        this.stars = stars;
         skills = new ArrayList<>(12);
         equippedSkills = new ArrayList<>(6);
     }

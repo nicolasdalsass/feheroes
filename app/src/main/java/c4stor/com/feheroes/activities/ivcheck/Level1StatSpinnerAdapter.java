@@ -68,7 +68,7 @@ public class Level1StatSpinnerAdapter implements SpinnerAdapter {
         if(baseStat[2-position]==-1){
             text="?";
         } else {
-            text = (baseStat[2 - position] - mod) + "";
+            text = (baseStat[2 - position] + mod) + "";
         }
         tv.setText(text);
         tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
