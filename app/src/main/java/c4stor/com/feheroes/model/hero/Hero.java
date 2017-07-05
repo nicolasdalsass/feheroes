@@ -1,6 +1,7 @@
 package c4stor.com.feheroes.model.hero;
 
 import java.io.Serializable;
+import java.util.List;
 
 import c4stor.com.feheroes.model.skill.WeaponType;
 
@@ -12,12 +13,12 @@ public class Hero implements Serializable {
 
     public String name;
     public WeaponType weaponType;
-    public int[] weaponChain;
-    public int[] assistChain;
-    public int[] specialChain;
-    public int[] aChain;
-    public int[] bChain;
-    public int[] cChain;
+    public List<Integer> weaponChain;
+    public List<Integer> assistChain;
+    public List<Integer> specialChain;
+    public List<Integer> aChain;
+    public List<Integer> bChain;
+    public List<Integer> cChain;
     public MovementType movementType;
     public int rarity;
     public int[] HP;
@@ -30,17 +31,17 @@ public class Hero implements Serializable {
 
     private final static int[][] growthRates = new int[][]
             {{7, 8, 8},
-                    {9, 10, 10},
-                    {11, 12, 13},
-                    {13, 14, 15},
-                    {15, 16, 17},
-                    {17, 18, 19},
-                    {19, 20, 22},
-                    {21, 22, 24},
-                    {23, 24, 26},
-                    {25, 26, 28},
-                    {27, 28, 30},
-                    {29, 31, 33}};
+            {9, 10, 10},
+            {11, 12, 13},
+            {13, 14, 15},
+            {15, 16, 17},
+            {17, 18, 19},
+            {19, 20, 22},
+            {21, 22, 24},
+            {23, 24, 26},
+            {25, 26, 28},
+            {27, 28, 30},
+            {29, 31, 33}};
 
     /**
      * @param rarity      the HeroRoll's rarity (value from 3 to 5)

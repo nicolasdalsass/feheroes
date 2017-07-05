@@ -405,8 +405,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     private void showComment() {
         if (heroRoll.comment == null) {
-            comment.setHint(R.string.comment);
-            //comment.setHint(singleton.gson.toJson(heroRoll.hero));
+            //comment.setHint(R.string.comment);
+            comment.setHint(singleton.gson.toJson(heroRoll.hero));
         } else {
             comment.setText(heroRoll.comment);
         }

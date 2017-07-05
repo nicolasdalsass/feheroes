@@ -28,12 +28,9 @@ public class HeroRoll implements Serializable {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
-    public HeroRoll (){
+    public HeroRoll () {
         skills = new ArrayList<>(12);
         equippedSkills = new ArrayList<>(6);
-    }
-    public void initRarity() {
-        hero.rarity = stars;
     }
 
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
@@ -41,6 +38,8 @@ public class HeroRoll implements Serializable {
         this.stars = stars;
         this.boons = boons;
         this.banes = banes;
+        this.stars = stars;
+        //hero.rarity = stars;//TODO Not sure if useful
         skills = new ArrayList<>(12);
         equippedSkills = new ArrayList<>(6);
     }

@@ -9,13 +9,13 @@ import java.io.Serializable;
 public class SimpleHero implements Serializable    {
 
     public String name;
-        public int rarity;
-        public int HP;
-        public int atk;
-        public int def;
-        public int speed;
-        public int res;
-        public int[] skills1;
-        public int[] skills40;
-    }
+    public int rarity;
+    public int HP;
+    public int atk;
+    public int def;
+    public int speed;
+    public int res;
+    public int[] skills1;
+    public int[] skills40;
+}
 

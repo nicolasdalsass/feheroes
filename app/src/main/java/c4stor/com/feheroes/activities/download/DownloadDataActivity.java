@@ -23,6 +23,7 @@ import java.util.Locale;
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ModelSingleton;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
@@ -150,10 +151,14 @@ public class DownloadDataActivity extends AppCompatActivity {
     //this method is there to update old HeroCollections
     private void updateHeroAttributes() {
         for (HeroRoll heroRoll : singleton.collection) {
-            if (heroRoll.hero.movementType == null) {
-                HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
-                heroRoll.hero.movementType = mapHero.movementType;
-                heroRoll.hero.weaponType = mapHero.weaponType;
+            Hero hero = heroRoll.hero;
+            if (hero.movementType == null) {
+                HeroInfo mapHero = singleton.basicsMap.get(hero.name);
+                hero.movementType = mapHero.movementType;
+                hero.weaponType = mapHero.weaponType;
+            }
+            if (hero.rarity == 0) {
+                hero.rarity = heroRoll.stars;
             }
         }
         singleton.collection.save(getBaseContext());
