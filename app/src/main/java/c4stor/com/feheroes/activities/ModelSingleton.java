@@ -124,7 +124,6 @@ public final class ModelSingleton {
         String line = reader.readLine();
         while (line != null) {
             HeroInfo h = gson.fromJson(line, HeroInfo.class);
-            System.out.println(gson.toJson(h));
             heroMap.put(h.name, h);
             line = reader.readLine();
         }
