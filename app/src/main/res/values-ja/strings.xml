@@ -174,8 +174,9 @@
     <string name="skill_to_inherit">To inherit</string>
     <string name="legion">ローロー</string>
     <string name="clarisse">クライネ</string>
-    <string name="fredericksummer">Frederick - Summer</string>
-    <string name="gaiussummer">Gaius - Summer</string>
-    <string name="robinfsummer">Robin (f) - Summer</string>
-    <string name="tikisummer">Tiki - Summer</string>
+    <string name="fredericksummer">水着フレデリク</string>
+    <string name="gaiussummer">水着ガイア</string>
+    <string name="robinfsummer">水着女ルフレ</string>
+    <string name="tikisummer">水着大人チキ</string>
+    <string name="tobin">ロビン</string>
 </resources>

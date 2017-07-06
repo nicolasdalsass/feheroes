@@ -39,12 +39,16 @@ public class DownloadDataActivity extends AppCompatActivity {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
             localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
         }
+        if (Locale.getDefault().getDisplayLanguage().startsWith("es")) {
+            final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
+            localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-es.json");
+        }
         final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", false);
         skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
         final DownloadTask growthTask = new DownloadTask(this, "hero.basics", false);
         growthTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes-skillchain.json");
         final DownloadTask heroInfoTask = new DownloadTask(this, "heroinfo.data", true);
-        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170630_cleaned.json");
+        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170706");
 
     }
 
