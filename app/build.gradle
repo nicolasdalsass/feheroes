@@ -7,8 +7,8 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 74
-        versionName "15.0 - Ylissian Summer"
+        versionCode 75
+        versionName "15.1 - Ylissian Summer and Tobin Torment"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
