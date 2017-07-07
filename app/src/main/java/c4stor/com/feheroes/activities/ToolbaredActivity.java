@@ -25,6 +25,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
+import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
@@ -158,7 +159,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void updateSkillView(LinearLayout layout, int[] skills) {
+    protected void updateSkillView(LinearLayout layout, List<Integer> skills) {
         TextView wpnTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_wpn);
         TextView assistTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_assist);
         TextView spTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_special);
@@ -226,7 +227,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
 
-        int[] result = new int[]{0, 0, 0, 0, 0};
+        int[] result = new int[5];
         if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
             for (int skill : hero.skills1) {
                 int[] mods = singleton.skillsMap.get(skill).mods;

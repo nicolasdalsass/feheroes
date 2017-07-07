@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.model.SortedList;
+import c4stor.com.feheroes.model.skill.HeroSkill;
 import c4stor.com.feheroes.model.skill.Skill;
 
 /**
@@ -20,20 +22,16 @@ public class HeroRoll implements Serializable {
     public List<String> boons;
     public List<String> banes;
     public String comment;
-    public List<Skill> skills;
-    public List<Skill> equippedSkills;
-    public int[] growthPoints;
+    public List<HeroSkill> skills;
+    public List<HeroSkill> equippedSkills;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
     public HeroRoll (){
-        skills = new ArrayList<>(12);
-        equippedSkills = new ArrayList<>(6);
-    }
-    public void initRarity() {
-        hero.rarity = stars;
+        skills = new SortedList<>(12);
+        equippedSkills = new SortedList<>(6);
     }
 
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
@@ -41,8 +39,16 @@ public class HeroRoll implements Serializable {
         this.stars = stars;
         this.boons = boons;
         this.banes = banes;
-        skills = new ArrayList<>(12);
-        equippedSkills = new ArrayList<>(6);
+        skills = new SortedList<>(12);
+        equippedSkills = new SortedList<>(6);
+    }
+
+    public HeroSkill getSkillFromId(int id){
+        for (HeroSkill heroSkill : skills) {
+            if (heroSkill.id == id)
+                return heroSkill;
+        }
+        return null;
     }
 
     public int getStat(Context c, int statId, int[] stat) {

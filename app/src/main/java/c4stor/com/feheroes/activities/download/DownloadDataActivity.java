@@ -18,13 +18,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 import java.util.Locale;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ModelSingleton;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
+import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
+import c4stor.com.feheroes.model.skill.HeroSkill;
+import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.skill.SkillState;
 
 public class DownloadDataActivity extends AppCompatActivity {
 
@@ -75,7 +80,6 @@ public class DownloadDataActivity extends AppCompatActivity {
             NetworkInfo netInfo = cm.getActiveNetworkInfo();
             return netInfo != null && netInfo.isConnected();
         }
-
 
         @Override
         protected String doInBackground(String... sUrl) {
@@ -154,10 +158,11 @@ public class DownloadDataActivity extends AppCompatActivity {
     //this method is there to update old HeroCollections
     private void updateHeroAttributes() {
         for (HeroRoll heroRoll : singleton.collection) {
-            if (heroRoll.hero.movementType == null) {
-                HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
-                heroRoll.hero.movementType = mapHero.movementType;
-                heroRoll.hero.weaponType = mapHero.weaponType;
+            Hero hero = heroRoll.hero;
+            if (hero.movementType == null) {
+                HeroInfo mapHero = singleton.basicsMap.get(hero.name);
+                hero.movementType = mapHero.movementType;
+                hero.weaponType = mapHero.weaponType;
             }
         }
         singleton.collection.save(getBaseContext());

@@ -26,8 +26,8 @@ public class Hero implements Serializable {
     public int[] def;
     public int[] speed;
     public int[] res;
-    public int[] skills1;
-    public int[] skills40;
+    public List<Integer> skills1;
+    public List<Integer> skills40;
 
     private final static int[][] growthRates = new int[][]
             {{7, 8, 8},

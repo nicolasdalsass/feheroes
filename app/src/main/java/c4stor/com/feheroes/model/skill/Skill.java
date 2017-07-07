@@ -2,6 +2,9 @@ package c4stor.com.feheroes.model.skill;
 
 import android.support.annotation.NonNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import c4stor.com.feheroes.model.InheritanceRestriction;
 
 /**
@@ -13,11 +16,11 @@ public class Skill implements Comparable<Skill> {
     public String name;
     public int[] mods;
     public InheritanceRestriction inheritance;
-    public SkillState skillState;
     public SkillType skillType;
+    public List<Integer> parents;
 
     public Skill() {
-        skillState = SkillState.LEARNABLE;
+        this.parents = new ArrayList<>(2);
     }
 
     public void initSkillType(){
