@@ -128,7 +128,6 @@ public class HeroPageActivity extends ToolbaredActivity {
                 HeroSkill heroSkill = heroRoll.getSkillFromId(id);
                 heroSkill.skillState = SkillState.EQUIPPED;
                 heroRoll.equippedSkills.add(heroSkill);
-                System.out.println("ADDED " + heroSkill.name + " TO EQUIPPED lIST");
             }
         }
 
@@ -142,15 +141,12 @@ public class HeroPageActivity extends ToolbaredActivity {
             if (heroRoll.hero.skills40.contains(s.id)){
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
                 reachedMaxSkill = true;
-                System.out.println(s.name + " MAX LEARNABLE");
             }
             else if (!reachedMaxSkill) {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                System.out.println(s.name + " LEARNABLE");
             }
             else {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
-                System.out.println(s.name + " NOT LEARNABLE");
             }
         }
     }
@@ -161,7 +157,6 @@ public class HeroPageActivity extends ToolbaredActivity {
         for (Integer id : chain) {
             Skill s = singleton.skillsMap.get(id);
             if (heroRoll.hero.skills1.contains(s.id)) {
-                System.out.println(s.name + " DEFAULT");
                 heroRoll.skills.add(new HeroSkill(s, SkillState.EQUIPPED));
                 reachedDefaultSkill = true;
                 if (heroRoll.hero.skills40.contains(s.id))
@@ -169,26 +164,21 @@ public class HeroPageActivity extends ToolbaredActivity {
             }
             else if (!heroRoll.hero.skills1.contains(s.id) && heroRoll.hero.skills40.contains(s.id)){
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                System.out.println(s.name + " LEARNABLE");
                 reachedDefaultSkill = true;
                 reachedMaxSkill = true;
             }
             else if (!reachedDefaultSkill) {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNED));
-                System.out.println(s.name + " PREVIOUS");
             }
             else if (heroRoll.hero.skills40.contains(s.id)){
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
                 reachedMaxSkill = true;
-                System.out.println(s.name + " MAX LEARNABLE");
             }
             else if (!reachedMaxSkill) {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                System.out.println(s.name + " LEARNABLE");
             }
             else {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
-                System.out.println(s.name + " NOT LEARNABLE");
             }
         }
     }
@@ -319,11 +309,8 @@ public class HeroPageActivity extends ToolbaredActivity {
          * @return the skill that was previously equipped on that skillslot or null
          */
         public void equipSkill(HeroSkill newSkill) {
-            System.out.println("EQUIPPING SKILL " + newSkill.name + " TYPE " + newSkill.skillType);
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
-                System.out.println("CHECKING SKILL " + oldSkill.name + " TYPE " + oldSkill.skillType);
                 if (oldSkill.skillType == newSkill.skillType) {
-                    System.out.println("SKILLS ARE SAME TYPE");
                     oldSkill.skillState = SkillState.LEARNED;
                     unequipSkill(oldSkill, SkillState.LEARNED);
                     heroRoll.equippedSkills.add(newSkill);
@@ -335,9 +322,6 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         public void unequipSkill(HeroSkill oldSkill, SkillState newState) {
             SeekBar oldSkillSeekBar = seekBarMap.get(oldSkill);
-            System.out.println(oldSkill.name);
-            System.out.println(seekBarMap.containsKey(oldSkill));
-            System.out.println(oldSkillSeekBar == null ? "SEEKBAR NULL" : "SEEKBAR NOT NULL");
             heroRoll.equippedSkills.remove(oldSkill);
             oldSkillSeekBar.setProgress(newState.stateNumber);
         }
