@@ -297,7 +297,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
 
-    public class SkillManagerAdapter extends ArrayAdapter<HeroSkill> implements Observer {
+    public class SkillManagerAdapter extends ArrayAdapter<HeroSkill> {
 
         public SkillManagerAdapter(@NonNull Context context, @LayoutRes int resource, List<HeroSkill> skillList) {
             super(context, resource, skillList);
@@ -309,21 +309,19 @@ public class HeroPageActivity extends ToolbaredActivity {
          * @return the skill that was previously equipped on that skillslot or null
          */
         public void equipSkill(HeroSkill newSkill) {
+            System.out.println("EQUIPPING SKILL");
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
+                    System.out.println("SKILLS ARE OF THE SAME TYPE");
                     oldSkill.skillState = SkillState.LEARNED;
-                    unequipSkill(oldSkill, SkillState.LEARNED);
+                    System.out.println(seekBarMap.containsKey(oldSkill));
+                    seekBarMap.get(oldSkill).setProgress(oldSkill.skillState.stateNumber);
+                    heroRoll.equippedSkills.remove(oldSkill);
                     heroRoll.equippedSkills.add(newSkill);
                     return;
                 }
             }
             heroRoll.equippedSkills.add(newSkill);
-        }
-
-        public void unequipSkill(HeroSkill oldSkill, SkillState newState) {
-            SeekBar oldSkillSeekBar = seekBarMap.get(oldSkill);
-            heroRoll.equippedSkills.remove(oldSkill);
-            oldSkillSeekBar.setProgress(newState.stateNumber);
         }
 
         @NonNull
@@ -388,9 +386,6 @@ public class HeroPageActivity extends ToolbaredActivity {
             holder.skillStateText = (TextView) v.findViewById(R.id.skillstate);
 
             seekBarMap.put(s, holder.seekBar);
-
-
-            seekBarMap.put(holder.skill, holder.seekBar);
 
             return holder;
         }

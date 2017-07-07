@@ -20,10 +20,6 @@ public class Skill implements Comparable<Skill> {
     public InheritanceRestriction inheritance;
     public SkillType skillType;
 
-    public Skill() {
-        skillState = SkillState.LEARNABLE;
-    }
-
     public void initSkillType(){
         if (isWeapon(id))
             skillType = SkillType.WEAPON;
