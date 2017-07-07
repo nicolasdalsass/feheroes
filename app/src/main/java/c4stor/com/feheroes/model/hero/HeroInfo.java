@@ -16,6 +16,12 @@ public class HeroInfo implements Serializable {
     public String name;
     public WeaponType weaponType;
     public MovementType movementType;
+    public List<Integer> weaponChain;
+    public List<Integer> assistChain;
+    public List<Integer> specialChain;
+    public List<Integer> aChain;
+    public List<Integer> bChain;
+    public List<Integer> cChain;
     public int hpGrowth;
     public int atkGrowth;
     public int spdGrowth;

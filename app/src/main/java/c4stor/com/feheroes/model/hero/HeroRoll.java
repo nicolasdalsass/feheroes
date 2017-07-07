@@ -37,6 +37,7 @@ public class HeroRoll implements Serializable {
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
         this.hero = hero;
         this.stars = stars;
+        this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;
         skills = new SortedList<>(12);

@@ -40,6 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 import c4stor.com.feheroes.R;
+import c4stor.com.feheroes.activities.ModelSingleton;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
 import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
 import c4stor.com.feheroes.model.hero.HeroCollection;
@@ -348,7 +349,11 @@ public class CollectionActivity extends ToolbaredActivity {
             if (comparator == null) {
                 view = singleton.collection;
             } else {
-                view = new ArrayList<>(CollectionActivity.this.singleton.collection);
+                try {
+                    view = new ArrayList<>(ModelSingleton.getInstance(getContext()).collection);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 Collections.sort(view, comparator);
             }
         }

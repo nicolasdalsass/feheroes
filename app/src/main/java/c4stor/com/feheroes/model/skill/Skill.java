@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.support.annotation.NonNull;
+
 import c4stor.com.feheroes.model.InheritanceRestriction;
 
 /**
@@ -17,10 +19,9 @@ public class Skill implements Comparable<Skill> {
     public int[] mods;
     public InheritanceRestriction inheritance;
     public SkillType skillType;
-    public List<Integer> parents;
 
     public Skill() {
-        this.parents = new ArrayList<>(2);
+        skillState = SkillState.LEARNABLE;
     }
 
     public void initSkillType(){

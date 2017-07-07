@@ -85,6 +85,7 @@ public final class ModelSingleton {
     private void initHeroes(Context context) throws IOException {
         File dataFile = new File(context.getFilesDir(), "hero.basics");
         if (dataFile.exists()) {
+            System.out.println("INIT SIMPLE HEROES FROM SKILLCHAIN GROWTHPOINTS FILE");
             try {
                 initHeroesBasics(new FileInputStream(dataFile));
             } catch (Exception e) {
@@ -93,9 +94,9 @@ public final class ModelSingleton {
         } else {
             initHeroesBasicsLocally(context);
         }
-
         File heroDataFile = new File(context.getFilesDir(), "heroinfo.data");
         if (heroDataFile.exists()) {
+            System.out.println("INIT STARRED HEROES FROM CLEANED FILE");
             try {
                 initHeroesFromInputStream(new FileInputStream(heroDataFile), context);
             } catch (Exception e) {
@@ -130,6 +131,7 @@ public final class ModelSingleton {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         String line = reader.readLine();
         while (line != null) {
+            System.out.println(line);
             SimpleHero simpleHero = gson.fromJson(line, SimpleHero.class);
             int rarity = Integer.valueOf(simpleHero.name.substring(simpleHero.name.length() - 1));
             simpleHero.name = simpleHero.name.substring(0, simpleHero.name.length() - 1);

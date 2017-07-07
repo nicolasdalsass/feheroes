@@ -81,6 +81,7 @@ public class DownloadDataActivity extends AppCompatActivity {
             return netInfo != null && netInfo.isConnected();
         }
 
+
         @Override
         protected String doInBackground(String... sUrl) {
             if (!isOnline()) {
@@ -134,6 +135,8 @@ public class DownloadDataActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
+
+
                 try {
                     singleton = ModelSingleton.getInstance(DownloadDataActivity.this);
                 } catch (IOException e) {
@@ -163,6 +166,9 @@ public class DownloadDataActivity extends AppCompatActivity {
                 HeroInfo mapHero = singleton.basicsMap.get(hero.name);
                 hero.movementType = mapHero.movementType;
                 hero.weaponType = mapHero.weaponType;
+            }
+            if (hero.rarity == 0) {
+                hero.rarity = heroRoll.stars;
             }
         }
         singleton.collection.save(getBaseContext());

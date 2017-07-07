@@ -389,12 +389,10 @@ public class HeroPageActivity extends ToolbaredActivity {
 
             seekBarMap.put(s, holder.seekBar);
 
+
+            seekBarMap.put(holder.skill, holder.seekBar);
+
             return holder;
-        }
-
-        @Override
-        public void update(Observable o, Object arg) {
-
         }
     }
 
