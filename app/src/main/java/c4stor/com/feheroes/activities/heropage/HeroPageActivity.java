@@ -137,6 +137,10 @@ public class HeroPageActivity extends ToolbaredActivity {
     private void addPassiveSkillChain(List<Integer> chain, HeroRoll heroRoll) {
         boolean reachedMaxSkill = false;
         for (Integer id : chain) {
+            if (id == 0) { //In case someone put a int[] somewhere sometime
+                chain.remove(id);
+                continue;
+            }
             Skill s = singleton.skillsMap.get(id);
             if (heroRoll.hero.skills40.contains(s.id)){
                 heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
@@ -155,6 +159,10 @@ public class HeroPageActivity extends ToolbaredActivity {
         boolean reachedDefaultSkill = false;
         boolean reachedMaxSkill = false;
         for (Integer id : chain) {
+            if (id == 0) { //In case someone put a int[] somewhere sometime
+                chain.remove(id);
+                continue;
+            }
             Skill s = singleton.skillsMap.get(id);
             if (heroRoll.hero.skills1.contains(s.id)) {
                 heroRoll.skills.add(new HeroSkill(s, SkillState.EQUIPPED));
@@ -309,12 +317,9 @@ public class HeroPageActivity extends ToolbaredActivity {
          * @return the skill that was previously equipped on that skillslot or null
          */
         public void equipSkill(HeroSkill newSkill) {
-            System.out.println("EQUIPPING SKILL");
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
-                    System.out.println("SKILLS ARE OF THE SAME TYPE");
                     oldSkill.skillState = SkillState.LEARNED;
-                    System.out.println(seekBarMap.containsKey(oldSkill));
                     seekBarMap.get(oldSkill).setProgress(oldSkill.skillState.stateNumber);
                     heroRoll.equippedSkills.remove(oldSkill);
                     heroRoll.equippedSkills.add(newSkill);
@@ -352,12 +357,13 @@ public class HeroPageActivity extends ToolbaredActivity {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (progress >= 0 && progress < SkillState.values().length) {
                         SkillState newState = SkillState.getStateFromIndex(progress);
-                        if (holder.skill.skillState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
-                            heroRoll.equippedSkills.remove(holder.skill);
-                        }
                         holder.skill.skillState = newState;
                         holder.skillStateText.setText(newState.stateStringId);
-                        if (newState == SkillState.EQUIPPED) {
+                        if (holder.skill.skillState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
+                            heroRoll.equippedSkills.remove(holder.skill);
+                            calculateHeroStats();
+                        }
+                        else if (newState == SkillState.EQUIPPED) {
                             equipSkill(holder.skill);
                         }
                         singleton.collection.save(getBaseContext());
@@ -458,7 +464,7 @@ public class HeroPageActivity extends ToolbaredActivity {
         switch (item.getItemId()) {
             case R.id.toggleNakedView:
                 managementOn = !managementOn;
-                //TODO calculate and show new skills and stats
+                //TODO calculate stats with new skills
                 invalidateOptionsMenu();
                 showSkillManagement();
                 showEquippedSkills();
