@@ -32,9 +32,12 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -130,65 +133,63 @@ public class HeroPageActivity extends ToolbaredActivity {
                 heroRoll.equippedSkills.add(heroSkill);
             }
         }
-
         onResume();
     }
 
     private void addPassiveSkillChain(List<Integer> chain, HeroRoll heroRoll) {
         boolean reachedMaxSkill = false;
+        List<Integer> copy = new ArrayList<>();
         for (Integer id : chain) {
             if (id == 0) { //In case someone put a int[] somewhere sometime
-                chain.remove(id);
-                continue;
-            }
-            Skill s = singleton.skillsMap.get(id);
-            if (heroRoll.hero.skills40.contains(s.id)){
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                reachedMaxSkill = true;
-            }
-            else if (!reachedMaxSkill) {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-            }
-            else {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
+                copy.addAll(chain);
+                break;
+            } else {
+                Skill s = singleton.skillsMap.get(id);
+                if (heroRoll.hero.skills40.contains(s.id)) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
+                    reachedMaxSkill = true;
+                } else if (!reachedMaxSkill) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
+                } else {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
+                }
             }
         }
+        chain.removeAll(copy);
     }
 
     private void addActiveSkillChain(List<Integer> chain, HeroRoll heroRoll) {
         boolean reachedDefaultSkill = false;
         boolean reachedMaxSkill = false;
+        List<Integer> copy = new ArrayList<>();
         for (Integer id : chain) {
             if (id == 0) { //In case someone put a int[] somewhere sometime
-                chain.remove(id);
-                continue;
-            }
-            Skill s = singleton.skillsMap.get(id);
-            if (heroRoll.hero.skills1.contains(s.id)) {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.EQUIPPED));
-                reachedDefaultSkill = true;
-                if (heroRoll.hero.skills40.contains(s.id))
+                copy.addAll(chain);
+                break;
+            } else {
+                Skill s = singleton.skillsMap.get(id);
+                if (heroRoll.hero.skills1.contains(s.id)) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.EQUIPPED));
+                    reachedDefaultSkill = true;
+                    if (heroRoll.hero.skills40.contains(s.id))
+                        reachedMaxSkill = true;
+                } else if (!heroRoll.hero.skills1.contains(s.id) && heroRoll.hero.skills40.contains(s.id)) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
+                    reachedDefaultSkill = true;
                     reachedMaxSkill = true;
-            }
-            else if (!heroRoll.hero.skills1.contains(s.id) && heroRoll.hero.skills40.contains(s.id)){
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                reachedDefaultSkill = true;
-                reachedMaxSkill = true;
-            }
-            else if (!reachedDefaultSkill) {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNED));
-            }
-            else if (heroRoll.hero.skills40.contains(s.id)){
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-                reachedMaxSkill = true;
-            }
-            else if (!reachedMaxSkill) {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
-            }
-            else {
-                heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
+                } else if (!reachedDefaultSkill) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNED));
+                } else if (heroRoll.hero.skills40.contains(s.id)) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
+                    reachedMaxSkill = true;
+                } else if (!reachedMaxSkill) {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.LEARNABLE));
+                } else {
+                    heroRoll.skills.add(new HeroSkill(s, SkillState.TO_INHERIT));
+                }
             }
         }
+        chain.removeAll(copy);
     }
 
     private void setToolbar(Toolbar myToolbar) {
@@ -320,6 +321,8 @@ public class HeroPageActivity extends ToolbaredActivity {
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
                     oldSkill.skillState = SkillState.LEARNED;
+System.out.println("CHANGING " + oldSkill.name + " " + System.identityHashCode(oldSkill)
+        + " " + seekBarMap.containsKey(oldSkill));//TODO remove print
                     seekBarMap.get(oldSkill).setProgress(oldSkill.skillState.stateNumber);
                     heroRoll.equippedSkills.remove(oldSkill);
                     heroRoll.equippedSkills.add(newSkill);
@@ -357,15 +360,20 @@ public class HeroPageActivity extends ToolbaredActivity {
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                     if (progress >= 0 && progress < SkillState.values().length) {
                         SkillState newState = SkillState.getStateFromIndex(progress);
+                        SkillState oldState = holder.skill.skillState;
                         holder.skill.skillState = newState;
                         holder.skillStateText.setText(newState.stateStringId);
-                        if (holder.skill.skillState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
+                        if (oldState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
+System.out.println("UNEQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
+        + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
                             heroRoll.equippedSkills.remove(holder.skill);
-                            calculateHeroStats();
                         }
                         else if (newState == SkillState.EQUIPPED) {
+System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
+        + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
                             equipSkill(holder.skill);
                         }
+                        calculateHeroStats();
                         singleton.collection.save(getBaseContext());
                     }
                 }
@@ -392,6 +400,7 @@ public class HeroPageActivity extends ToolbaredActivity {
             holder.skillStateText = (TextView) v.findViewById(R.id.skillstate);
 
             seekBarMap.put(s, holder.seekBar);
+            System.out.println("PUT " + s.name + " " + System.identityHashCode(s) + " " + s.skillState);//TODO remove print
 
             return holder;
         }
@@ -406,8 +415,8 @@ public class HeroPageActivity extends ToolbaredActivity {
     }
 
     //this whole chunk of code is redundant with CollectionActivity's
-    private void calculateHeroStats() {
-        int[] mods = calculateMods(heroRoll.hero, 40, !managementOn);
+    protected void calculateHeroStats() {
+        int[] mods = calculateMods(heroRoll.hero, 40, true);
         makePopupStat(hp, heroRoll, heroRoll.hero.HP, mods[0], getResources().getString(R.string.hp));
         makePopupStat(atk, heroRoll, heroRoll.hero.atk, mods[1], getResources().getString(R.string.atk));
         makePopupStat(spd, heroRoll, heroRoll.hero.speed, mods[2], getResources().getString(R.string.spd));
@@ -423,13 +432,13 @@ public class HeroPageActivity extends ToolbaredActivity {
     public void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
 
         if (hero.boons != null && hero.boons.contains(statName)) {
-            statTV.setText(statName + " " + makeText(stat[5] - mod));
+            statTV.setText(statName + " " + makeText(stat[5] + mod));
             statTV.setTextColor(getResources().getColor(R.color.high_green));
         } else if (hero.banes != null && hero.banes.contains(statName)) {
-            statTV.setText(statName + " " + makeText(stat[3] - mod));
+            statTV.setText(statName + " " + makeText(stat[3] + mod));
             statTV.setTextColor(getResources().getColor(R.color.low_red));
         } else {
-            statTV.setText(statName + " " + makeText(stat[4] - mod));
+            statTV.setText(statName + " " + makeText(stat[4] + mod));
             statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
     }
@@ -468,6 +477,7 @@ public class HeroPageActivity extends ToolbaredActivity {
                 invalidateOptionsMenu();
                 showSkillManagement();
                 showEquippedSkills();
+                resetSeekbarMap();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -476,10 +486,18 @@ public class HeroPageActivity extends ToolbaredActivity {
         }
     }
 
+    private void resetSeekbarMap() {
+        List<Skill> copy = new ArrayList<>();
+        copy.addAll(seekBarMap.keySet());
+        for (Skill s : copy){
+            seekBarMap.remove(s);
+        }
+    }
+
     private void showComment() {
         if (heroRoll.comment == null) {
             comment.setHint(R.string.comment);
-            //comment.setHint(singleton.gson.toJson(heroRoll.hero));
+            //comment.setHint(singleton.gson.toJson(heroRoll));
         } else {
             comment.setText(heroRoll.comment);
         }

@@ -225,10 +225,9 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         mPublisherAdView.setVisibility(View.GONE);
     }
 
-    protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
-
+    protected int[] calculateMods(Hero hero, int lvl, boolean withSkills) {
         int[] result = new int[5];
-        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
+        if (lvl == 1 && hero.skills1 != null && withSkills) {
             for (int skill : hero.skills1) {
                 int[] mods = singleton.skillsMap.get(skill).mods;
                 result[0] += mods[0];
@@ -238,7 +237,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 result[4] += mods[4];
             }
         } else {
-            if (hero.skills40 != null && nakedHeroes) {
+            if (hero.skills40 != null && withSkills) {
                 for (int skill : hero.skills40) {
                     int[] mods = singleton.skillsMap.get(skill).mods;
                     result[0] += mods[0];
@@ -251,4 +250,20 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    protected int[] calculateMods(HeroRoll hero, boolean withSkills) {
+        int[] result = new int[5];
+        if (hero.equippedSkills != null && withSkills) {
+            for (Skill skill : hero.equippedSkills) {
+                int[] mods = singleton.skillsMap.get(skill.id).mods;
+                result[0] += mods[0];
+                result[1] += mods[1];
+                result[2] += mods[2];
+                result[3] += mods[3];
+                result[4] += mods[4];
+            }
+        }
+        return result;
+    }
+
 }
