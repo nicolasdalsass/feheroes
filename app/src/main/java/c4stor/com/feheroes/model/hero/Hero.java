@@ -3,6 +3,8 @@ package c4stor.com.feheroes.model.hero;
 import java.io.Serializable;
 import java.util.List;
 
+import c4stor.com.feheroes.model.AdvancedInheritanceRestriction;
+import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.WeaponType;
 
 /**
@@ -117,5 +119,16 @@ public class Hero implements Serializable {
         this.specialChain = heroInfo.specialChain;
     }
 
+    public boolean canInherit(Skill skill) {
+        //This is ugly but I don't know how to manage this restriction otherwise
+        if (skill.inheritance.equals(AdvancedInheritanceRestriction.MELEE_INFANTRY_ARMOR)) {
+            if (movementType == MovementType.CAVALRY || movementType == MovementType.FLIER)
+                return false;
+            if (weaponType.isCompatibleWith(AdvancedInheritanceRestriction.MELEE))
+                return true;
+            return false;
+        }
+        return skill.inheritance.isCompatibleWith(weaponType) || skill.inheritance.isCompatibleWith(movementType);
+    }
 
 }
