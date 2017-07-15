@@ -75,6 +75,7 @@ public class CollectionActivity extends ToolbaredActivity {
         toolBar.setTitle(R.string.mycollection);
         toolBar.setTitleTextColor(getResources().getColor(R.color.icons));
         setSupportActionBar(toolBar);
+        applySortingPref();
         onResume();
     }
 
@@ -155,47 +156,48 @@ public class CollectionActivity extends ToolbaredActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortByName:
-                sortByName();
-                defaultVisibility = View.GONE;
+                prefs.setSorting("name",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByStars:
-                sortByStar();
-                defaultVisibility = View.GONE;
+                prefs.setSorting("stars",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByHP:
-                sortByHP();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("HP",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByAtk:
-                sortByAtk();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("atk",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortBySpd:
-                sortBySpd();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("spd",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByDef:
-                sortByDef();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("def",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByRes:
-                sortByRes();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("res",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByBST:
-                sortByBST();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("bst",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByDate:
-                sorting = null;
+                prefs.setSorting("date",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.toggleNakedView:
@@ -210,6 +212,47 @@ public class CollectionActivity extends ToolbaredActivity {
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void applySortingPref(){
+        switch(prefs.getSorting()){
+            case "date":
+                sorting=null;
+                defaultVisibility = View.GONE;
+                break;
+            case "bst":
+                sortByBST();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "res":
+                sortByRes();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "def":
+                sortByDef();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "spd":
+                sortBySpd();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "atk":
+                sortByAtk();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "HP":
+                sortByHP();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "stars":
+                sortByStar();
+                defaultVisibility = View.GONE;
+                break;
+            case "name":
+                sortByName();
+                defaultVisibility = View.GONE;
+                break;
         }
     }
 
