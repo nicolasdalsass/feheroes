@@ -2,11 +2,14 @@ package c4stor.com.feheroes.activities.download;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -22,12 +25,12 @@ import java.util.Locale;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ModelSingleton;
+import c4stor.com.feheroes.activities.Preferences;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class DownloadDataActivity extends AppCompatActivity {
-
 
     private ModelSingleton singleton;
 
@@ -35,7 +38,13 @@ public class DownloadDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
-        String userLocale = Locale.getDefault().toString();
+        Preferences prefs = Preferences.loadFromStorage(this);
+        String userLocale = prefs.getLocale().toString();
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = prefs.getLocale();
+        res.updateConfiguration(conf, dm);
         String skillsFile = null;
         if (userLocale.startsWith("fr")) {
             skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-fr.json";
@@ -50,6 +59,11 @@ public class DownloadDataActivity extends AppCompatActivity {
         if (skillsFile != null) {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
             localeDownloadTask.execute(skillsFile);
+        } else {
+            File f = new File(getBaseContext().getFilesDir(), "skills.locale");
+            if(f.exists()) {
+                f.delete();
+            }
         }
         final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", false);
         skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
@@ -137,9 +151,8 @@ public class DownloadDataActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (goToIVFinder) {
-
-
                 try {
+                    ModelSingleton.regen(DownloadDataActivity.this);
                     singleton = ModelSingleton.getInstance(DownloadDataActivity.this);
                 } catch (IOException e) {
                     DownloadDataActivity.this.finish();
