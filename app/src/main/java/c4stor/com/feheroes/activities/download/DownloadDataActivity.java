@@ -21,7 +21,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Locale;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ModelSingleton;
@@ -33,6 +32,14 @@ import c4stor.com.feheroes.model.hero.HeroRoll;
 public class DownloadDataActivity extends AppCompatActivity {
 
     private ModelSingleton singleton;
+
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnected();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,7 @@ public class DownloadDataActivity extends AppCompatActivity {
             localeDownloadTask.execute(skillsFile);
         } else {
             File f = new File(getBaseContext().getFilesDir(), "skills.locale");
-            if(f.exists()) {
+            if (f.exists()) {
                 f.delete();
             }
         }
@@ -83,20 +90,10 @@ public class DownloadDataActivity extends AppCompatActivity {
 
         public DownloadTask(Context context, String outputFilePath, boolean goToIVFinder) {
             this.context = context;
-
             File directory = getBaseContext().getFilesDir();
             dataFile = new File(directory, outputFilePath);
             this.goToIVFinder = goToIVFinder;
         }
-
-
-        public boolean isOnline() {
-            ConnectivityManager cm =
-                    (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo netInfo = cm.getActiveNetworkInfo();
-            return netInfo != null && netInfo.isConnected();
-        }
-
 
         @Override
         protected String doInBackground(String... sUrl) {
@@ -118,6 +115,7 @@ public class DownloadDataActivity extends AppCompatActivity {
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
                     Log.w("", "Web update failed. Server returned HTTP " + connection.getResponseCode()
                             + " " + connection.getResponseMessage());
+                    return null;
                 }
 
 
@@ -176,7 +174,7 @@ public class DownloadDataActivity extends AppCompatActivity {
     //this method is there to update old HeroCollections
     private void updateHeroAttributes() {
         for (HeroRoll heroRoll : singleton.collection) {
-            if (heroRoll.hero.movementType == null) {
+            if (heroRoll.hero != null && heroRoll.hero.movementType == null) {
                 HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
                 heroRoll.hero.movementType = mapHero.movementType;
                 heroRoll.hero.weaponType = mapHero.weaponType;

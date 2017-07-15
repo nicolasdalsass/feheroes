@@ -48,7 +48,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    protected static ModelSingleton singleton ;
+    protected static ModelSingleton singleton;
     protected static Preferences prefs;
 
     protected abstract int getLayoutResource();
@@ -69,7 +69,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            singleton=ModelSingleton.getInstance(this);
+            singleton = ModelSingleton.getInstance(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -85,8 +85,8 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private void startDownloadDataActivity() {
 
-            Intent intent = new Intent(this, DownloadDataActivity.class);
-            startActivity(intent);
+        Intent intent = new Intent(this, DownloadDataActivity.class);
+        startActivity(intent);
 
     }
 
@@ -123,11 +123,11 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 displayContactDialog();
                 return true;
             case R.id.languageES:
-                prefs.setLocale(new Locale("es", ""),this);
+                prefs.setLocale(new Locale("es", ""), this);
                 startDownloadDataActivity();
                 return true;
             case R.id.languageFR:
-                prefs.setLocale(Locale.FRANCE,this);
+                prefs.setLocale(Locale.FRANCE, this);
                 startDownloadDataActivity();
                 return true;
             case R.id.languageJA:
@@ -217,7 +217,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     protected void makeSkillView(TextView tv, Skill skill) {
         Drawable d;
-        switch(skill.skillType){
+        switch (skill.skillType) {
             case WEAPON:
                 d = getResources().getDrawable(R.drawable.weapons);
                 break;
@@ -231,7 +231,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 d = getResources().getDrawable(R.drawable.passives);
                 break;
         }
-        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        tv.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
         tv.setText(skill.name);
         tv.setVisibility(View.VISIBLE);
     }
@@ -260,23 +260,29 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
         int[] result = new int[]{0, 0, 0, 0, 0};
         if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
-            for (int skill : hero.skills1) {
-                int[] mods = singleton.skillsMap.get(skill).mods;
-                result[0] += mods[0];
-                result[1] += mods[1];
-                result[2] += mods[2];
-                result[3] += mods[3];
-                result[4] += mods[4];
-            }
-        } else {
-            if (hero.skills40 != null && nakedHeroes) {
-                for (int skill : hero.skills40) {
-                    int[] mods = singleton.skillsMap.get(skill).mods;
+            for (int skillId : hero.skills1) {
+                Skill skill = singleton.skillsMap.get(skillId);
+                if (skill != null) {
+                    int[] mods = skill.mods;
                     result[0] += mods[0];
                     result[1] += mods[1];
                     result[2] += mods[2];
                     result[3] += mods[3];
                     result[4] += mods[4];
+                }
+            }
+        } else {
+            if (hero.skills40 != null && nakedHeroes) {
+                for (int skillId : hero.skills40) {
+                    Skill skill = singleton.skillsMap.get(skillId);
+                    if (skill != null) {
+                        int[] mods = skill.mods;
+                        result[0] += mods[0];
+                        result[1] += mods[1];
+                        result[2] += mods[2];
+                        result[3] += mods[3];
+                        result[4] += mods[4];
+                    }
                 }
             }
         }
