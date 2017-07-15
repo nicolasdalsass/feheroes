@@ -310,7 +310,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
     //this whole chunk of code is redundant with CollectionActivity's
     private void calculateHeroStats() {
-        int[] mods = calculateMods(heroRoll.hero, 40, !skillOn);
+        int[] mods = calculateMods(heroRoll.hero, 40, skillOn);
         makePopupStat(hp, heroRoll, heroRoll.hero.HP, mods[0], getResources().getString(R.string.hp));
         makePopupStat(atk, heroRoll, heroRoll.hero.atk, mods[1], getResources().getString(R.string.atk));
         makePopupStat(spd, heroRoll, heroRoll.hero.speed, mods[2], getResources().getString(R.string.spd));
@@ -326,13 +326,13 @@ public class HeroPageActivity extends ToolbaredActivity {
     public void makePopupStat(TextView statTV, HeroRoll hero, int[] stat, int mod, String statName) {
 
         if (hero.boons != null && hero.boons.contains(statName)) {
-            statTV.setText(statName + " " + makeText(stat[5] - mod));
+            statTV.setText(statName + " " + makeText(stat[5] + mod));
             statTV.setTextColor(getResources().getColor(R.color.high_green));
         } else if (hero.banes != null && hero.banes.contains(statName)) {
-            statTV.setText(statName + " " + makeText(stat[3] - mod));
+            statTV.setText(statName + " " + makeText(stat[3] + mod));
             statTV.setTextColor(getResources().getColor(R.color.low_red));
         } else {
-            statTV.setText(statName + " " + makeText(stat[4] - mod));
+            statTV.setText(statName + " " + makeText(stat[4] + mod));
             statTV.setTextColor(getResources().getColor(R.color.colorPrimary));
         }
     }

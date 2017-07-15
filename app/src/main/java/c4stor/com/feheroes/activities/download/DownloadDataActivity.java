@@ -35,21 +35,27 @@ public class DownloadDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
-        if (Locale.getDefault().getDisplayLanguage().startsWith("fr")) {
-            final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
-            localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-fr.json");
+        String userLocale = Locale.getDefault().getDisplayLanguage();
+        String skillsFile = null;
+        if (userLocale.startsWith("fr")) {
+            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-fr.json";
+        } else if (userLocale.equalsIgnoreCase("es-es")) {
+            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es-ES.json";
+        } else if (userLocale.startsWith("es")) {
+            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es.json";
+        } else if (userLocale.startsWith("ja")) {
+            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-ja.json";
         }
-        if (Locale.getDefault().getDisplayLanguage().startsWith("es")) {
+        if (skillsFile != null) {
             final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
-            localeDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-es.json");
+            localeDownloadTask.execute(skillsFile);
         }
         final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", false);
         skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
         final DownloadTask growthTask = new DownloadTask(this, "hero.basics", false);
         growthTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes-skillchain.json");
         final DownloadTask heroInfoTask = new DownloadTask(this, "heroinfo.data", true);
-        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170706");
-
+        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170713");
     }
 
 

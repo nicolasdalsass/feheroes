@@ -231,8 +231,8 @@ public class CollectionActivity extends ToolbaredActivity {
                 int[] m2 = calculateMods(o2.hero, 40, skillsOn);
                 int mod1 = m1[0] + m1[1] + m1[2] + m1[3] + m1[4];
                 int mod2 = m2[0] + m2[1] + m2[2] + m2[3] + m2[4];
-                if (o1.getBST(getBaseContext()) - mod1 != o2.getBST(getBaseContext()) - mod2)
-                    return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) - mod2 + mod1;
+                if (o1.getBST(getBaseContext()) + mod1 != o2.getBST(getBaseContext()) + mod2)
+                    return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -245,8 +245,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[4];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[4];
-                if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
-                    return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) - mod2 + mod1;
+                if (o1.getRes(getBaseContext())+ mod1 != o2.getRes(getBaseContext() )+ mod2)
+                    return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -259,8 +259,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[3];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[3];
-                if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
-                    return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) - mod2 + mod1;
+                if (o1.getDef(getBaseContext())+ mod1 != o2.getDef(getBaseContext())+ mod2)
+                    return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -273,8 +273,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[2];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[2];
-                if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
-                    return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) - mod2 + mod1;
+                if (o1.getSpeed(getBaseContext())+ mod1 != o2.getSpeed(getBaseContext())+ mod2)
+                    return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -287,8 +287,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[1];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[1];
-                if (o1.getAtk(getBaseContext()) - mod1 != o2.getAtk(getBaseContext()) - mod2)
-                    return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) - mod2 + mod1;
+                if (o1.getAtk(getBaseContext()) + mod1 != o2.getAtk(getBaseContext()) + mod2)
+                    return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -301,8 +301,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[0];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[0];
-                if (o1.getHP(getBaseContext()) - mod1 != o2.getHP(getBaseContext()) - mod2)
-                    return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) - mod2 + mod1;
+                if (o1.getHP(getBaseContext()) + mod1 != o2.getHP(getBaseContext()) + mod2)
+                    return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
