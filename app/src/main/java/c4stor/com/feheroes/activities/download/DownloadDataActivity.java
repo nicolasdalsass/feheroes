@@ -35,11 +35,12 @@ public class DownloadDataActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_download_data);
-        String userLocale = Locale.getDefault().getDisplayLanguage();
+        String userLocale = Locale.getDefault().toString();
         String skillsFile = null;
         if (userLocale.startsWith("fr")) {
             skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-fr.json";
-        } else if (userLocale.equalsIgnoreCase("es-es")) {
+        } else if (userLocale.equalsIgnoreCase("es_es")) {
+
             skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es-ES.json";
         } else if (userLocale.startsWith("es")) {
             skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es.json";
