@@ -77,4 +77,8 @@ public class Skill implements Comparable<Skill> {
         else
             return this.name.compareTo(o.name);
     }
+
+    public boolean equals(Skill o) {
+        return this.id == o.id;
+    }
 }

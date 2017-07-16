@@ -29,7 +29,7 @@ public class HeroRoll implements Serializable {
     }
 
     public HeroRoll (){
-        skills = new SortedList<>(12);
+        skills = new SortedList<>(13);
         equippedSkills = new SortedList<>(6);
     }
 
@@ -39,7 +39,7 @@ public class HeroRoll implements Serializable {
         this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;
-        skills = new SortedList<>(12);
+        skills = new SortedList<>(13);
         equippedSkills = new SortedList<>(6);
     }
 

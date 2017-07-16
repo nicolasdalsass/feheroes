@@ -137,10 +137,14 @@ public class HeroPageActivity extends ToolbaredActivity {
             addPassiveSkillChain(hero.bChain, heroRoll);
             addPassiveSkillChain(hero.cChain, heroRoll);
         }
-        for (Integer id : hero.skills1) {
-            HeroSkill heroSkill = heroRoll.skills.get(id);
-            heroSkill.skillState = SkillState.EQUIPPED;
-            heroRoll.equippedSkills.add(heroSkill);
+        //complexity 2 * native skill list length (usually 13)
+        for (Integer id : heroRoll.hero.skills1) {
+            for (HeroSkill s : heroRoll.skills) {
+                if (s.id == id) {
+                    s.skillState = SkillState.EQUIPPED;
+                    heroRoll.equippedSkills.add(s);
+                }
+            }
         }
     }
 
@@ -360,7 +364,7 @@ System.out.println("CHANGING OLD " + oldSkill.name + " " + System.identityHashCo
                 // view already exists, get the holder instance from the view
                 holder = (ViewHolder) v.getTag();
             }
-
+//this code snippet prevents the app from crashing but the seekbars sometimes do not update correctly
             if (!hasBeenOpenedOnce) {
                 hasBeenOpenedOnce = true;
                 for (HeroSkill s : heroRoll.equippedSkills) {

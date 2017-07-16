@@ -6,12 +6,15 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,17 +29,17 @@ import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.collection.CollectionActivity;
+import c4stor.com.feheroes.activities.download.DownloadDataActivity;
 import c4stor.com.feheroes.activities.ivcheck.IVCheckActivity;
 import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 import c4stor.com.feheroes.model.skill.Skill;
 import c4stor.com.feheroes.model.skill.SkillType;
-
-import static c4stor.com.feheroes.model.skill.Skill.*;
 
 /**
  * Created by Nicolas on 19/02/2017.
@@ -46,7 +49,8 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     private FirebaseAnalytics mFirebaseAnalytics;
 
-    protected static ModelSingleton singleton ;
+    protected static ModelSingleton singleton;
+    protected static Preferences prefs;
 
     protected abstract int getLayoutResource();
 
@@ -66,24 +70,37 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            singleton=ModelSingleton.getInstance(this);
+            singleton = ModelSingleton.getInstance(this);
         } catch (IOException e) {
             e.printStackTrace();
         }
         setContentView(getLayoutResource());
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        prefs = Preferences.loadFromStorage(this);
+        Resources res = getResources();
+        DisplayMetrics dm = res.getDisplayMetrics();
+        Configuration conf = res.getConfiguration();
+        conf.locale = prefs.getLocale();
+        res.updateConfiguration(conf, dm);
+    }
+
+    private void startDownloadDataActivity() {
+
+        Intent intent = new Intent(this, DownloadDataActivity.class);
+        startActivity(intent);
+
     }
 
     private void startCollectionActivity() {
         if (!isHeroCollection()) {
-            Intent intent = new Intent(getBaseContext(), CollectionActivity.class);
+            Intent intent = new Intent(this, CollectionActivity.class);
             startActivity(intent);
         }
     }
 
     private void startFinderActivity() {
         if (!isIVFinder()) {
-            Intent intent = new Intent(getBaseContext(), IVCheckActivity.class);
+            Intent intent = new Intent(this, IVCheckActivity.class);
             startActivity(intent);
         }
     }
@@ -106,7 +123,22 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
             case R.id.contact:
                 displayContactDialog();
                 return true;
-
+            case R.id.languageES:
+                prefs.setLocale(new Locale("es", ""), this);
+                startDownloadDataActivity();
+                return true;
+            case R.id.languageFR:
+                prefs.setLocale(Locale.FRANCE, this);
+                startDownloadDataActivity();
+                return true;
+            case R.id.languageJA:
+                prefs.setLocale(Locale.JAPAN, this);
+                startDownloadDataActivity();
+                return true;
+            case R.id.languageUS:
+                prefs.setLocale(Locale.US, this);
+                startDownloadDataActivity();
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -186,7 +218,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
 
     protected void makeSkillView(TextView tv, Skill skill) {
         Drawable d;
-        switch(skill.skillType){
+        switch (skill.skillType) {
             case WEAPON:
                 d = getResources().getDrawable(R.drawable.weapons);
                 break;
@@ -200,7 +232,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 d = getResources().getDrawable(R.drawable.passives);
                 break;
         }
-        tv.setCompoundDrawablesWithIntrinsicBounds(d,null,null,null);
+        tv.setCompoundDrawablesWithIntrinsicBounds(d, null, null, null);
         tv.setText(skill.name);
         tv.setVisibility(View.VISIBLE);
     }
@@ -226,25 +258,32 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     }
 
     protected int[] calculateMods(Hero hero, int lvl, boolean withSkills) {
-        int[] result = new int[5];
+
+        int[] result = new int[]{0, 0, 0, 0, 0};
         if (lvl == 1 && hero.skills1 != null && withSkills) {
-            for (int skill : hero.skills1) {
-                int[] mods = singleton.skillsMap.get(skill).mods;
-                result[0] += mods[0];
-                result[1] += mods[1];
-                result[2] += mods[2];
-                result[3] += mods[3];
-                result[4] += mods[4];
-            }
-        } else {
-            if (hero.skills40 != null && withSkills) {
-                for (int skill : hero.skills40) {
-                    int[] mods = singleton.skillsMap.get(skill).mods;
+            for (int skillId : hero.skills1) {
+                Skill skill = singleton.skillsMap.get(skillId);
+                if (skill != null) {
+                    int[] mods = skill.mods;
                     result[0] += mods[0];
                     result[1] += mods[1];
                     result[2] += mods[2];
                     result[3] += mods[3];
                     result[4] += mods[4];
+                }
+            }
+        } else {
+            if (hero.skills40 != null && withSkills) {
+                for (int skillId : hero.skills40) {
+                    Skill skill = singleton.skillsMap.get(skillId);
+                    if (skill != null) {
+                        int[] mods = skill.mods;
+                        result[0] += mods[0];
+                        result[1] += mods[1];
+                        result[2] += mods[2];
+                        result[3] += mods[3];
+                        result[4] += mods[4];
+                    }
                 }
             }
         }

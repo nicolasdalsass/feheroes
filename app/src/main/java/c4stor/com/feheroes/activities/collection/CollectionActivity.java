@@ -74,6 +74,7 @@ public class CollectionActivity extends ToolbaredActivity {
         toolBar.setTitle(R.string.mycollection);
         toolBar.setTitleTextColor(getResources().getColor(R.color.icons));
         setSupportActionBar(toolBar);
+        applySortingPref();
         onResume();
     }
 
@@ -152,47 +153,48 @@ public class CollectionActivity extends ToolbaredActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.sortByName:
-                sortByName();
-                defaultVisibility = View.GONE;
+                prefs.setSorting("name",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByStars:
-                sortByStar();
-                defaultVisibility = View.GONE;
+                prefs.setSorting("stars",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByHP:
-                sortByHP();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("HP",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByAtk:
-                sortByAtk();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("atk",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortBySpd:
-                sortBySpd();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("spd",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByDef:
-                sortByDef();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("def",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByRes:
-                sortByRes();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("res",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByBST:
-                sortByBST();
-                defaultVisibility = View.VISIBLE;
+                prefs.setSorting("bst",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.sortByDate:
-                sorting = null;
+                prefs.setSorting("date",this);
+                applySortingPref();
                 initListView();
                 return true;
             case R.id.toggleNakedView:
@@ -207,6 +209,47 @@ public class CollectionActivity extends ToolbaredActivity {
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void applySortingPref(){
+        switch(prefs.getSorting()){
+            case "date":
+                sorting=null;
+                defaultVisibility = View.GONE;
+                break;
+            case "bst":
+                sortByBST();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "res":
+                sortByRes();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "def":
+                sortByDef();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "spd":
+                sortBySpd();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "atk":
+                sortByAtk();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "HP":
+                sortByHP();
+                defaultVisibility = View.VISIBLE;
+                break;
+            case "stars":
+                sortByStar();
+                defaultVisibility = View.GONE;
+                break;
+            case "name":
+                sortByName();
+                defaultVisibility = View.GONE;
+                break;
         }
     }
 
@@ -228,8 +271,8 @@ public class CollectionActivity extends ToolbaredActivity {
                 int[] m2 = calculateMods(o2.hero, 40, skillsOn);
                 int mod1 = m1[0] + m1[1] + m1[2] + m1[3] + m1[4];
                 int mod2 = m2[0] + m2[1] + m2[2] + m2[3] + m2[4];
-                if (o1.getBST(getBaseContext()) - mod1 != o2.getBST(getBaseContext()) - mod2)
-                    return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) - mod2 + mod1;
+                if (o1.getBST(getBaseContext()) + mod1 != o2.getBST(getBaseContext()) + mod2)
+                    return o2.getBST(getBaseContext()) - o1.getBST(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -242,8 +285,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[4];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[4];
-                if (o1.getRes(getBaseContext()) != o2.getRes(getBaseContext()))
-                    return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) - mod2 + mod1;
+                if (o1.getRes(getBaseContext())+ mod1 != o2.getRes(getBaseContext() )+ mod2)
+                    return o2.getRes(getBaseContext()) - o1.getRes(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -256,8 +299,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[3];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[3];
-                if (o1.getDef(getBaseContext()) != o2.getDef(getBaseContext()))
-                    return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) - mod2 + mod1;
+                if (o1.getDef(getBaseContext())+ mod1 != o2.getDef(getBaseContext())+ mod2)
+                    return o2.getDef(getBaseContext()) - o1.getDef(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -270,8 +313,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[2];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[2];
-                if (o1.getSpeed(getBaseContext()) != o2.getSpeed(getBaseContext()))
-                    return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) - mod2 + mod1;
+                if (o1.getSpeed(getBaseContext())+ mod1 != o2.getSpeed(getBaseContext())+ mod2)
+                    return o2.getSpeed(getBaseContext()) - o1.getSpeed(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -284,8 +327,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[1];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[1];
-                if (o1.getAtk(getBaseContext()) - mod1 != o2.getAtk(getBaseContext()) - mod2)
-                    return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) - mod2 + mod1;
+                if (o1.getAtk(getBaseContext()) + mod1 != o2.getAtk(getBaseContext()) + mod2)
+                    return o2.getAtk(getBaseContext()) - o1.getAtk(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }
@@ -298,8 +341,8 @@ public class CollectionActivity extends ToolbaredActivity {
             public int compare(HeroRoll o1, HeroRoll o2) {
                 int mod1 = calculateMods(o1.hero, 40, skillsOn)[0];
                 int mod2 = calculateMods(o2.hero, 40, skillsOn)[0];
-                if (o1.getHP(getBaseContext()) - mod1 != o2.getHP(getBaseContext()) - mod2)
-                    return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) - mod2 + mod1;
+                if (o1.getHP(getBaseContext()) + mod1 != o2.getHP(getBaseContext()) + mod2)
+                    return o2.getHP(getBaseContext()) - o1.getHP(getBaseContext()) + mod2 - mod1;
                 else
                     return o1.getDisplayName(getBaseContext()).compareTo(o2.getDisplayName(getBaseContext()));
             }

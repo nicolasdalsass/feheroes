@@ -15,17 +15,38 @@
 
     <item
         android:id="@+id/toggleNakedView"
-        android:title="@string/no_skills"
         android:icon="@drawable/skill_icon"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/no_skills"
+        app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/copycollectiontoclipboard"
+    <item
+        android:id="@+id/copycollectiontoclipboard"
         android:title="@string/export_collection"
-        app:showAsAction="never"/>
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/contact"
         android:title="@string/contactme"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/language"
+        android:title="Language"
+        app:showAsAction="never">
+        <menu>
+            <item
+                android:id="@+id/languageUS"
+                android:title="English" />
+            <item
+                android:id="@+id/languageES"
+                android:title="Español" />
+            <item
+                android:id="@+id/languageFR"
+                android:title="Français" />
+            <item
+                android:id="@+id/languageJA"
+                android:title="日本語" />
+        </menu>
+    </item>
 
 </menu>

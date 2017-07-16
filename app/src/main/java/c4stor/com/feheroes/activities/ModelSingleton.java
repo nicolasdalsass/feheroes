@@ -58,6 +58,11 @@ public final class ModelSingleton {
         return instance;
     }
 
+    public static void regen(Context context) throws IOException {
+        instance = new ModelSingleton();
+        instance.init(context);
+    }
+
     private void init(Context context) throws IOException {
         initHeroes(context);
         initSkillData(context);
