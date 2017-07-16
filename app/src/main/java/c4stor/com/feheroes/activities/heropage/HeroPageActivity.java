@@ -32,15 +32,11 @@ import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.Set;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
@@ -72,7 +68,7 @@ public class HeroPageActivity extends ToolbaredActivity {
     private TextView bst;
     protected boolean managementOn = false;
     private LinearLayout equippedSkillsLayout;
-    private Map<Skill, SeekBar> seekBarMap;
+    private Map<HeroSkill, SeekBar> seekBarMap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,11 +82,8 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         setToolbar(myToolbar);
 
-        heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
-        movementIcon = (ImageView) this.findViewById(R.id.movementIcon);
-        weaponIcon = (ImageView) this.findViewById(R.id.weaponIcon);
+        findViewsById();
 
-        comment = (EditText) findViewById(R.id.heroComment);
         comment.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -108,15 +101,33 @@ public class HeroPageActivity extends ToolbaredActivity {
                 //do nothing
             }
         });
+        seekBarMap = new HashMap<>();
+
+        if (!heroRoll.hasOpenedPageOnce){
+            heroRoll.hasOpenedPageOnce = true;
+            initHeroRollSkills();
+        }
+
+        onResume();
+    }
+
+    private void findViewsById() {
+        heroPortrait = (ImageView) this.findViewById(R.id.heroPortrait);
+        movementIcon = (ImageView) this.findViewById(R.id.movementIcon);
+        weaponIcon = (ImageView) this.findViewById(R.id.weaponIcon);
+        comment = (EditText) findViewById(R.id.heroComment);
+
         hp = (TextView) findViewById(R.id.hero40LineHP);
         atk = (TextView) findViewById(R.id.hero40LineAtk);
         spd = (TextView) findViewById(R.id.hero40LineSpd);
         def = (TextView) findViewById(R.id.hero40LineDef);
         res = (TextView) findViewById(R.id.hero40LineRes);
         bst = (TextView) findViewById(R.id.hero40LineBST);
-        equippedSkillsLayout = (LinearLayout) findViewById(R.id.equippedSkills);
-        seekBarMap = new HashMap<>();
 
+        equippedSkillsLayout = (LinearLayout) findViewById(R.id.equippedSkills);
+    }
+
+    private void initHeroRollSkills() {
         Hero hero = heroRoll.hero;
         if (heroRoll.skills.isEmpty()) {
             addActiveSkillChain(hero.weaponChain, heroRoll);
@@ -126,14 +137,11 @@ public class HeroPageActivity extends ToolbaredActivity {
             addPassiveSkillChain(hero.bChain, heroRoll);
             addPassiveSkillChain(hero.cChain, heroRoll);
         }
-        if (heroRoll.equippedSkills.isEmpty()){
-            for (Integer id : hero.skills1) {
-                HeroSkill heroSkill = heroRoll.getSkillFromId(id);
-                heroSkill.skillState = SkillState.EQUIPPED;
-                heroRoll.equippedSkills.add(heroSkill);
-            }
+        for (Integer id : hero.skills1) {
+            HeroSkill heroSkill = heroRoll.skills.get(id);
+            heroSkill.skillState = SkillState.EQUIPPED;
+            heroRoll.equippedSkills.add(heroSkill);
         }
-        onResume();
     }
 
     private void addPassiveSkillChain(List<Integer> chain, HeroRoll heroRoll) {
@@ -155,7 +163,9 @@ public class HeroPageActivity extends ToolbaredActivity {
                 }
             }
         }
-        chain.removeAll(copy);
+        if (!copy.isEmpty()) {
+            chain.removeAll(copy);
+        }
     }
 
     private void addActiveSkillChain(List<Integer> chain, HeroRoll heroRoll) {
@@ -189,7 +199,9 @@ public class HeroPageActivity extends ToolbaredActivity {
                 }
             }
         }
-        chain.removeAll(copy);
+        if (!copy.isEmpty()) {
+            chain.removeAll(copy);
+        }
     }
 
     private void setToolbar(Toolbar myToolbar) {
@@ -305,24 +317,22 @@ public class HeroPageActivity extends ToolbaredActivity {
         return true;
     }
 
-
     public class SkillManagerAdapter extends ArrayAdapter<HeroSkill> {
+
+        private boolean hasBeenOpenedOnce = false;
 
         public SkillManagerAdapter(@NonNull Context context, @LayoutRes int resource, List<HeroSkill> skillList) {
             super(context, resource, skillList);
         }
 
-        /**
-         *
-         * @param newSkill the skill that was set to equipped
-         * @return the skill that was previously equipped on that skillslot or null
-         */
         public void equipSkill(HeroSkill newSkill) {
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
                     oldSkill.skillState = SkillState.LEARNED;
-System.out.println("CHANGING " + oldSkill.name + " " + System.identityHashCode(oldSkill)
+
+System.out.println("CHANGING OLD " + oldSkill.name + " " + System.identityHashCode(oldSkill)
         + " " + seekBarMap.containsKey(oldSkill));//TODO remove print
+
                     seekBarMap.get(oldSkill).setProgress(oldSkill.skillState.stateNumber);
                     heroRoll.equippedSkills.remove(oldSkill);
                     heroRoll.equippedSkills.add(newSkill);
@@ -350,11 +360,25 @@ System.out.println("CHANGING " + oldSkill.name + " " + System.identityHashCode(o
                 // view already exists, get the holder instance from the view
                 holder = (ViewHolder) v.getTag();
             }
-            //add stuff here
+
+            if (!hasBeenOpenedOnce) {
+                hasBeenOpenedOnce = true;
+                for (HeroSkill s : heroRoll.equippedSkills) {
+                    //seekBarMap.remove(holder.skill);
+                    seekBarMap.put(s, holder.seekBar);
+System.out.println("PUT EQUIPPED SKILL " + s.name + " " + System.identityHashCode(s) + " " + s.skillState);//TODO remove print
+                }
+            }
+
             holder.skillName.setText(holder.skill.name);
             holder.skillStateText.setText(holder.skill.skillState.stateStringId);
             holder.seekBar.setProgress(holder.skill.skillState.stateNumber);
             holder.seekBar.setMax(SkillState.values().length - 1);
+            setOnSeekBarChangeListener(holder);
+            return v;
+        }
+
+        public void setOnSeekBarChangeListener(final ViewHolder holder) {
             holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -364,13 +388,17 @@ System.out.println("CHANGING " + oldSkill.name + " " + System.identityHashCode(o
                         holder.skill.skillState = newState;
                         holder.skillStateText.setText(newState.stateStringId);
                         if (oldState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
+
 System.out.println("UNEQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
         + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
+
                             heroRoll.equippedSkills.remove(holder.skill);
                         }
                         else if (newState == SkillState.EQUIPPED) {
+
 System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
         + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
+
                             equipSkill(holder.skill);
                         }
                         calculateHeroStats();
@@ -388,7 +416,6 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
 
                 }
             });
-            return v;
         }
 
         private ViewHolder initViewHolder(View v, HeroSkill s) {
@@ -416,7 +443,7 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
 
     //this whole chunk of code is redundant with CollectionActivity's
     protected void calculateHeroStats() {
-        int[] mods = calculateMods(heroRoll.hero, 40, true);
+        int[] mods = calculateMods(heroRoll, true);
         makePopupStat(hp, heroRoll, heroRoll.hero.HP, mods[0], getResources().getString(R.string.hp));
         makePopupStat(atk, heroRoll, heroRoll.hero.atk, mods[1], getResources().getString(R.string.atk));
         makePopupStat(spd, heroRoll, heroRoll.hero.speed, mods[2], getResources().getString(R.string.spd));
@@ -477,7 +504,7 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
                 invalidateOptionsMenu();
                 showSkillManagement();
                 showEquippedSkills();
-                resetSeekbarMap();
+                //resetSeekbarMap();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -487,9 +514,9 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
     }
 
     private void resetSeekbarMap() {
-        List<Skill> copy = new ArrayList<>();
+        List<HeroSkill> copy = new ArrayList<>();
         copy.addAll(seekBarMap.keySet());
-        for (Skill s : copy){
+        for (HeroSkill s : copy){
             seekBarMap.remove(s);
         }
     }

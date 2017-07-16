@@ -3,13 +3,11 @@ package c4stor.com.feheroes.model.hero;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.model.SortedList;
 import c4stor.com.feheroes.model.skill.HeroSkill;
-import c4stor.com.feheroes.model.skill.Skill;
 
 /**
  * Created by Nicolas on 15/02/2017.
@@ -24,6 +22,7 @@ public class HeroRoll implements Serializable {
     public String comment;
     public List<HeroSkill> skills;
     public List<HeroSkill> equippedSkills;
+    public boolean hasOpenedPageOnce = false;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
@@ -42,14 +41,6 @@ public class HeroRoll implements Serializable {
         this.banes = banes;
         skills = new SortedList<>(12);
         equippedSkills = new SortedList<>(6);
-    }
-
-    public HeroSkill getSkillFromId(int id){
-        for (HeroSkill heroSkill : skills) {
-            if (heroSkill.id == id)
-                return heroSkill;
-        }
-        return null;
     }
 
     public int getStat(Context c, int statId, int[] stat) {
