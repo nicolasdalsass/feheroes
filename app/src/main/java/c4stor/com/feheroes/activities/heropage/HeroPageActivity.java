@@ -77,7 +77,7 @@ public class HeroPageActivity extends ToolbaredActivity {
 
         Intent intent = getIntent();
         int heroPosition = intent.getIntExtra("position", 1);
-        singleton.collection = HeroCollection.loadFromStorage(getBaseContext());//TODO check if this line is useless
+        //singleton.collection = HeroCollection.loadFromStorage(getBaseContext());//TODO check if this line is useless
         this.heroRoll = singleton.collection.get(heroPosition);
 
         setToolbar(myToolbar);
@@ -333,14 +333,9 @@ public class HeroPageActivity extends ToolbaredActivity {
             for (HeroSkill oldSkill : heroRoll.equippedSkills) {
                 if (oldSkill.skillType == newSkill.skillType) {
                     oldSkill.skillState = SkillState.LEARNED;
-
-System.out.println("CHANGING OLD " + oldSkill.name + " " + System.identityHashCode(oldSkill)
-        + " " + seekBarMap.containsKey(oldSkill));//TODO remove print
-
                     seekBarMap.get(oldSkill).setProgress(oldSkill.skillState.stateNumber);
                     heroRoll.equippedSkills.remove(oldSkill);
-                    heroRoll.equippedSkills.add(newSkill);
-                    return;
+                    break;
                 }
             }
             heroRoll.equippedSkills.add(newSkill);
@@ -364,13 +359,12 @@ System.out.println("CHANGING OLD " + oldSkill.name + " " + System.identityHashCo
                 // view already exists, get the holder instance from the view
                 holder = (ViewHolder) v.getTag();
             }
-//this code snippet prevents the app from crashing but the seekbars sometimes do not update correctly
+//this if block prevents the app from crashing but the seekbars sometimes do not update correctly
             if (!hasBeenOpenedOnce) {
                 hasBeenOpenedOnce = true;
                 for (HeroSkill s : heroRoll.equippedSkills) {
                     //seekBarMap.remove(holder.skill);
                     seekBarMap.put(s, holder.seekBar);
-System.out.println("PUT EQUIPPED SKILL " + s.name + " " + System.identityHashCode(s) + " " + s.skillState);//TODO remove print
                 }
             }
 
@@ -392,17 +386,9 @@ System.out.println("PUT EQUIPPED SKILL " + s.name + " " + System.identityHashCod
                         holder.skill.skillState = newState;
                         holder.skillStateText.setText(newState.stateStringId);
                         if (oldState == SkillState.EQUIPPED && newState != SkillState.EQUIPPED) {
-
-System.out.println("UNEQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
-        + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
-
                             heroRoll.equippedSkills.remove(holder.skill);
                         }
                         else if (newState == SkillState.EQUIPPED) {
-
-System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashCode(holder.skill)
-        + " " + seekBarMap.containsKey(holder.skill));//TODO remove print
-
                             equipSkill(holder.skill);
                         }
                         calculateHeroStats();
@@ -431,7 +417,6 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
             holder.skillStateText = (TextView) v.findViewById(R.id.skillstate);
 
             seekBarMap.put(s, holder.seekBar);
-            System.out.println("PUT " + s.name + " " + System.identityHashCode(s) + " " + s.skillState);//TODO remove print
 
             return holder;
         }
@@ -507,21 +492,13 @@ System.out.println("EQUIPPING " + holder.skill.name + " " + System.identityHashC
                 //TODO calculate stats with new skills
                 invalidateOptionsMenu();
                 showSkillManagement();
+                //seekBarMap.clear();//TODO maybe useless
                 showEquippedSkills();
-                //resetSeekbarMap();
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private void resetSeekbarMap() {
-        List<HeroSkill> copy = new ArrayList<>();
-        copy.addAll(seekBarMap.keySet());
-        for (HeroSkill s : copy){
-            seekBarMap.remove(s);
         }
     }
 
