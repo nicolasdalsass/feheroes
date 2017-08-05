@@ -72,7 +72,6 @@ public class HeroCollection extends ArrayList<HeroRoll> implements Serializable 
         }
     }
 
-    //this function makes the sliders go in datasheet order somehow
     private static void synchronizeSkills(HeroCollection collection) {
         for (HeroRoll roll : collection) {
             List<HeroSkill> copyList = new ArrayList<>(6);
