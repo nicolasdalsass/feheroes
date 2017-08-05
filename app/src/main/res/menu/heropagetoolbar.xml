@@ -2,6 +2,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/toggleNakedView"
+        android:icon="@drawable/skill_icon"
+        android:title="@string/skill_management"
+        app:showAsAction="always" />
+
+    <item
         android:id="@+id/gotofinder"
         android:icon="@drawable/search"
         android:title="@string/app_name"

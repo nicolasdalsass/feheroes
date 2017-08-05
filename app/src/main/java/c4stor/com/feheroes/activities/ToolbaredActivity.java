@@ -28,6 +28,7 @@ import com.google.android.gms.ads.doubleclick.PublisherAdView;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import c4stor.com.feheroes.R;
@@ -190,7 +191,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         return true;
     }
 
-    protected void updateSkillView(LinearLayout layout, int[] skills) {
+    protected void updateSkillView(LinearLayout layout, List<Integer> skills) {
         TextView wpnTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_wpn);
         TextView assistTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_assist);
         TextView spTV = findAndResetSkillTextView(layout, R.id.vertical_skill_tv_special);
@@ -256,10 +257,10 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         mPublisherAdView.setVisibility(View.GONE);
     }
 
-    protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
+    protected int[] calculateMods(Hero hero, int lvl, boolean withSkills) {
 
         int[] result = new int[]{0, 0, 0, 0, 0};
-        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
+        if (lvl == 1 && hero.skills1 != null && withSkills) {
             for (int skillId : hero.skills1) {
                 Skill skill = singleton.skillsMap.get(skillId);
                 if (skill != null) {
@@ -272,7 +273,7 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
                 }
             }
         } else {
-            if (hero.skills40 != null && nakedHeroes) {
+            if (hero.skills40 != null && withSkills) {
                 for (int skillId : hero.skills40) {
                     Skill skill = singleton.skillsMap.get(skillId);
                     if (skill != null) {
@@ -288,4 +289,20 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    protected int[] calculateMods(HeroRoll hero, boolean withSkills) {
+        int[] result = new int[5];
+        if (hero.equippedSkills != null && withSkills) {
+            for (Skill skill : hero.equippedSkills) {
+                int[] mods = singleton.skillsMap.get(skill.id).mods;
+                result[0] += mods[0];
+                result[1] += mods[1];
+                result[2] += mods[2];
+                result[3] += mods[3];
+                result[4] += mods[4];
+            }
+        }
+        return result;
+    }
+
 }

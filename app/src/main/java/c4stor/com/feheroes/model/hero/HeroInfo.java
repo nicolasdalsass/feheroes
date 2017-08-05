@@ -15,13 +15,13 @@ public class HeroInfo implements Serializable {
 
     public String name;
     public WeaponType weaponType;
-    public int[] weaponChain;
-    public int[] assistChain;
-    public int[] specialChain;
-    public int[] aChain;
-    public int[] bChain;
-    public int[] cChain;
     public MovementType movementType;
+    public List<Integer> weaponChain;
+    public List<Integer> assistChain;
+    public List<Integer> specialChain;
+    public List<Integer> aChain;
+    public List<Integer> bChain;
+    public List<Integer> cChain;
     public int hpGrowth;
     public int atkGrowth;
     public int spdGrowth;
@@ -29,22 +29,17 @@ public class HeroInfo implements Serializable {
     public int resGrowth;
 
     public HeroInfo() {
-        weaponChain = new int[4];
-        assistChain = new int[3];
-        specialChain = new int[3];
-        aChain = new int[3];
-        bChain = new int[3];
-        cChain = new int[3];
+        weaponChain = new ArrayList<>(4);
+        assistChain = new ArrayList<>(3);
+        specialChain = new ArrayList<>(3);
+        aChain = new ArrayList<>(3);
+        bChain = new ArrayList<>(3);
+        cChain = new ArrayList<>(3);
     }
 
     @Override
     public String toString(){
         return name;
-    }
-
-    public boolean canInherit(Skill skill) {
-        //Seems a bit weak, but should work as long as there isn't a condition involving both weapon and movement type somewhere.
-        return skill.inheritance.isCompatibleWith(weaponType) || skill.inheritance.isCompatibleWith(movementType);
     }
 
 }

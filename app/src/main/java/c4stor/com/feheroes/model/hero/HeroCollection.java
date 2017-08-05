@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -16,9 +17,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import c4stor.com.feheroes.model.InheritanceRestriction;
 import c4stor.com.feheroes.model.InheritanceRestrictionDeserializer;
+import c4stor.com.feheroes.model.skill.HeroSkill;
 
 /**
  * Created by Nicolas on 15/02/2017.
@@ -61,10 +64,27 @@ public class HeroCollection extends ArrayList<HeroRoll> implements Serializable 
                 HeroCollection hc = gson.fromJson(reader, HeroCollection.class);
                 reader.endArray();
                 reader.close();
+                synchronizeSkills(hc);
                 return hc;
             } catch (IOException e) {
                 return new HeroCollection();
             }
+        }
+    }
+
+    private static void synchronizeSkills(HeroCollection collection) {
+        for (HeroRoll roll : collection) {
+            List<HeroSkill> copyList = new ArrayList<>(6);
+            for (HeroSkill equippedSkill : roll.equippedSkills) {
+                for (HeroSkill skill : roll.skills) {
+                    if (skill.id == equippedSkill.id) {
+                        copyList.add(skill);
+                        break;
+                    }
+                }
+            }
+            roll.equippedSkills.clear();
+            roll.equippedSkills.addAll(copyList);
         }
     }
 }

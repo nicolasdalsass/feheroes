@@ -1,7 +1,6 @@
 package c4stor.com.feheroes.model;
 
-import c4stor.com.feheroes.model.hero.MovementType;
-
+import static c4stor.com.feheroes.model.hero.MovementType.*;
 import static c4stor.com.feheroes.model.skill.WeaponType.*;
 
 /**
@@ -9,15 +8,22 @@ import static c4stor.com.feheroes.model.skill.WeaponType.*;
  */
 
 public enum AdvancedInheritanceRestriction implements InheritanceRestriction {
-    NOT_FLIER(new NotInheritanceRestrictionType(MovementType.FLIER)),
+    NOT_FLIER(new NotInheritanceRestrictionType(FLIER)),
     NOT_STAFF(new NotInheritanceRestrictionType(STAFF)),
     DRAGON(new OrInheritanceRestrictionType(RBREATH, BBREATH, GBREATH)),
     PHYSICAL_MELEE(new OrInheritanceRestrictionType(SWORD, LANCE, AXE)),
     MELEE(new OrInheritanceRestrictionType(SWORD, LANCE, AXE, RBREATH, BBREATH, GBREATH)),
+    NOT_RANGED_MAGIC(new OrInheritanceRestrictionType(SWORD, LANCE, AXE, RBREATH, BBREATH, GBREATH, BOW, DAGGER)),
+
     NOT_RED(new OrInheritanceRestrictionType(LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH, BOW, DAGGER, STAFF)),
     NOT_BLUE(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, AXE, GTOME, GBREATH, BOW, DAGGER, STAFF)),
     NOT_GREEN(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, BOW, DAGGER, STAFF)),
-    NOT_COlORLESS(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH));
+    NOT_COlORLESS(new OrInheritanceRestrictionType(SWORD, RTOME, RBREATH, LANCE, BTOME, BBREATH, AXE, GTOME, GBREATH)),
+
+    MELEE_INFANTRY_ARMOR(new AndInheritanceRestrictionType(
+            new OrInheritanceRestrictionType(INFANTRY, ARMOR),
+            new OrInheritanceRestrictionType(SWORD, LANCE, AXE, RBREATH, BBREATH, GBREATH)));
+
 
     private InheritanceRestriction restriction;
 

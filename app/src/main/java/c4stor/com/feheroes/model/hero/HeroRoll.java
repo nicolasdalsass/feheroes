@@ -3,11 +3,11 @@ package c4stor.com.feheroes.model.hero;
 import android.content.Context;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import c4stor.com.feheroes.R;
-import c4stor.com.feheroes.model.skill.Skill;
+import c4stor.com.feheroes.model.SortedList;
+import c4stor.com.feheroes.model.skill.HeroSkill;
 
 /**
  * Created by Nicolas on 15/02/2017.
@@ -20,19 +20,17 @@ public class HeroRoll implements Serializable {
     public List<String> boons;
     public List<String> banes;
     public String comment;
-    public List<Skill> skills;
-    public int[] growthPoints;
+    public List<HeroSkill> skills;
+    public List<HeroSkill> equippedSkills;
+    public boolean hasOpenedPageOnce = false;
 
     private String capitalize(final String line) {
         return Character.toUpperCase(line.charAt(0)) + line.substring(1);
     }
 
     public HeroRoll (){
-        skills = new ArrayList<>(4);
-    }
-
-    public void initRarity() {
-        hero.rarity = stars;
+        skills = new SortedList<>(13);
+        equippedSkills = new SortedList<>(6);
     }
 
     public HeroRoll(Hero hero, int stars, List<String> boons, List<String> banes) {
@@ -41,34 +39,8 @@ public class HeroRoll implements Serializable {
         this.hero.rarity = stars;
         this.boons = boons;
         this.banes = banes;
-        skills = new ArrayList<>();
-    }
-
-    public void applyBoonBaneOnGrowth() {
-        for (String boon : boons) {
-            if ("HP".equals(boon))
-                growthPoints[0] += 1;
-            else if ("atk".equals(boon))
-                growthPoints[1] += 1;
-            else if ("speed".equals(boon))
-                growthPoints[2] += 1;
-            else if ("def".equals(boon))
-                growthPoints[3] += 1;
-            else if ("res".equals(boon))
-                growthPoints[4] += 1;
-        }
-        for (String bane : banes) {
-            if ("HP".equals(bane))
-                growthPoints[0] -= 1;
-            else if ("atk".equals(bane))
-                growthPoints[1] -= 1;
-            else if ("speed".equals(bane))
-                growthPoints[2] -= 1;
-            else if ("def".equals(bane))
-                growthPoints[3] -= 1;
-            else if ("res".equals(bane))
-                growthPoints[4] -= 1;
-        }
+        skills = new SortedList<>(13);
+        equippedSkills = new SortedList<>(6);
     }
 
     public int getStat(Context c, int statId, int[] stat) {
@@ -126,7 +98,7 @@ public class HeroRoll implements Serializable {
         StringBuilder sb = new StringBuilder();
         sb.append(capitalize(hero.name));
         sb.append(",");
-        for (int i = 0; i < hero.rarity; i++) {
+        for (int i = 0; i < stars; i++) {
             sb.append("★");
         }
         sb.append(",");
