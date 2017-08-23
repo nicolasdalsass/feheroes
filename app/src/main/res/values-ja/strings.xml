@@ -187,4 +187,13 @@
     <string name="leon">レオ</string>
     <string name="mathilda">マチルダ</string>
     <string name="saber">セーバー</string>
+    <string name="xandersummer">"マークス - 泳ぎの鍛錬中 "</string>
+    <string name="valter">ヴァルター</string>
+    <string name="tana">ターナ</string>
+    <string name="seth">ゼト</string>
+    <string name="amelia">アメリア</string>
+    <string name="innes">ヒーニアス</string>
+    <string name="leosummer">レオン - サマーグラビティ</string>
+    <string name="elisesummer">エリーゼ - 南国の花</string>
+    <string name="corrinfsummer">"カムイ - はじめての夏休み "</string>
 </resources>

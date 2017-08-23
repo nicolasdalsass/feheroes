@@ -77,7 +77,7 @@ public class DownloadDataActivity extends AppCompatActivity {
         final DownloadTask growthTask = new DownloadTask(this, "hero.basics", false);
         growthTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes-skillchain.json");
         final DownloadTask heroInfoTask = new DownloadTask(this, "heroinfo.data", true);
-        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170713");
+        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170802");
     }
 
 

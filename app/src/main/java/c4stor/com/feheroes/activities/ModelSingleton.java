@@ -112,7 +112,7 @@ public final class ModelSingleton {
     }
 
     private void initHeroesBasicsLocally(Context context) throws IOException {
-        InputStream inputStream = context.getResources().openRawResource(R.raw.heroesjson);
+        InputStream inputStream = context.getResources().openRawResource(R.raw.combojson);
         initHeroesBasics(inputStream);
     }
 
@@ -127,7 +127,7 @@ public final class ModelSingleton {
     }
 
     private void initHeroesFromCombo(Context context) throws IOException {
-        InputStream inputStream = context.getResources().openRawResource(R.raw.combojson);
+        InputStream inputStream = context.getResources().openRawResource(R.raw.heroesjson);
         initHeroesFromInputStream(inputStream, context);
     }
 

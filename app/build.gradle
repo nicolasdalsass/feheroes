@@ -7,8 +7,8 @@ android {
         applicationId "c4stor.com.feheroes"
         minSdkVersion 15
         targetSdkVersion 25
-        versionCode 79
-        versionName "16.0 - Alm and Celica armies"
+        versionCode 80
+        versionName "17.0 - Summer 2017 Update"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
