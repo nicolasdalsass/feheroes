@@ -52,32 +52,11 @@ public class DownloadDataActivity extends AppCompatActivity {
         Configuration conf = res.getConfiguration();
         conf.locale = prefs.getLocale();
         res.updateConfiguration(conf, dm);
-        String skillsFile = null;
-        if (userLocale.startsWith("fr")) {
-            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-fr.json";
-        } else if (userLocale.equalsIgnoreCase("es_es")) {
 
-            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es-ES.json";
-        } else if (userLocale.startsWith("es")) {
-            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-es.json";
-        } else if (userLocale.startsWith("ja")) {
-            skillsFile = "https://nicolasdalsass.github.io/heroesjson/allskills-ja.json";
-        }
-        if (skillsFile != null) {
-            final DownloadTask localeDownloadTask = new DownloadTask(this, "skills.locale", false);
-            localeDownloadTask.execute(skillsFile);
-        } else {
-            File f = new File(getBaseContext().getFilesDir(), "skills.locale");
-            if (f.exists()) {
-                f.delete();
-            }
-        }
-        final DownloadTask skillDownloadTask = new DownloadTask(this, "skills.data", false);
-        skillDownloadTask.execute("https://nicolasdalsass.github.io/heroesjson/allskills-inheritance.json");
         final DownloadTask growthTask = new DownloadTask(this, "hero.basics", false);
-        growthTask.execute("https://nicolasdalsass.github.io/heroesjson/heroes-skillchain.json");
+        growthTask.execute("https://nicolasdalsass.github.io/heroesjson/herogrowths.json");
         final DownloadTask heroInfoTask = new DownloadTask(this, "heroinfo.data", true);
-        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/v170802");
+        heroInfoTask.execute("https://nicolasdalsass.github.io/heroesjson/V170919");
     }
 
 
@@ -174,10 +153,9 @@ public class DownloadDataActivity extends AppCompatActivity {
     //this method is there to update old HeroCollections
     private void updateHeroAttributes() {
         for (HeroRoll heroRoll : singleton.collection) {
-            if (heroRoll.hero != null && heroRoll.hero.movementType == null) {
+            if (heroRoll.hero != null) {
                 HeroInfo mapHero = singleton.basicsMap.get(heroRoll.hero.name);
-                heroRoll.hero.movementType = mapHero.movementType;
-                heroRoll.hero.weaponType = mapHero.weaponType;
+
             }
         }
         singleton.collection.save(getBaseContext());

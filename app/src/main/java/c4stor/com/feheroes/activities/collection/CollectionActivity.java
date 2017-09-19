@@ -32,7 +32,6 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -42,10 +41,7 @@ import java.util.Map;
 
 import c4stor.com.feheroes.R;
 import c4stor.com.feheroes.activities.ToolbaredActivity;
-import c4stor.com.feheroes.activities.heropage.HeroPageActivity;
-import c4stor.com.feheroes.model.hero.Hero;
 import c4stor.com.feheroes.model.hero.HeroCollection;
-import c4stor.com.feheroes.model.hero.HeroInfo;
 import c4stor.com.feheroes.model.hero.HeroRoll;
 
 public class CollectionActivity extends ToolbaredActivity {
@@ -462,7 +458,6 @@ public class CollectionActivity extends ToolbaredActivity {
             showComment(holder, hero);
 
             setDeleteButtonListener(holder, hero);
-            setHeroPageButtonListener(holder);
 
             if (statVisibility.containsKey(hero)) {
                 //noinspection WrongConstant
@@ -487,17 +482,6 @@ public class CollectionActivity extends ToolbaredActivity {
                     getResources().getString(R.string.bst) + " " +
                             bstText);
             holder.lvl40BST.setTextColor(getResources().getColor(R.color.colorPrimary));
-        }
-
-        private void setHeroPageButtonListener(final ViewHolder holder) {
-            holder.detailsButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(getBaseContext(), HeroPageActivity.class);
-                    intent.putExtra("position", singleton.collection.indexOf(holder.hero));
-                    startActivity(intent);
-                }
-            });
         }
 
         private void setDeleteButtonListener(ViewHolder holder, final HeroRoll hero) {

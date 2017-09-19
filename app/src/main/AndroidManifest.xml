@@ -24,8 +24,6 @@
             android:configChanges="orientation|keyboardHidden|screenSize"/>
         <activity android:name=".activities.ivcheck.IVCheckActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"/>
-        <activity android:name=".activities.heropage.HeroPageActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"/>
     </application>
 
 </manifest>

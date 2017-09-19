@@ -15,7 +15,5 @@ public class SimpleHero implements Serializable    {
         public int def;
         public int speed;
         public int res;
-        public int[] skills1;
-        public int[] skills40;
     }
 

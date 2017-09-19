@@ -259,33 +259,12 @@ public abstract class ToolbaredActivity extends AppCompatActivity {
     protected int[] calculateMods(Hero hero, int lvl, boolean nakedHeroes) {
 
         int[] result = new int[]{0, 0, 0, 0, 0};
-        if (lvl == 1 && hero.skills1 != null && nakedHeroes) {
-            for (int skillId : hero.skills1) {
-                Skill skill = singleton.skillsMap.get(skillId);
-                if (skill != null) {
-                    int[] mods = skill.mods;
-                    result[0] += mods[0];
-                    result[1] += mods[1];
-                    result[2] += mods[2];
-                    result[3] += mods[3];
-                    result[4] += mods[4];
-                }
-            }
+        if (lvl == 1  && nakedHeroes) {
+            return hero.mods1;
+        } else if(nakedHeroes){
+            return hero.mods40;
         } else {
-            if (hero.skills40 != null && nakedHeroes) {
-                for (int skillId : hero.skills40) {
-                    Skill skill = singleton.skillsMap.get(skillId);
-                    if (skill != null) {
-                        int[] mods = skill.mods;
-                        result[0] += mods[0];
-                        result[1] += mods[1];
-                        result[2] += mods[2];
-                        result[3] += mods[3];
-                        result[4] += mods[4];
-                    }
-                }
-            }
+            return result;
         }
-        return result;
     }
 }

@@ -65,26 +65,7 @@ public final class ModelSingleton {
 
     private void init(Context context) throws IOException {
         initHeroes(context);
-        initSkillData(context);
         collection = HeroCollection.loadFromStorage(context);
-    }
-
-    private void initSkillData(Context context) throws IOException {
-        File dataFile = new File(context.getFilesDir(), "skills.data");
-        File localeFile = new File(context.getFilesDir(), "skills.locale");
-        if (dataFile.exists()) {
-            try {
-                if (localeFile.exists()) {
-                    initSkillsFromInputStream(new FileInputStream(dataFile), new FileInputStream(localeFile));
-                } else {
-                    initSkillsFromInputStream(new FileInputStream(dataFile));
-                }
-            } catch (Exception e) {
-                initSkillsLocally(context);
-            }
-        } else {
-            initSkillsLocally(context);
-        }
     }
 
     private void initHeroes(Context context) throws IOException {

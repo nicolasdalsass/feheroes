@@ -1,5 +1,7 @@
 package c4stor.com.feheroes.model.hero;
 
+import com.google.gson.Gson;
+
 import java.io.Serializable;
 
 import c4stor.com.feheroes.model.skill.WeaponType;
@@ -10,23 +12,15 @@ import c4stor.com.feheroes.model.skill.WeaponType;
 
 public class Hero implements Serializable {
 
-    public String name;
-    public WeaponType weaponType;
-    public int[] weaponChain;
-    public int[] assistChain;
-    public int[] specialChain;
-    public int[] aChain;
-    public int[] bChain;
-    public int[] cChain;
-    public MovementType movementType;
     public int rarity;
+    public String name;
     public int[] HP;
     public int[] atk;
     public int[] def;
     public int[] speed;
     public int[] res;
-    public int[] skills1;
-    public int[] skills40;
+    public int[] mods1;
+    public int[] mods40;
 
     private final static int[][] growthRates = new int[][]
             {{7, 8, 8},
@@ -73,7 +67,6 @@ public class Hero implements Serializable {
     public Hero(SimpleHero simpleHero, HeroInfo heroInfo) {
         this.rarity = simpleHero.rarity;
         this.name = simpleHero.name;
-        this.weaponChain = heroInfo.weaponChain;
         this.HP = new int[]{simpleHero.HP - 1,
                 simpleHero.HP,
                 simpleHero.HP > -1 ? simpleHero.HP + 1 : -1,
@@ -104,17 +97,12 @@ public class Hero implements Serializable {
                 getLvl40Bane(rarity, heroInfo.resGrowth, simpleHero.res),
                 getLvl40Neutral(rarity, heroInfo.resGrowth, simpleHero.res),
                 getLvl40Boon(rarity, heroInfo.resGrowth, simpleHero.res)};
-
-        this.skills1 = simpleHero.skills1;
-        this.skills40 = simpleHero.skills40;
-        this.movementType = heroInfo.movementType;
-        this.weaponType = heroInfo.weaponType;
-        this.aChain = heroInfo.aChain;
-        this.bChain = heroInfo.bChain;
-        this.cChain = heroInfo.cChain;
-        this.assistChain = heroInfo.assistChain;
-        this.specialChain = heroInfo.specialChain;
     }
 
+    @Override
+    public String toString() {
 
+        Gson g = new Gson();
+       return g.toJson(this).toString();
+    }
 }

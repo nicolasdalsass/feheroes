@@ -3,6 +3,7 @@ package c4stor.com.feheroes.activities.ivcheck;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -101,6 +102,18 @@ public class IVCheckActivity extends ToolbaredActivity {
     protected void onResume() {
         super.onResume();
         singleton.collection = HeroCollection.loadFromStorage(getBaseContext());
+        for(Hero heroo : singleton.fiveStarsMap.values()){
+            heroo.name = heroo.name+heroo.rarity;
+            printHero(heroo);
+        }
+        for(Hero heroo : singleton.fourStarsMap.values()){
+            heroo.name = heroo.name+heroo.rarity;
+            printHero(heroo);
+        }
+        for(Hero heroo : singleton.threeStarsMap.values()){
+            heroo.name = heroo.name+heroo.rarity;
+            printHero(heroo);
+        }
 
 
         final Spinner spinnerHeroes = (Spinner) findViewById(R.id.spinner_heroes);
@@ -133,6 +146,8 @@ public class IVCheckActivity extends ToolbaredActivity {
             spinnerHeroes.setAdapter(starredHeroAdapter);
             spinnerHeroes.setSelection(newPositionc);
         }
+
+
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -188,6 +203,14 @@ public class IVCheckActivity extends ToolbaredActivity {
             // Another interface callback
         }
 
+    }
+
+    private void printHero(final Hero hero) {
+        int[] lvl1mods = calculateMods(hero, 1, !nakedHeroes);
+        int[] lvl40mods = calculateMods(hero, 40, !nakedHeroes);
+        hero.mods1 = lvl1mods;
+        hero.mods40= lvl40mods;
+        Log.w("heromod",hero.toString());
     }
 
     private void populateTableWithHero(final Hero hero) {
@@ -261,10 +284,6 @@ public class IVCheckActivity extends ToolbaredActivity {
         TextView skillsLabel = (TextView) skillsRow.findViewById(R.id.skillsLabel);
         LinearLayout skills1 = (LinearLayout) skillsRow.findViewById(R.id.skills1);
         LinearLayout skills40 = (LinearLayout) skillsRow.findViewById(R.id.skills40);
-        skillsLabel.setText(R.string.skills);
-
-        updateSkillView(skills1, hero.skills1);
-        updateSkillView(skills40, hero.skills40);
 
         skillsRow.setLayoutParams(new TableRow.LayoutParams(
                 TableRow.LayoutParams.MATCH_PARENT,
